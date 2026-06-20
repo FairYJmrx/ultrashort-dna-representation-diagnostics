@@ -1,0 +1,32 @@
+# Python/runtime
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+
+# Local editor / OS
+.DS_Store
+Thumbs.db
+.vscode/
+
+# Bulky downloaded references; regenerate from manifests.
+data/reference_genomes/
+data/real_slices/*.csv
+*.fna
+*.fa
+*.fasta
+*.fastq
+*.fq
+*.gz
+*.zip
+
+# Render QA intermediates
+manuscript/rendered_final/
+manuscript/draft_manuscript.md
+manuscript/stage*.md
+*.tmp
+
+# Logs and scratch
+*.log
+tmp/
+scratch/

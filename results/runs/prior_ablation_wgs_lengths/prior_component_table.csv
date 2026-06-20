@@ -1,0 +1,11 @@
+﻿representation,family,contiguous_kmer,spaced_seed,canonical_rc,property_summary,position_phase,rope_position,description
+kmer5_count_l2,contiguous k-mer,1,0,0,0,0,0,Contiguous 5-mer count vector with L2 normalization.
+ckmer5_count_l2,canonical contiguous k-mer,1,0,1,0,0,0,"5-mer counts after min(k-mer, reverse-complement k-mer) canonicalization."
+spaced_count_l2,spaced seed,0,1,0,0,0,0,"Spaced seed counts using pattern positions (0,2,4,6)."
+cspaced_count_l2,canonical spaced seed,0,1,1,0,0,0,Spaced seed counts with reverse-complement canonicalization.
+cspaced_property_l2,canonical spaced-property,0,1,1,1,0,0,Canonical spaced seed counts concatenated with DNA property summaries and L2 normalization.
+property_channels,base property channels,0,0,0,1,0,0,"Per-position hydrogen-bond, GC, purine, EIIP and N-mask channels."
+spaced_kmer_no_phase,spaced property token,0,1,0,1,0,0,Spaced token property sequence without explicit three-phase position signal.
+spaced_kmer_phase,phase-aware spaced property token,0,1,0,1,1,0,Spaced token property sequence with sine/cosine start-position phase.
+rope_onehot,RoPE-onehot,0,0,0,0,0,1,One-hot base vectors rotated by RoPE-like positional phases.
+rope_property,RoPE-property,0,0,0,1,0,1,DNA property vectors rotated by RoPE-like positional phases.

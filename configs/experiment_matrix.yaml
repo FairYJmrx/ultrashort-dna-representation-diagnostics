@@ -1,0 +1,98 @@
+project: kmer_informatics
+default_read_length: 75
+random_seeds: [13, 37, 101, 2026, 3407]
+read_lengths: [69, 75, 100, 125, 150, 200]
+
+lightweight_dataset:
+  first_wave_species: [GC_rich, AT_rich, near_SNP]
+  reads_per_species_smoke: 20
+  reads_per_species_stable: 40
+  first_wave_conditions:
+    - clean
+    - substitution_1pct
+    - N_3pct
+    - trim_to_69
+    - reverse_complement
+  expansion_conditions:
+    - substitution_0_5pct
+    - substitution_2pct
+    - substitution_5pct
+    - terminal_substitution_gradient
+    - N_1pct
+    - N_5pct
+    - trim_to_60
+    - trim_to_50
+    - indel_stress
+    - low_complexity
+    - adapter_like
+    - host_background
+    - unknown_OOD
+
+priority_experiment_units:
+  first_wave: [E01, E02, E03, E05, E06, E07, E10, E11]
+  second_wave: [E12, E13, E14, E15, E16]
+  expansion: [E04, E08, E09, E17, E18]
+
+data_levels:
+  L0_toy:
+    description: controlled short reads for implementation and hypothesis smoke tests
+    path: data/toy_reads/toy_reads.csv
+  L1_small_genome_slices:
+    description: small real sequence slices or selected genome fragments
+    path: data/small_genome_slices
+  L2_noisy_75bp:
+    description: substitution/N/trimmed 75bp reads
+    path: data/noisy_reads
+  L3_near_species_holdout:
+    description: near species or strain holdout stress tests
+    path: data/near_species
+  L4_clinical_like:
+    description: host background, low abundance, unknown taxa
+    path: data/clinical_like
+
+representations:
+  composition:
+    k_values: [2, 3, 4, 5, 6, 7, 8, 10, 12]
+    feature_types: [count, relative_frequency, tfidf]
+    canonical_reverse_complement: [false, true]
+    normalization: [none, l1, l2]
+    reducers:
+      - none
+      - truncated_svd
+    svd_components: [16, 32, 64, 128, 256]
+  token_sequence:
+    k_values: [3, 4, 5, 7, 9, 12, 13]
+    canonical_reverse_complement: [false, true]
+    max_length: auto
+    ablations: [none, token_shuffle, position_shuffle, token_id_permutation]
+  raw_base:
+    encodings: [one_hot, voss, eiip, tetrahedron, hydrogen_bond_scalar, property_channels]
+    include_n_mask: [true, false]
+    ablations: [none, channel_drop, terminal_noise]
+  position_aware:
+    k_values: [base_level, 3, 5, 7, motif_level]
+    encodings: [none, sinusoidal_pe, learned_pe, attribute_gated_pe, rope_like_rotation, prior_plus_residual]
+    ablations: [no_position, no_base_property, fixed_prior, learnable_only]
+
+models:
+  classical:
+    - logistic_regression
+    - linear_svm
+    - random_forest
+  neural:
+    - mlp
+    - mean_embedding
+    - cnn1d
+    - gru
+    - lightweight_transformer
+
+metrics:
+  classification: [accuracy, macro_f1, per_class_f1, confusion_matrix, top_k_accuracy]
+  robustness: [noise_sensitivity, trim_sensitivity, near_species_confusion]
+  efficiency: [runtime_seconds, peak_memory_mb, feature_sparsity]
+
+fit_scope_rules:
+  split_before_fit: true
+  tfidf_fit_on_train_only: true
+  svd_fit_on_train_only: true
+  vocabulary_fit_on_train_only: true
