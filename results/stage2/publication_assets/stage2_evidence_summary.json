@@ -411,5 +411,598 @@
       "SD macro-F1": 0.18076714239895422,
       "Mean features": 1971.3333333333333
     }
+  ],
+  "neural_result_rows": 252,
+  "neural_aggregate": [
+    {
+      "Task": "global species",
+      "Model": "mlp ckmer5",
+      "Model family": "tabular mlp",
+      "Input": "ckmer5 count l2",
+      "Mean macro-F1": 0.1164912696114864,
+      "Mean accuracy": 0.1326168929110105,
+      "Mean features": 512.0,
+      "Runs": 12
+    },
+    {
+      "Task": "global species",
+      "Model": "mlp hybrid",
+      "Model family": "tabular mlp",
+      "Input": "hybrid ckmer5 csp",
+      "Mean macro-F1": 0.1151290826836535,
+      "Mean accuracy": 0.129211229946524,
+      "Mean features": 659.0,
+      "Runs": 12
+    },
+    {
+      "Task": "global species",
+      "Model": "mlp csp",
+      "Model family": "tabular mlp",
+      "Input": "cspaced property l2",
+      "Mean macro-F1": 0.0988034123131314,
+      "Mean accuracy": 0.1167557932263814,
+      "Mean features": 147.0,
+      "Runs": 12
+    },
+    {
+      "Task": "global species",
+      "Model": "cnn property",
+      "Model family": "cnn1d",
+      "Input": "property",
+      "Mean macro-F1": 0.0784450322926572,
+      "Mean accuracy": 0.1183120800767859,
+      "Mean features": 492.5,
+      "Runs": 12
+    },
+    {
+      "Task": "global species",
+      "Model": "tiny transformer onehot",
+      "Model family": "tiny transformer",
+      "Input": "onehot",
+      "Mean macro-F1": 0.0742981099318671,
+      "Mean accuracy": 0.1292540792540792,
+      "Mean features": 492.5,
+      "Runs": 12
+    },
+    {
+      "Task": "global species",
+      "Model": "tiny transformer property",
+      "Model family": "tiny transformer",
+      "Input": "property",
+      "Mean macro-F1": 0.0654698195176812,
+      "Mean accuracy": 0.1281314273961332,
+      "Mean features": 492.5,
+      "Runs": 12
+    },
+    {
+      "Task": "global species",
+      "Model": "cnn onehot",
+      "Model family": "cnn1d",
+      "Input": "onehot",
+      "Mean macro-F1": 0.0652076971830791,
+      "Mean accuracy": 0.1031828465651994,
+      "Mean features": 492.5,
+      "Runs": 12
+    },
+    {
+      "Task": "target background",
+      "Model": "cnn onehot",
+      "Model family": "cnn1d",
+      "Input": "onehot",
+      "Mean macro-F1": 0.5692435935975632,
+      "Mean accuracy": 0.5833333333333334,
+      "Mean features": 492.5,
+      "Runs": 12
+    },
+    {
+      "Task": "target background",
+      "Model": "mlp csp",
+      "Model family": "tabular mlp",
+      "Input": "cspaced property l2",
+      "Mean macro-F1": 0.562542484422042,
+      "Mean accuracy": 0.5677083333333334,
+      "Mean features": 147.0,
+      "Runs": 12
+    },
+    {
+      "Task": "target background",
+      "Model": "mlp hybrid",
+      "Model family": "tabular mlp",
+      "Input": "hybrid ckmer5 csp",
+      "Mean macro-F1": 0.5589407905180102,
+      "Mean accuracy": 0.5633680555555556,
+      "Mean features": 659.0,
+      "Runs": 12
+    },
+    {
+      "Task": "target background",
+      "Model": "tiny transformer property",
+      "Model family": "tiny transformer",
+      "Input": "property",
+      "Mean macro-F1": 0.5528666231513861,
+      "Mean accuracy": 0.556423611111111,
+      "Mean features": 492.5,
+      "Runs": 12
+    },
+    {
+      "Task": "target background",
+      "Model": "mlp ckmer5",
+      "Model family": "tabular mlp",
+      "Input": "ckmer5 count l2",
+      "Mean macro-F1": 0.5466257641051512,
+      "Mean accuracy": 0.5598958333333334,
+      "Mean features": 512.0,
+      "Runs": 12
+    },
+    {
+      "Task": "target background",
+      "Model": "tiny transformer onehot",
+      "Model family": "tiny transformer",
+      "Input": "onehot",
+      "Mean macro-F1": 0.5347474415248824,
+      "Mean accuracy": 0.537326388888889,
+      "Mean features": 492.5,
+      "Runs": 12
+    },
+    {
+      "Task": "target background",
+      "Model": "cnn property",
+      "Model family": "cnn1d",
+      "Input": "property",
+      "Mean macro-F1": 0.5345171909495909,
+      "Mean accuracy": 0.5581597222222222,
+      "Mean features": 492.5,
+      "Runs": 12
+    },
+    {
+      "Task": "within-genus Enterobacter",
+      "Model": "mlp hybrid",
+      "Model family": "tabular mlp",
+      "Input": "hybrid ckmer5 csp",
+      "Mean macro-F1": 0.2021280368965849,
+      "Mean accuracy": 0.2201257861635219,
+      "Mean features": 657.0,
+      "Runs": 12
+    },
+    {
+      "Task": "within-genus Enterobacter",
+      "Model": "mlp csp",
+      "Model family": "tabular mlp",
+      "Input": "cspaced property l2",
+      "Mean macro-F1": 0.1874695199265026,
+      "Mean accuracy": 0.2201257861635219,
+      "Mean features": 147.0,
+      "Runs": 12
+    },
+    {
+      "Task": "within-genus Enterobacter",
+      "Model": "mlp ckmer5",
+      "Model family": "tabular mlp",
+      "Input": "ckmer5 count l2",
+      "Mean macro-F1": 0.1669085362019878,
+      "Mean accuracy": 0.1902515723270439,
+      "Mean features": 510.0,
+      "Runs": 12
+    },
+    {
+      "Task": "within-genus Enterobacter",
+      "Model": "cnn onehot",
+      "Model family": "cnn1d",
+      "Input": "onehot",
+      "Mean macro-F1": 0.1327088769260005,
+      "Mean accuracy": 0.2091194968553458,
+      "Mean features": 492.5,
+      "Runs": 12
+    },
+    {
+      "Task": "within-genus Enterobacter",
+      "Model": "tiny transformer onehot",
+      "Model family": "tiny transformer",
+      "Input": "onehot",
+      "Mean macro-F1": 0.1233371890153138,
+      "Mean accuracy": 0.2059748427672955,
+      "Mean features": 492.5,
+      "Runs": 12
+    },
+    {
+      "Task": "within-genus Enterobacter",
+      "Model": "tiny transformer property",
+      "Model family": "tiny transformer",
+      "Input": "property",
+      "Mean macro-F1": 0.1054542586566327,
+      "Mean accuracy": 0.1871069182389936,
+      "Mean features": 492.5,
+      "Runs": 12
+    },
+    {
+      "Task": "within-genus Enterobacter",
+      "Model": "cnn property",
+      "Model family": "cnn1d",
+      "Input": "property",
+      "Mean macro-F1": 0.0998793463182696,
+      "Mean accuracy": 0.1886792452830188,
+      "Mean features": 492.5,
+      "Runs": 12
+    }
+  ],
+  "neural_drop_summary": [
+    {
+      "Task": "global species",
+      "Condition": "3% N mask",
+      "Model": "mlp csp",
+      "Model family": "tabular mlp",
+      "Input": "cspaced property l2",
+      "Mean macro-F1 drop vs clean": -0.0233306455821548,
+      "Mean accuracy drop vs clean": -0.0180532702591526
+    },
+    {
+      "Task": "global species",
+      "Condition": "3% N mask",
+      "Model": "tiny transformer onehot",
+      "Model family": "tiny transformer",
+      "Input": "onehot",
+      "Mean macro-F1 drop vs clean": -0.0181960703392539,
+      "Mean accuracy drop vs clean": -0.0147264500205676
+    },
+    {
+      "Task": "global species",
+      "Condition": "3% N mask",
+      "Model": "mlp ckmer5",
+      "Model family": "tabular mlp",
+      "Input": "ckmer5 count l2",
+      "Mean macro-F1 drop vs clean": -0.0102757394124458,
+      "Mean accuracy drop vs clean": -0.0102118469765528
+    },
+    {
+      "Task": "global species",
+      "Condition": "3% N mask",
+      "Model": "cnn onehot",
+      "Model family": "cnn1d",
+      "Input": "onehot",
+      "Mean macro-F1 drop vs clean": 0.0001919849375238,
+      "Mean accuracy drop vs clean": 0.0091011929247223
+    },
+    {
+      "Task": "global species",
+      "Condition": "3% N mask",
+      "Model": "mlp hybrid",
+      "Model family": "tabular mlp",
+      "Input": "hybrid ckmer5 csp",
+      "Mean macro-F1 drop vs clean": 0.0033353746650432,
+      "Mean accuracy drop vs clean": 0.0056663924310982
+    },
+    {
+      "Task": "global species",
+      "Condition": "3% N mask",
+      "Model": "tiny transformer property",
+      "Model family": "tiny transformer",
+      "Input": "property",
+      "Mean macro-F1 drop vs clean": 0.0075997796781025,
+      "Mean accuracy drop vs clean": 0.0056869600987248
+    },
+    {
+      "Task": "global species",
+      "Condition": "3% N mask",
+      "Model": "cnn property",
+      "Model family": "cnn1d",
+      "Input": "property",
+      "Mean macro-F1 drop vs clean": 0.0170569864546837,
+      "Mean accuracy drop vs clean": 0.0034502262443438
+    },
+    {
+      "Task": "global species",
+      "Condition": "1% substitution + 3% N",
+      "Model": "mlp csp",
+      "Model family": "tabular mlp",
+      "Input": "cspaced property l2",
+      "Mean macro-F1 drop vs clean": -0.0172042637888927,
+      "Mean accuracy drop vs clean": -0.0158011106540518
+    },
+    {
+      "Task": "global species",
+      "Condition": "1% substitution + 3% N",
+      "Model": "mlp hybrid",
+      "Model family": "tabular mlp",
+      "Input": "hybrid ckmer5 csp",
+      "Mean macro-F1 drop vs clean": -0.0132222071605577,
+      "Mean accuracy drop vs clean": -0.0158782394076511
+    },
+    {
+      "Task": "global species",
+      "Condition": "1% substitution + 3% N",
+      "Model": "mlp ckmer5",
+      "Model family": "tabular mlp",
+      "Input": "ckmer5 count l2",
+      "Mean macro-F1 drop vs clean": 0.0043591155896972,
+      "Mean accuracy drop vs clean": -3.59934183463452e-05
+    },
+    {
+      "Task": "global species",
+      "Condition": "1% substitution + 3% N",
+      "Model": "tiny transformer onehot",
+      "Model family": "tiny transformer",
+      "Input": "onehot",
+      "Mean macro-F1 drop vs clean": 0.006446805846944,
+      "Mean accuracy drop vs clean": -0.0022778691896338
+    },
+    {
+      "Task": "global species",
+      "Condition": "1% substitution + 3% N",
+      "Model": "cnn property",
+      "Model family": "cnn1d",
+      "Input": "property",
+      "Mean macro-F1 drop vs clean": 0.0076639887460111,
+      "Mean accuracy drop vs clean": 0.0057075277663513
+    },
+    {
+      "Task": "global species",
+      "Condition": "1% substitution + 3% N",
+      "Model": "tiny transformer property",
+      "Model family": "tiny transformer",
+      "Input": "property",
+      "Mean macro-F1 drop vs clean": 0.011405917284594,
+      "Mean accuracy drop vs clean": 0.0010849444672974
+    },
+    {
+      "Task": "global species",
+      "Condition": "1% substitution + 3% N",
+      "Model": "cnn onehot",
+      "Model family": "cnn1d",
+      "Input": "onehot",
+      "Mean macro-F1 drop vs clean": 0.0192877345612,
+      "Mean accuracy drop vs clean": 0.024958864664747
+    },
+    {
+      "Task": "target background",
+      "Condition": "3% N mask",
+      "Model": "cnn onehot",
+      "Model family": "cnn1d",
+      "Input": "onehot",
+      "Mean macro-F1 drop vs clean": -0.0780710311777744,
+      "Mean accuracy drop vs clean": -0.0416666666666666
+    },
+    {
+      "Task": "target background",
+      "Condition": "3% N mask",
+      "Model": "tiny transformer property",
+      "Model family": "tiny transformer",
+      "Input": "property",
+      "Mean macro-F1 drop vs clean": -0.0613750995887691,
+      "Mean accuracy drop vs clean": -0.0677083333333333
+    },
+    {
+      "Task": "target background",
+      "Condition": "3% N mask",
+      "Model": "cnn property",
+      "Model family": "cnn1d",
+      "Input": "property",
+      "Mean macro-F1 drop vs clean": -0.0486874822785509,
+      "Mean accuracy drop vs clean": -0.0208333333333333
+    },
+    {
+      "Task": "target background",
+      "Condition": "3% N mask",
+      "Model": "mlp ckmer5",
+      "Model family": "tabular mlp",
+      "Input": "ckmer5 count l2",
+      "Mean macro-F1 drop vs clean": -0.0228569438499532,
+      "Mean accuracy drop vs clean": -0.0104166666666666
+    },
+    {
+      "Task": "target background",
+      "Condition": "3% N mask",
+      "Model": "tiny transformer onehot",
+      "Model family": "tiny transformer",
+      "Input": "onehot",
+      "Mean macro-F1 drop vs clean": -0.0193732426472175,
+      "Mean accuracy drop vs clean": -0.0156249999999999
+    },
+    {
+      "Task": "target background",
+      "Condition": "3% N mask",
+      "Model": "mlp csp",
+      "Model family": "tabular mlp",
+      "Input": "cspaced property l2",
+      "Mean macro-F1 drop vs clean": -0.0110900832345328,
+      "Mean accuracy drop vs clean": -0.0130208333333333
+    },
+    {
+      "Task": "target background",
+      "Condition": "3% N mask",
+      "Model": "mlp hybrid",
+      "Model family": "tabular mlp",
+      "Input": "hybrid ckmer5 csp",
+      "Mean macro-F1 drop vs clean": 0.0348040128099112,
+      "Mean accuracy drop vs clean": 0.0312499999999999
+    },
+    {
+      "Task": "target background",
+      "Condition": "1% substitution + 3% N",
+      "Model": "cnn onehot",
+      "Model family": "cnn1d",
+      "Input": "onehot",
+      "Mean macro-F1 drop vs clean": -0.0588382339658132,
+      "Mean accuracy drop vs clean": -0.0208333333333333
+    },
+    {
+      "Task": "target background",
+      "Condition": "1% substitution + 3% N",
+      "Model": "tiny transformer property",
+      "Model family": "tiny transformer",
+      "Input": "property",
+      "Mean macro-F1 drop vs clean": -0.0532978511443116,
+      "Mean accuracy drop vs clean": -0.0546874999999999
+    },
+    {
+      "Task": "target background",
+      "Condition": "1% substitution + 3% N",
+      "Model": "mlp csp",
+      "Model family": "tabular mlp",
+      "Input": "cspaced property l2",
+      "Mean macro-F1 drop vs clean": -0.0497354938888303,
+      "Mean accuracy drop vs clean": -0.0494791666666666
+    },
+    {
+      "Task": "target background",
+      "Condition": "1% substitution + 3% N",
+      "Model": "cnn property",
+      "Model family": "cnn1d",
+      "Input": "property",
+      "Mean macro-F1 drop vs clean": -0.0431733120927188,
+      "Mean accuracy drop vs clean": -0.0286458333333333
+    },
+    {
+      "Task": "target background",
+      "Condition": "1% substitution + 3% N",
+      "Model": "tiny transformer onehot",
+      "Model family": "tiny transformer",
+      "Input": "onehot",
+      "Mean macro-F1 drop vs clean": -0.0282628606496803,
+      "Mean accuracy drop vs clean": -0.0260416666666666
+    },
+    {
+      "Task": "target background",
+      "Condition": "1% substitution + 3% N",
+      "Model": "mlp hybrid",
+      "Model family": "tabular mlp",
+      "Input": "hybrid ckmer5 csp",
+      "Mean macro-F1 drop vs clean": 0.0023910034229758,
+      "Mean accuracy drop vs clean": 0.0052083333333332
+    },
+    {
+      "Task": "target background",
+      "Condition": "1% substitution + 3% N",
+      "Model": "mlp ckmer5",
+      "Model family": "tabular mlp",
+      "Input": "ckmer5 count l2",
+      "Mean macro-F1 drop vs clean": 0.0546597176730378,
+      "Mean accuracy drop vs clean": 0.0572916666666666
+    },
+    {
+      "Task": "within-genus Enterobacter",
+      "Condition": "3% N mask",
+      "Model": "tiny transformer onehot",
+      "Model family": "tiny transformer",
+      "Input": "onehot",
+      "Mean macro-F1 drop vs clean": -0.0327514660392769,
+      "Mean accuracy drop vs clean": 0.0047169811320754
+    },
+    {
+      "Task": "within-genus Enterobacter",
+      "Condition": "3% N mask",
+      "Model": "cnn onehot",
+      "Model family": "cnn1d",
+      "Input": "onehot",
+      "Mean macro-F1 drop vs clean": -0.0327198595360516,
+      "Mean accuracy drop vs clean": -0.0283018867924527
+    },
+    {
+      "Task": "within-genus Enterobacter",
+      "Condition": "3% N mask",
+      "Model": "cnn property",
+      "Model family": "cnn1d",
+      "Input": "property",
+      "Mean macro-F1 drop vs clean": -0.0191607165558824,
+      "Mean accuracy drop vs clean": -0.0141509433962263
+    },
+    {
+      "Task": "within-genus Enterobacter",
+      "Condition": "3% N mask",
+      "Model": "tiny transformer property",
+      "Model family": "tiny transformer",
+      "Input": "property",
+      "Mean macro-F1 drop vs clean": 0.0039970411453535,
+      "Mean accuracy drop vs clean": 0.0047169811320754
+    },
+    {
+      "Task": "within-genus Enterobacter",
+      "Condition": "3% N mask",
+      "Model": "mlp csp",
+      "Model family": "tabular mlp",
+      "Input": "cspaced property l2",
+      "Mean macro-F1 drop vs clean": 0.0313176786001103,
+      "Mean accuracy drop vs clean": 0.0141509433962264
+    },
+    {
+      "Task": "within-genus Enterobacter",
+      "Condition": "3% N mask",
+      "Model": "mlp ckmer5",
+      "Model family": "tabular mlp",
+      "Input": "ckmer5 count l2",
+      "Mean macro-F1 drop vs clean": 0.0464168352075328,
+      "Mean accuracy drop vs clean": 0.0566037735849056
+    },
+    {
+      "Task": "within-genus Enterobacter",
+      "Condition": "3% N mask",
+      "Model": "mlp hybrid",
+      "Model family": "tabular mlp",
+      "Input": "hybrid ckmer5 csp",
+      "Mean macro-F1 drop vs clean": 0.0674037905980358,
+      "Mean accuracy drop vs clean": 0.0660377358490566
+    },
+    {
+      "Task": "within-genus Enterobacter",
+      "Condition": "1% substitution + 3% N",
+      "Model": "cnn property",
+      "Model family": "cnn1d",
+      "Input": "property",
+      "Mean macro-F1 drop vs clean": -0.0056006546265546,
+      "Mean accuracy drop vs clean": 0.0141509433962264
+    },
+    {
+      "Task": "within-genus Enterobacter",
+      "Condition": "1% substitution + 3% N",
+      "Model": "mlp ckmer5",
+      "Model family": "tabular mlp",
+      "Input": "ckmer5 count l2",
+      "Mean macro-F1 drop vs clean": 0.0042695038879249,
+      "Mean accuracy drop vs clean": -0.0047169811320754
+    },
+    {
+      "Task": "within-genus Enterobacter",
+      "Condition": "1% substitution + 3% N",
+      "Model": "tiny transformer property",
+      "Model family": "tiny transformer",
+      "Input": "property",
+      "Mean macro-F1 drop vs clean": 0.0119759748102139,
+      "Mean accuracy drop vs clean": 0.0141509433962264
+    },
+    {
+      "Task": "within-genus Enterobacter",
+      "Condition": "1% substitution + 3% N",
+      "Model": "cnn onehot",
+      "Model family": "cnn1d",
+      "Input": "onehot",
+      "Mean macro-F1 drop vs clean": 0.0141688498016031,
+      "Mean accuracy drop vs clean": 0.0094339622641509
+    },
+    {
+      "Task": "within-genus Enterobacter",
+      "Condition": "1% substitution + 3% N",
+      "Model": "tiny transformer onehot",
+      "Model family": "tiny transformer",
+      "Input": "onehot",
+      "Mean macro-F1 drop vs clean": 0.0389479192679859,
+      "Mean accuracy drop vs clean": 0.0141509433962264
+    },
+    {
+      "Task": "within-genus Enterobacter",
+      "Condition": "1% substitution + 3% N",
+      "Model": "mlp csp",
+      "Model family": "tabular mlp",
+      "Input": "cspaced property l2",
+      "Mean macro-F1 drop vs clean": 0.0636468820798866,
+      "Mean accuracy drop vs clean": 0.0330188679245283
+    },
+    {
+      "Task": "within-genus Enterobacter",
+      "Condition": "1% substitution + 3% N",
+      "Model": "mlp hybrid",
+      "Model family": "tabular mlp",
+      "Input": "hybrid ckmer5 csp",
+      "Mean macro-F1 drop vs clean": 0.0945647104406792,
+      "Mean accuracy drop vs clean": 0.080188679245283
+    }
   ]
 }

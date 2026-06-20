@@ -8,6 +8,7 @@
 4. A revised V2 manuscript was generated in Markdown, DOCX, TeX and PDF formats.
 5. The V2 PDF was rendered to PNG pages and visually checked through a contact sheet.
 6. A reviewer-style self-audit was written to identify remaining evidence gaps and unsupported claims.
+7. A deterministic PyTorch CPU neural compatibility probe was added after audit identified that CNN/tiny Transformer evidence was still only future work.
 
 ## Core experimental outputs
 
@@ -17,6 +18,7 @@
 - Attention breakpoint diagnostic: `results/stage2/attention_breakpoint`
 - ARG/SNP boundary probes: `results/stage2/arg_snp_boundary`
 - k and spaced-pattern sensitivity: `results/stage2/parameter_sensitivity`
+- Deterministic neural compatibility probes: `results/stage2/neural_compatibility`
 - Publication-ready generated assets: `results/stage2/publication_assets`
 
 ## Main evidence summary
@@ -25,6 +27,7 @@
 - CSP had the clearest advantage in 69/75 bp perturbation settings, especially N masking, local mismatch and combined perturbation.
 - The CSP property block improved stability over canonical spaced seed counts; hydrogen-bond and entropy summaries were the strongest singleton additions.
 - Readout probes did not show universal classification superiority for CSP. Canonical k-mer remained a strong high-resolution identity baseline.
+- Neural compatibility probes trained 252 fixed-seed MLP/CNN/tiny Transformer combinations. They showed task-dependent model fit rather than universal neural superiority; CSP was most defensible as a compact tabular auxiliary input.
 - Attention-context breakpoints depended on motif position, so the 125-150 bp transition should be discussed as a visibility problem rather than one fixed read-length threshold.
 - ARG/SNP probes support CSP as auxiliary perturbation-stability evidence, not as a standalone ARG allele or resistance SNP caller.
 
@@ -47,13 +50,14 @@ LibreOffice remains broken on this machine with a `bootstrap.ini` startup error,
 - Canonical k-mer remains a strong identity evidence baseline for close-relative and exact sequence tasks.
 - Hybrid or layered evidence is a better practical framing than replacing canonical k-mer with CSP.
 - Read-length effects for attention-like models should be diagnosed by motif/context visibility, not by base count alone.
+- Small local neural probes can test whether a representation is readable by a model family, but they do not establish clinical neural-model superiority.
 
 ## Claims that remain future work
 
 - Clinical species identification accuracy.
 - CSP-alone species identification.
 - ARG allele calling or resistance SNP calling.
-- Transformer/CNN superiority with CSP or property channels.
+- Transformer/CNN superiority at realistic clinical scale.
 - Kraken2/Centrifuge/Kaiju performance comparisons on matched noisy FASTQ.
 - Real FASTQ quality-profile simulation with host/background mixtures.
 - CARD/ResFinder/AMRFinderPlus grounded ARG benchmark.

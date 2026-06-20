@@ -1,16 +1,16 @@
 # Ultra-short DNA Read Representation Diagnostics
 
-This repository contains a lightweight, reproducible subproject for comparing DNA-read representation schemes under mNGS-like short-read constraints.
+This repository contains the `信息学` subproject for controlled DNA-read representation diagnostics under mNGS-like short-read constraints.
 
-The scientific goal is **not** to prove that one representation universally wins species classification. The goal is to diagnose what each representation preserves, stabilizes, compresses, or loses when reads are 69-150 bp long.
+The scientific goal is **not** to prove that one representation universally wins species classification. The goal is to diagnose what each representation preserves, stabilizes, compresses or loses when reads are 69-150 bp long, with a PE150 proxy included as a paired-end-style reference point.
 
 ## Current Manuscript Position
 
-The safest paper claim is:
+The current paper claim is:
 
-> Canonical spaced-property encoding (`cspaced_property_l2` in code) is a compact, strand-friendly, perturbation-stable auxiliary representation. Canonical k-mer remains a strong close-relative classification baseline.
+> Canonical k-mers provide high-resolution identity evidence, whereas canonical spaced-property encoding (`cspaced_property_l2`, abbreviated CSP) provides compact, strand-friendly and perturbation-stable auxiliary evidence for ultra-short mNGS-like reads. Hybrid or layered evidence is the practical route.
 
-Accuracy and macro-F1 are treated as downstream probes, not clinical mNGS performance estimates.
+Accuracy and macro-F1 are treated as readout probes, not clinical mNGS performance estimates.
 
 ## Main Representation Families
 
@@ -24,21 +24,26 @@ Accuracy and macro-F1 are treated as downstream probes, not clinical mNGS perfor
 
 ## Key Evidence
 
-- Perturbation stability: adding property summaries to canonical spaced counts improves N-masking and substitution robustness.
-- Strand consistency: canonicalization is the decisive component, not property summaries alone.
-- Read length and context: 69/75/100/125/150/PE150 comparisons show that short reads can remove entire motif-pair relations.
-- Close-relative stress test: canonical k-mer and canonical spaced variants remain strong baselines; new methods are complementary.
+- Perturbation stability: CSP was the top clean-perturbed stability representation in 42/42 WGS-slice length-by-perturbation settings.
+- Hospital-like short reads: the clearest CSP advantage occurs around 69/75 bp under N masking, local mismatch and combined perturbation.
+- CSP ablation: the full property block improves stability over canonical spaced seed counts; hydrogen-bond and entropy summaries are the strongest singleton additions.
+- Readout probes: CSP does not universally win classification; canonical k-mer remains a strong high-resolution identity baseline.
+- Neural compatibility: deterministic local MLP/CNN/tiny Transformer probes show task-dependent model fit, not universal neural superiority.
+- Read length and context: the 125-150 bp transition is position-dependent because short reads can remove entire motif-pair relations.
 - Parameter sensitivity: k and spaced-seed pattern choices affect classification probes, so claims should not depend on a single k value.
+- ARG/SNP boundary: CSP can preserve perturbed feature proximity, but allele/SNP decisions still require exact sequence, alignment or curated database evidence.
 
 ## Important Outputs
 
-- Final manuscript source: `manuscript/final_manuscript.md`
-- Final Word draft: `manuscript/final_manuscript.docx`
-- Evidence synthesis: `manuscript/publication_evidence_synthesis.md`
-- Positioning policy: `manuscript/revision_positioning_and_evidence_policy.md`
-- Server-scale follow-up plan: `manuscript/paper_scope_metrics_and_server_plan.md`
+- Stage-2 manuscript source: `manuscript/stage2_manuscript_v2.md`
+- Stage-2 Word draft: `manuscript/stage2_manuscript_v2.docx`
+- Stage-2 PDF: `manuscript/stage2_manuscript_v2.pdf`
+- Evidence synthesis: `results/stage2/publication_assets/stage2_evidence_summary.md`
+- Reviewer self-audit: `manuscript/stage2_reviewer_self_audit.md`
+- Completion report: `docs/stage2_completion_report.md`
 - Formal references: `references/references.bib`
-- Publication figures: `results/figures/fig_publication_*.png`
+- Publication figures: `results/stage2/publication_assets/figures/stage2_fig_*.png`
+- Publication tables: `results/stage2/publication_assets/tables/stage2_table_*.md`
 
 ## Reproducibility
 
@@ -54,16 +59,15 @@ Core rerun order:
 ```powershell
 .\.venv\Scripts\python.exe scripts\prepare_close_relative_genomes.py
 .\.venv\Scripts\python.exe scripts\make_close_relative_reads.py
-.\.venv\Scripts\python.exe scripts\run_prior_ablation.py --input data\real_slices\close_relative_reads.csv --output-dir results\runs\prior_ablation_wgs_lengths
-.\.venv\Scripts\python.exe scripts\run_attention_context_diagnostic.py
-.\.venv\Scripts\python.exe scripts\run_parameter_sensitivity.py --k-values 4,5,6,7 --patterns 0-1-2-3,0-2-4-6,0-1-3-6 --max-paired-reads 120 --max-samples-per-group 80 --classification-lengths 75,150,300
-.\.venv\Scripts\python.exe scripts\generate_publication_evidence.py
-```
-
-The final Word manuscript is generated with the bundled Codex document runtime:
-
-```powershell
-python scripts\build_final_manuscript.py
+.\.venv\Scripts\python.exe scripts\run_stage2_representation_grid.py
+.\.venv\Scripts\python.exe scripts\run_stage2_csp_ablation.py
+.\.venv\Scripts\python.exe scripts\run_stage2_attention_breakpoint.py
+.\.venv\Scripts\python.exe scripts\run_stage2_arg_snp_boundary.py
+.\.venv\Scripts\python.exe scripts\run_parameter_sensitivity.py --input results\stage2\representation_grid\stage2_derived_reads.csv --output-dir results\stage2\parameter_sensitivity
+.\.venv\Scripts\python.exe scripts\run_stage2_neural_compatibility.py --resume
+.\.venv\Scripts\python.exe scripts\generate_stage2_publication_assets.py
+.\.venv\Scripts\python.exe scripts\build_stage2_manuscript.py
+.\.venv\Scripts\python.exe scripts\build_stage2_pdf_manuscript.py
 ```
 
 ## Data Policy
@@ -72,12 +76,17 @@ This repository should include lightweight generated reads, manifests, scripts, 
 
 The current local close-relative panel contains 21 genomes from six clinically relevant genera. It is a lightweight stress test, not a universal clinical mNGS benchmark.
 
+Large stage-2 derived-read CSV files are intentionally ignored by Git and kept local. Summary tables, figures, scripts and manuscript files are tracked.
+
+## Rendering Note
+
+LibreOffice is currently broken on this machine with a `bootstrap.ini` startup error, so DOCX visual rendering could not be completed. The manuscript PDF is compiled with XeLaTeX and checked through rendered PNG pages; treat the PDF as the visually verified artifact and the DOCX as an editable draft.
+
 ## Server-scale Follow-up
 
 The local results are sufficient for a representation-diagnostics draft, but stronger claims require:
 
 - larger close-relative panels with many strains per genus;
 - realistic FASTQ simulation with quality decay, adapters, host/background mixtures, and abundance variation;
-- tiny CNN and tiny Transformer comparisons under matched representation inputs;
 - Kraken2/Centrifuge/Kaiju clean-noisy-OOD audits;
 - AMR-gene tasks before resistance-detection claims.

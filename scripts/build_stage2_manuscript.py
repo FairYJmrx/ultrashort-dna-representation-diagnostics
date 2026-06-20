@@ -171,6 +171,7 @@ def build_markdown() -> str:
     readout_agg = read_markdown_table(TABLES / "stage2_table_readout_aggregate.md")
     attention_cp = read_markdown_table(TABLES / "stage2_table_attention_change_points.md")
     param_best = read_markdown_table(TABLES / "stage2_table_parameter_readout_best.md")
+    neural_agg = read_markdown_table(TABLES / "stage2_table_neural_compatibility_aggregate.md")
     arg_readout = read_markdown_table(TABLES / "stage2_table_arg_snp_readout_aggregate.md")
     arg_stability = read_markdown_table(TABLES / "stage2_table_arg_snp_best_stability.md")
 
@@ -201,9 +202,11 @@ def build_markdown() -> str:
         "0.877 for canonical 5-mers. This advantage did not translate into universal species or resistance accuracy: "
         "canonical k-mers remained strong high-resolution identity baselines in close-relative and ARG/SNP probes. A "
         "dense context-visibility diagnostic further showed that apparent read-length thresholds depend on motif position, "
-        "with motif-pair visibility emerging at 130, 140, 148 or 155 bp under different placements. These results support "
-        "a bounded conclusion: short-read DNA pipelines should separate exact identity evidence from compact perturbation-"
-        "stable auxiliary evidence, rather than ranking representations by a single accuracy number."
+        "with motif-pair visibility emerging at 130, 140, 148 or 155 bp under different placements. Deterministic neural "
+        "probes further showed that small CNN and tiny Transformer readouts were task-dependent rather than universally "
+        "superior. These results support a bounded conclusion: short-read DNA pipelines should separate exact identity "
+        "evidence from compact perturbation-stable auxiliary evidence, rather than ranking representations by a single "
+        "accuracy number."
     )
 
     md.append("## Introduction\n")
@@ -240,8 +243,8 @@ def build_markdown() -> str:
         "claim is not that CSP replaces canonical k-mers. Instead, canonical k-mers provide high-resolution identity "
         "evidence, whereas CSP provides compact, strand-friendly and perturbation-stable auxiliary evidence. We evaluate "
         "this claim using WGS-derived close-relative reads, hospital-like 69/75 bp perturbation grids, CSP component "
-        "ablation, k and spaced-pattern sensitivity, lightweight readout probes, synthetic ARG/SNP boundary tasks and "
-        "attention-style context-visibility diagnostics."
+        "ablation, k and spaced-pattern sensitivity, lightweight readout probes, deterministic neural compatibility probes, "
+        "synthetic ARG/SNP boundary tasks and attention-style context-visibility diagnostics."
     )
 
     md.append("## Related Work\n")
@@ -332,6 +335,13 @@ def build_markdown() -> str:
         "from 110 to 160 bp and moved a class-defining motif pair across positions 120, 130, 138 and 145. Synthetic ARG/SNP "
         "boundary probes tested ARG-family, ARG-allele and resistance-SNP style tasks under the same perturbation logic."
     )
+    md.append(
+        "The neural compatibility probe used PyTorch CPU with deterministic seeds and single-thread execution. It compared "
+        "tabular MLP readouts for canonical 5-mer, CSP and hybrid vectors with 1D-CNN and one-layer tiny Transformer readouts "
+        "over one-hot or property channels. The probe covered 69, 75, 100 and 150 bp reads, clean/N-masked/combined-perturbation "
+        "conditions, target/background classification, global species stress classification and an Enterobacter within-genus "
+        "species task. It was designed to test model-readability, not clinical accuracy."
+    )
 
     md.append("## Results\n")
     md.append("### CSP had its clearest advantage in clean-perturbed stability\n")
@@ -383,6 +393,19 @@ def build_markdown() -> str:
     )
     md.append(df_to_markdown(param_best))
 
+    md.append("### Deterministic neural probes showed model compatibility, not neural superiority\n")
+    md.append(
+        "The additional PyTorch probe trained 252 small neural readouts with fixed seeds. It did not support a broad claim "
+        "that CNNs or tiny Transformers automatically improve ultra-short read interpretation. In target/background probes, "
+        "1D-CNN over one-hot channels had the highest mean macro-F1, while CSP read by a tabular MLP was close and used only "
+        "147 features on average. In global species and within-genus Enterobacter stress probes, the best small models were "
+        "tabular MLPs over canonical or hybrid vectors, and absolute macro-F1 values remained low. This supports a practical "
+        "model-matching interpretation: CSP is a natural compact tabular auxiliary input, whereas one-hot or property channels "
+        "are more appropriate when a CNN or attention model is explicitly trained."
+    )
+    md.append(df_to_markdown(neural_agg))
+    md.append("\n![Figure 5. Deterministic neural compatibility probes.](figures/stage2_fig_neural_compatibility.png)\n")
+
     md.append("### Context loss around 125-150 bp was position-dependent, not a single read-length threshold\n")
     md.append(
         "The attention-context diagnostic directly addressed the concern that a coarse 125 versus 150 bp comparison could "
@@ -393,8 +416,8 @@ def build_markdown() -> str:
         "but cannot model the missing relation."
     )
     md.append(df_to_markdown(attention_cp))
-    md.append("\n![Figure 5. Attention-style context visibility breakpoints.](figures/stage2_fig_attention_breakpoints.png)\n")
-    md.append("\n![Figure 6. Best readout transitions around motif visibility.](figures/stage2_fig_attention_f1_breakpoints.png)\n")
+    md.append("\n![Figure 6. Attention-style context visibility breakpoints.](figures/stage2_fig_attention_breakpoints.png)\n")
+    md.append("\n![Figure 7. Best readout transitions around motif visibility.](figures/stage2_fig_attention_f1_breakpoints.png)\n")
 
     md.append("### ARG/SNP boundary probes bounded the role of CSP\n")
     md.append(
@@ -407,7 +430,7 @@ def build_markdown() -> str:
     )
     md.append(df_to_markdown(select_rows(arg_stability_focus, 18)))
     md.append(df_to_markdown(arg_readout))
-    md.append("\n![Figure 7. ARG/SNP boundary readout probes.](figures/stage2_fig_arg_snp_readout.png)\n")
+    md.append("\n![Figure 8. ARG/SNP boundary readout probes.](figures/stage2_fig_arg_snp_readout.png)\n")
 
     md.append("## Discussion\n")
     md.append(
@@ -433,10 +456,11 @@ def build_markdown() -> str:
         "SNP interpretation, gene context and plasmid linkage require exact sequence, protein-domain or curated database evidence."
     )
     md.append(
-        "Several conclusions remain deliberately unproven. We did not train a full Transformer or CNN on realistic clinical "
-        "mNGS data. We did not benchmark Kraken2, Centrifuge, Kaiju or alignment pipelines on the same noisy FASTQ inputs. "
-        "We did not use real CARD, ResFinder or AMRFinderPlus marker panels for ARG calling. These are appropriate server-stage "
-        "experiments. The local experiments establish the representation-level evidence needed to justify those larger tests."
+        "Several conclusions remain deliberately unproven. The neural probe was intentionally small and local; it does not "
+        "establish CNN or Transformer superiority on realistic clinical mNGS data. We did not benchmark Kraken2, Centrifuge, "
+        "Kaiju or alignment pipelines on the same noisy FASTQ inputs. We did not use real CARD, ResFinder or AMRFinderPlus "
+        "marker panels for ARG calling. These are appropriate server-stage experiments. The local experiments establish the "
+        "representation-level evidence needed to justify those larger tests."
     )
 
     md.append("## Limitations\n")

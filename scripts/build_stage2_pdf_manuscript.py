@@ -108,7 +108,8 @@ def figure_to_latex(line: str, manuscript_dir: Path) -> str:
     match = re.match(r"!\[(.*?)\]\((.*?)\)", line)
     if not match:
         return ""
-    caption = inline_math(match.group(1))
+    caption_text = re.sub(r"^Figure\s+\d+\.\s*", "", match.group(1).strip())
+    caption = inline_math(caption_text)
     raw_path = match.group(2)
     fig_path = (manuscript_dir / raw_path).resolve()
     rel = fig_path.relative_to(manuscript_dir).as_posix() if fig_path.is_relative_to(manuscript_dir) else fig_path.as_posix()

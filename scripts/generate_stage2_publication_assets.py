@@ -117,6 +117,9 @@ def load_inputs() -> dict[str, pd.DataFrame]:
         "attention_cp": load_csv(STAGE2 / "attention_breakpoint" / "attention_breakpoint_change_points.csv"),
         "param_stability": load_csv(STAGE2 / "parameter_sensitivity" / "parameter_stability_metrics.csv"),
         "param_readout": load_csv(STAGE2 / "parameter_sensitivity" / "parameter_classification_probes.csv"),
+        "neural": load_csv(STAGE2 / "neural_compatibility" / "neural_compatibility_results.csv"),
+        "neural_aggregate": load_csv(STAGE2 / "neural_compatibility" / "neural_compatibility_aggregate.csv"),
+        "neural_drop": load_csv(STAGE2 / "neural_compatibility" / "neural_compatibility_drop_summary.csv"),
     }
 
 
@@ -586,6 +589,78 @@ def summarize_parameter_sensitivity(stability: pd.DataFrame, readout: pd.DataFra
     return out
 
 
+def summarize_neural_compatibility(results: pd.DataFrame, aggregate: pd.DataFrame, drop_summary: pd.DataFrame) -> dict[str, object]:
+    if results.empty:
+        return {}
+    out: dict[str, object] = {"neural_result_rows": int(len(results))}
+    if aggregate.empty:
+        valid = results.dropna(subset=["macro_f1"]).copy()
+        aggregate = (
+            valid.groupby(["task", "model", "family", "input_name"], as_index=False)
+            .agg(
+                mean_macro_f1=("macro_f1", "mean"),
+                mean_accuracy=("accuracy", "mean"),
+                mean_epochs=("epochs_ran", "mean"),
+                mean_features=("n_features", "mean"),
+                n_runs=("macro_f1", "size"),
+            )
+            .sort_values(["task", "mean_macro_f1"], ascending=[True, False])
+        )
+    if not aggregate.empty:
+        table = aggregate.copy()
+        table["Task"] = table["task"].str.replace("_", " ", regex=False).str.replace("within genus species:Enterobacter", "within-genus Enterobacter", regex=False)
+        table["Model"] = table["model"].str.replace("_", " ", regex=False)
+        table["Model family"] = table["family"].str.replace("_", " ", regex=False)
+        table["Input"] = table["input_name"].str.replace("_", " ", regex=False)
+        table = table[
+            ["Task", "Model", "Model family", "Input", "mean_macro_f1", "mean_accuracy", "mean_features", "n_runs"]
+        ].rename(
+            columns={
+                "mean_macro_f1": "Mean macro-F1",
+                "mean_accuracy": "Mean accuracy",
+                "mean_features": "Mean features",
+                "n_runs": "Runs",
+            }
+        )
+        write_table(table, "stage2_table_neural_compatibility_aggregate")
+        out["neural_aggregate"] = table.to_dict(orient="records")
+
+        fig, axes = plt.subplots(1, min(3, aggregate["task"].nunique()), figsize=(13, 4.4), sharey=True)
+        if not isinstance(axes, np.ndarray):
+            axes = np.array([axes])
+        for ax, (task, sub) in zip(axes.ravel(), aggregate.groupby("task", sort=True)):
+            top = sub.sort_values("mean_macro_f1", ascending=False).head(7)
+            labels = [m.replace("_", "\n") for m in top["model"]]
+            ax.bar(labels, top["mean_macro_f1"], color="#3b5b92")
+            ax.set_title(task.replace("within_genus_species:Enterobacter", "within-genus Enterobacter").replace("_", " "))
+            ax.set_ylim(0, 1.02)
+            ax.tick_params(axis="x", rotation=25)
+        axes[0].set_ylabel("Mean macro-F1")
+        fig.suptitle("Deterministic neural probes are task- and representation-dependent")
+        fig.tight_layout(rect=[0, 0, 1, 0.90])
+        save_figure(fig, "stage2_fig_neural_compatibility")
+        plt.close(fig)
+
+    if not drop_summary.empty:
+        drop = drop_summary.copy()
+        drop["Task"] = drop["task"].str.replace("_", " ", regex=False).str.replace("within genus species:Enterobacter", "within-genus Enterobacter", regex=False)
+        drop["Condition"] = drop["condition"].map(condition_label).fillna(drop["condition"])
+        drop["Model"] = drop["model"].str.replace("_", " ", regex=False)
+        drop["Model family"] = drop["family"].str.replace("_", " ", regex=False)
+        drop["Input"] = drop["input_name"].str.replace("_", " ", regex=False)
+        drop = drop[
+            ["Task", "Condition", "Model", "Model family", "Input", "mean_macro_f1_drop", "mean_accuracy_drop"]
+        ].rename(
+            columns={
+                "mean_macro_f1_drop": "Mean macro-F1 drop vs clean",
+                "mean_accuracy_drop": "Mean accuracy drop vs clean",
+            }
+        )
+        write_table(drop, "stage2_table_neural_compatibility_drop")
+        out["neural_drop_summary"] = drop.to_dict(orient="records")
+    return out
+
+
 def write_summary(summary: dict[str, object]) -> None:
     lines: list[str] = []
     lines.append("# Stage-2 Publication Evidence Summary\n")
@@ -599,9 +674,11 @@ def write_summary(summary: dict[str, object]) -> None:
     lines.append("- Lightweight readout probes did not show a universal classification win for CSP. Near-species identity remains task- and parameter-dependent, and canonical k-mer is a strong high-resolution baseline.\n")
     lines.append("- CSP component ablation supports that the property block adds stability over canonical spaced seed counts; the full block is more defensible than any single biochemical summary alone.\n")
     lines.append("- Attention-context diagnostics show that the 125-150 bp transition is not a single magic read length: the breakpoint shifts with motif position and paired-context visibility.\n")
+    if summary.get("neural_result_rows"):
+        lines.append(f"- Deterministic neural compatibility probes ({summary['neural_result_rows']} trained combinations) showed task-dependent model fit: no small CNN or tiny Transformer universally dominated, and CSP was most defensible as a compact tabular auxiliary input.\n")
     lines.append("- ARG/SNP boundary probes show a sharp distinction between stability and identity. CSP preserves perturbed feature proximity, but exact k-mer evidence dominates synthetic ARG-family/allele readouts, and SNP decisions cannot be assigned to CSP alone.\n")
     lines.append("\n## Claims to Downgrade to Discussion/Future Work\n")
-    lines.append("- Transformer superiority, embedding-layer behavior and clinical mNGS accuracy are not proven by these local experiments.\n")
+    lines.append("- Transformer superiority, embedding-layer behavior at clinical scale and clinical mNGS accuracy are not proven by these local experiments.\n")
     lines.append("- CSP-alone species identification, ARG allele calling, resistance SNP interpretation, plasmid linkage and gene-context inference are not supported as stand-alone claims.\n")
     lines.append("- Kraken2/Centrifuge/Kaiju pipeline comparisons, genome-held-out panels, real FASTQ quality profiles and CARD/ResFinder/AMRFinderPlus marker tasks remain server-stage or future work.\n")
     lines.append("\n## Generated Tables\n")
@@ -625,6 +702,7 @@ def main() -> None:
     summary.update(summarize_attention(data["attention"], data["attention_cp"]))
     summary.update(summarize_arg_snp(data["arg_stability"], data["arg_readout"]))
     summary.update(summarize_parameter_sensitivity(data["param_stability"], data["param_readout"]))
+    summary.update(summarize_neural_compatibility(data["neural"], data["neural_aggregate"], data["neural_drop"]))
     write_summary(summary)
     print(f"Wrote stage-2 publication assets to {ASSETS}")
 

@@ -7,7 +7,7 @@
 ## Abstract
 
 
-Clinical metagenomic next-generation sequencing (mNGS) often produces short or quality-trimmed reads, yet DNA representations are still commonly judged by downstream accuracy alone. This can obscure which information an encoding preserves before any classifier is trained. We present a controlled representation-diagnostics framework for ultra-short DNA reads and define canonical spaced-property encoding (CSP), a deterministic feature block that combines reverse-complement canonical spaced-seed counts with interpretable biochemical summaries. Across a close-relative WGS-slice grid spanning 69, 75, 100, 110, 125, 150 bp and a PE150 proxy, CSP was the top clean-perturbed stability representation in 42 of 42 length-by-perturbation settings. At 69 bp, CSP achieved mean paired cosine of 0.994 under 3% N masking and 0.988 under a 6-bp local mismatch, compared with 0.940 and 0.877 for canonical 5-mers. This advantage did not translate into universal species or resistance accuracy: canonical k-mers remained strong high-resolution identity baselines in close-relative and ARG/SNP probes. A dense context-visibility diagnostic further showed that apparent read-length thresholds depend on motif position, with motif-pair visibility emerging at 130, 140, 148 or 155 bp under different placements. These results support a bounded conclusion: short-read DNA pipelines should separate exact identity evidence from compact perturbation-stable auxiliary evidence, rather than ranking representations by a single accuracy number.
+Clinical metagenomic next-generation sequencing (mNGS) often produces short or quality-trimmed reads, yet DNA representations are still commonly judged by downstream accuracy alone. This can obscure which information an encoding preserves before any classifier is trained. We present a controlled representation-diagnostics framework for ultra-short DNA reads and define canonical spaced-property encoding (CSP), a deterministic feature block that combines reverse-complement canonical spaced-seed counts with interpretable biochemical summaries. Across a close-relative WGS-slice grid spanning 69, 75, 100, 110, 125, 150 bp and a PE150 proxy, CSP was the top clean-perturbed stability representation in 42 of 42 length-by-perturbation settings. At 69 bp, CSP achieved mean paired cosine of 0.994 under 3% N masking and 0.988 under a 6-bp local mismatch, compared with 0.940 and 0.877 for canonical 5-mers. This advantage did not translate into universal species or resistance accuracy: canonical k-mers remained strong high-resolution identity baselines in close-relative and ARG/SNP probes. A dense context-visibility diagnostic further showed that apparent read-length thresholds depend on motif position, with motif-pair visibility emerging at 130, 140, 148 or 155 bp under different placements. Deterministic neural probes further showed that small CNN and tiny Transformer readouts were task-dependent rather than universally superior. These results support a bounded conclusion: short-read DNA pipelines should separate exact identity evidence from compact perturbation-stable auxiliary evidence, rather than ranking representations by a single accuracy number.
 
 ## Introduction
 
@@ -18,7 +18,7 @@ Most mature metagenomic classifiers are built around exact or near-exact word ev
 
 Deep learning has widened the representational vocabulary for DNA. Convolutional and recurrent models have been used to learn regulatory sequence specificity (Alipanahi et al., 2015; Zhou and Troyanskaya, 2015; Quang and Xie, 2016); read-level metagenomic neural classifiers include recurrent and attention-based models (Liang et al., 2020; Wichmann et al., 2023); and DNA foundation models now include k-mer token models, efficient multi-species pretraining, long-context models, reverse-complement-aware architectures and single-nucleotide generative models (Ji et al., 2021; Zhou et al., 2024; Dalla-Torre et al., 2025; Nguyen et al., 2023; Schiff et al., 2024; Fishman et al., 2025; Nguyen et al., 2024). However, a more expressive model cannot attend to information that is absent from the observed read. The short-read setting therefore requires diagnostics that separate model capacity from input information loss.
 
-Here we propose a controlled information-preservation study rather than a final clinical classifier. Our central claim is not that CSP replaces canonical k-mers. Instead, canonical k-mers provide high-resolution identity evidence, whereas CSP provides compact, strand-friendly and perturbation-stable auxiliary evidence. We evaluate this claim using WGS-derived close-relative reads, hospital-like 69/75 bp perturbation grids, CSP component ablation, k and spaced-pattern sensitivity, lightweight readout probes, synthetic ARG/SNP boundary tasks and attention-style context-visibility diagnostics.
+Here we propose a controlled information-preservation study rather than a final clinical classifier. Our central claim is not that CSP replaces canonical k-mers. Instead, canonical k-mers provide high-resolution identity evidence, whereas CSP provides compact, strand-friendly and perturbation-stable auxiliary evidence. We evaluate this claim using WGS-derived close-relative reads, hospital-like 69/75 bp perturbation grids, CSP component ablation, k and spaced-pattern sensitivity, lightweight readout probes, deterministic neural compatibility probes, synthetic ARG/SNP boundary tasks and attention-style context-visibility diagnostics.
 
 ## Related Work
 
@@ -81,6 +81,8 @@ The 69/75 bp analysis was treated as a hospital-like short-read setting because 
 Perturbation stability was measured by paired clean-perturbed cosine similarity, paired L2 drift and nearest-clean retrieval. Compactness was measured by feature dimension and density. Readout probes used nearest centroid, logistic regression and a small scikit-learn MLP with fixed random seeds. These probes measured whether a signal could be extracted by simple models. They were not interpreted as clinical accuracy estimates.
 
 CSP ablation separated canonical spaced counts from property additions: hydrogen-bond class, GC indicator, purine indicator, EIIP-like values, N fraction, entropy and length. Parameter sensitivity swept canonical k-mer values from k=4 to k=9 and several spaced seed patterns. The attention-context diagnostic varied read length densely from 110 to 160 bp and moved a class-defining motif pair across positions 120, 130, 138 and 145. Synthetic ARG/SNP boundary probes tested ARG-family, ARG-allele and resistance-SNP style tasks under the same perturbation logic.
+
+The neural compatibility probe used PyTorch CPU with deterministic seeds and single-thread execution. It compared tabular MLP readouts for canonical 5-mer, CSP and hybrid vectors with 1D-CNN and one-layer tiny Transformer readouts over one-hot or property channels. The probe covered 69, 75, 100 and 150 bp reads, clean/N-masked/combined-perturbation conditions, target/background classification, global species stress classification and an Enterobacter within-genus species task. It was designed to test model-readability, not clinical accuracy.
 
 ## Results
 
@@ -197,6 +199,39 @@ The parameter grid showed that the best readout configuration changed with task 
 | within_genus_species |       75 | k-mer                       | k=5             |           0.373 |         0.135 |          979.5  |
 | within_genus_species |      150 | canonical k-mer             | k=6             |           0.398 |         0.181 |         1971.33 |
 
+### Deterministic neural probes showed model compatibility, not neural superiority
+
+
+The additional PyTorch probe trained 252 small neural readouts with fixed seeds. It did not support a broad claim that CNNs or tiny Transformers automatically improve ultra-short read interpretation. In target/background probes, 1D-CNN over one-hot channels had the highest mean macro-F1, while CSP read by a tabular MLP was close and used only 147 features on average. In global species and within-genus Enterobacter stress probes, the best small models were tabular MLPs over canonical or hybrid vectors, and absolute macro-F1 values remained low. This supports a practical model-matching interpretation: CSP is a natural compact tabular auxiliary input, whereas one-hot or property channels are more appropriate when a CNN or attention model is explicitly trained.
+
+| Task                      | Model                     | Model family     | Input               |   Mean macro-F1 |   Mean accuracy |   Mean features |   Runs |
+|:--------------------------|:--------------------------|:-----------------|:--------------------|----------------:|----------------:|----------------:|-------:|
+| global species            | mlp ckmer5                | tabular mlp      | ckmer5 count l2     |           0.116 |           0.133 |           512   |     12 |
+| global species            | mlp hybrid                | tabular mlp      | hybrid ckmer5 csp   |           0.115 |           0.129 |           659   |     12 |
+| global species            | mlp csp                   | tabular mlp      | cspaced property l2 |           0.099 |           0.117 |           147   |     12 |
+| global species            | cnn property              | cnn1d            | property            |           0.078 |           0.118 |           492.5 |     12 |
+| global species            | tiny transformer onehot   | tiny transformer | onehot              |           0.074 |           0.129 |           492.5 |     12 |
+| global species            | tiny transformer property | tiny transformer | property            |           0.065 |           0.128 |           492.5 |     12 |
+| global species            | cnn onehot                | cnn1d            | onehot              |           0.065 |           0.103 |           492.5 |     12 |
+| target background         | cnn onehot                | cnn1d            | onehot              |           0.569 |           0.583 |           492.5 |     12 |
+| target background         | mlp csp                   | tabular mlp      | cspaced property l2 |           0.563 |           0.568 |           147   |     12 |
+| target background         | mlp hybrid                | tabular mlp      | hybrid ckmer5 csp   |           0.559 |           0.563 |           659   |     12 |
+| target background         | tiny transformer property | tiny transformer | property            |           0.553 |           0.556 |           492.5 |     12 |
+| target background         | mlp ckmer5                | tabular mlp      | ckmer5 count l2     |           0.547 |           0.56  |           512   |     12 |
+| target background         | tiny transformer onehot   | tiny transformer | onehot              |           0.535 |           0.537 |           492.5 |     12 |
+| target background         | cnn property              | cnn1d            | property            |           0.535 |           0.558 |           492.5 |     12 |
+| within-genus Enterobacter | mlp hybrid                | tabular mlp      | hybrid ckmer5 csp   |           0.202 |           0.22  |           657   |     12 |
+| within-genus Enterobacter | mlp csp                   | tabular mlp      | cspaced property l2 |           0.187 |           0.22  |           147   |     12 |
+| within-genus Enterobacter | mlp ckmer5                | tabular mlp      | ckmer5 count l2     |           0.167 |           0.19  |           510   |     12 |
+| within-genus Enterobacter | cnn onehot                | cnn1d            | onehot              |           0.133 |           0.209 |           492.5 |     12 |
+| within-genus Enterobacter | tiny transformer onehot   | tiny transformer | onehot              |           0.123 |           0.206 |           492.5 |     12 |
+| within-genus Enterobacter | tiny transformer property | tiny transformer | property            |           0.105 |           0.187 |           492.5 |     12 |
+| within-genus Enterobacter | cnn property              | cnn1d            | property            |           0.1   |           0.189 |           492.5 |     12 |
+
+
+![Figure 5. Deterministic neural compatibility probes.](figures/stage2_fig_neural_compatibility.png)
+
+
 ### Context loss around 125-150 bp was position-dependent, not a single read-length threshold
 
 
@@ -210,11 +245,11 @@ The attention-context diagnostic directly addressed the concern that a coarse 12
 |              145 |                                            155 |                         1 | 110,115,120,125,130,135,138,140,142,145,148,150,155,160 |
 
 
-![Figure 5. Attention-style context visibility breakpoints.](figures/stage2_fig_attention_breakpoints.png)
+![Figure 6. Attention-style context visibility breakpoints.](figures/stage2_fig_attention_breakpoints.png)
 
 
 
-![Figure 6. Best readout transitions around motif visibility.](figures/stage2_fig_attention_f1_breakpoints.png)
+![Figure 7. Best readout transitions around motif visibility.](figures/stage2_fig_attention_f1_breakpoints.png)
 
 
 ### ARG/SNP boundary probes bounded the role of CSP
@@ -259,7 +294,7 @@ Synthetic ARG/SNP probes showed why CSP should be treated as auxiliary evidence.
 | resistance_snp | Canonical 7-mer       |           0.971 |           0.975 |         778.083 |
 
 
-![Figure 7. ARG/SNP boundary readout probes.](figures/stage2_fig_arg_snp_readout.png)
+![Figure 8. ARG/SNP boundary readout probes.](figures/stage2_fig_arg_snp_readout.png)
 
 
 ## Discussion
@@ -271,7 +306,7 @@ This distinction also resolves the apparent conflict around accuracy. Accuracy a
 
 The most realistic future route is hybrid evidence. For mNGS species identification, canonical k-mers, alignment or database indices should provide high-resolution taxonomic evidence, whereas CSP can track whether short, N-masked or locally mismatched reads remain compositionally and biochemically near the expected clean signal. For ARG work, CSP may help characterize degraded or ambiguous reads and expose interpretable shifts, but allele calling, resistance SNP interpretation, gene context and plasmid linkage require exact sequence, protein-domain or curated database evidence.
 
-Several conclusions remain deliberately unproven. We did not train a full Transformer or CNN on realistic clinical mNGS data. We did not benchmark Kraken2, Centrifuge, Kaiju or alignment pipelines on the same noisy FASTQ inputs. We did not use real CARD, ResFinder or AMRFinderPlus marker panels for ARG calling. These are appropriate server-stage experiments. The local experiments establish the representation-level evidence needed to justify those larger tests.
+Several conclusions remain deliberately unproven. The neural probe was intentionally small and local; it does not establish CNN or Transformer superiority on realistic clinical mNGS data. We did not benchmark Kraken2, Centrifuge, Kaiju or alignment pipelines on the same noisy FASTQ inputs. We did not use real CARD, ResFinder or AMRFinderPlus marker panels for ARG calling. These are appropriate server-stage experiments. The local experiments establish the representation-level evidence needed to justify those larger tests.
 
 ## Limitations
 

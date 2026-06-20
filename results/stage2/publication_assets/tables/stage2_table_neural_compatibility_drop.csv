@@ -1,0 +1,43 @@
+﻿Task,Condition,Model,Model family,Input,Mean macro-F1 drop vs clean,Mean accuracy drop vs clean
+global species,3% N mask,mlp csp,tabular mlp,cspaced property l2,-0.0233306455821548,-0.0180532702591526
+global species,3% N mask,tiny transformer onehot,tiny transformer,onehot,-0.0181960703392539,-0.0147264500205676
+global species,3% N mask,mlp ckmer5,tabular mlp,ckmer5 count l2,-0.0102757394124458,-0.0102118469765528
+global species,3% N mask,cnn onehot,cnn1d,onehot,0.0001919849375238,0.0091011929247223
+global species,3% N mask,mlp hybrid,tabular mlp,hybrid ckmer5 csp,0.0033353746650432,0.0056663924310982
+global species,3% N mask,tiny transformer property,tiny transformer,property,0.0075997796781025,0.0056869600987248
+global species,3% N mask,cnn property,cnn1d,property,0.0170569864546837,0.0034502262443438
+global species,1% substitution + 3% N,mlp csp,tabular mlp,cspaced property l2,-0.0172042637888927,-0.0158011106540518
+global species,1% substitution + 3% N,mlp hybrid,tabular mlp,hybrid ckmer5 csp,-0.0132222071605577,-0.0158782394076511
+global species,1% substitution + 3% N,mlp ckmer5,tabular mlp,ckmer5 count l2,0.0043591155896972,-3.59934183463452e-05
+global species,1% substitution + 3% N,tiny transformer onehot,tiny transformer,onehot,0.006446805846944,-0.0022778691896338
+global species,1% substitution + 3% N,cnn property,cnn1d,property,0.0076639887460111,0.0057075277663513
+global species,1% substitution + 3% N,tiny transformer property,tiny transformer,property,0.011405917284594,0.0010849444672974
+global species,1% substitution + 3% N,cnn onehot,cnn1d,onehot,0.0192877345612,0.024958864664747
+target background,3% N mask,cnn onehot,cnn1d,onehot,-0.0780710311777744,-0.0416666666666666
+target background,3% N mask,tiny transformer property,tiny transformer,property,-0.0613750995887691,-0.0677083333333333
+target background,3% N mask,cnn property,cnn1d,property,-0.0486874822785509,-0.0208333333333333
+target background,3% N mask,mlp ckmer5,tabular mlp,ckmer5 count l2,-0.0228569438499532,-0.0104166666666666
+target background,3% N mask,tiny transformer onehot,tiny transformer,onehot,-0.0193732426472175,-0.0156249999999999
+target background,3% N mask,mlp csp,tabular mlp,cspaced property l2,-0.0110900832345328,-0.0130208333333333
+target background,3% N mask,mlp hybrid,tabular mlp,hybrid ckmer5 csp,0.0348040128099112,0.0312499999999999
+target background,1% substitution + 3% N,cnn onehot,cnn1d,onehot,-0.0588382339658132,-0.0208333333333333
+target background,1% substitution + 3% N,tiny transformer property,tiny transformer,property,-0.0532978511443116,-0.0546874999999999
+target background,1% substitution + 3% N,mlp csp,tabular mlp,cspaced property l2,-0.0497354938888303,-0.0494791666666666
+target background,1% substitution + 3% N,cnn property,cnn1d,property,-0.0431733120927188,-0.0286458333333333
+target background,1% substitution + 3% N,tiny transformer onehot,tiny transformer,onehot,-0.0282628606496803,-0.0260416666666666
+target background,1% substitution + 3% N,mlp hybrid,tabular mlp,hybrid ckmer5 csp,0.0023910034229758,0.0052083333333332
+target background,1% substitution + 3% N,mlp ckmer5,tabular mlp,ckmer5 count l2,0.0546597176730378,0.0572916666666666
+within-genus Enterobacter,3% N mask,tiny transformer onehot,tiny transformer,onehot,-0.0327514660392769,0.0047169811320754
+within-genus Enterobacter,3% N mask,cnn onehot,cnn1d,onehot,-0.0327198595360516,-0.0283018867924527
+within-genus Enterobacter,3% N mask,cnn property,cnn1d,property,-0.0191607165558824,-0.0141509433962263
+within-genus Enterobacter,3% N mask,tiny transformer property,tiny transformer,property,0.0039970411453535,0.0047169811320754
+within-genus Enterobacter,3% N mask,mlp csp,tabular mlp,cspaced property l2,0.0313176786001103,0.0141509433962264
+within-genus Enterobacter,3% N mask,mlp ckmer5,tabular mlp,ckmer5 count l2,0.0464168352075328,0.0566037735849056
+within-genus Enterobacter,3% N mask,mlp hybrid,tabular mlp,hybrid ckmer5 csp,0.0674037905980358,0.0660377358490566
+within-genus Enterobacter,1% substitution + 3% N,cnn property,cnn1d,property,-0.0056006546265546,0.0141509433962264
+within-genus Enterobacter,1% substitution + 3% N,mlp ckmer5,tabular mlp,ckmer5 count l2,0.0042695038879249,-0.0047169811320754
+within-genus Enterobacter,1% substitution + 3% N,tiny transformer property,tiny transformer,property,0.0119759748102139,0.0141509433962264
+within-genus Enterobacter,1% substitution + 3% N,cnn onehot,cnn1d,onehot,0.0141688498016031,0.0094339622641509
+within-genus Enterobacter,1% substitution + 3% N,tiny transformer onehot,tiny transformer,onehot,0.0389479192679859,0.0141509433962264
+within-genus Enterobacter,1% substitution + 3% N,mlp csp,tabular mlp,cspaced property l2,0.0636468820798866,0.0330188679245283
+within-genus Enterobacter,1% substitution + 3% N,mlp hybrid,tabular mlp,hybrid ckmer5 csp,0.0945647104406792,0.080188679245283

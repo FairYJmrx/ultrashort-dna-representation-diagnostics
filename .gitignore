@@ -22,6 +22,8 @@ data/real_slices/*.csv
 
 # Render QA intermediates
 manuscript/rendered_final/
+manuscript/rendered_final_*/
+manuscript/latex_build/
 manuscript/rendered_stage2_pdf/
 manuscript/latex_build_stage2/
 manuscript/draft_manuscript.md
@@ -39,3 +41,4 @@ scratch/
 results/stage2/**/stage2_derived_reads.csv
 results/stage2/**/arg_snp_reads.csv
 results/stage2/**/attention_breakpoint_reads.csv
+results/stage2/*_smoke/

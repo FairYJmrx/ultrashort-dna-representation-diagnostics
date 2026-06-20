@@ -5,7 +5,7 @@
 - Input scope: `stage2_manuscript_v2.md`, stage-2 result tables/figures, and rendered PDF QA.
 - Assessment boundary: local controlled representation diagnostics, not clinical mNGS validation.
 - Shared manuscript claim: canonical k-mers provide high-resolution identity evidence, whereas CSP provides compact perturbation-stable auxiliary evidence for ultra-short mNGS-like reads.
-- Evidence base: WGS-slice perturbation grid, 69/75 bp hospital-like stability audit, CSP component ablation, k/pattern sensitivity, lightweight readout probes, attention-context breakpoint diagnostic, and synthetic ARG/SNP boundary probes.
+- Evidence base: WGS-slice perturbation grid, 69/75 bp hospital-like stability audit, CSP component ablation, k/pattern sensitivity, lightweight readout probes, deterministic MLP/CNN/tiny Transformer compatibility probes, attention-context breakpoint diagnostic, and synthetic ARG/SNP boundary probes.
 
 ## Reviewer 1: Technical Soundness
 
@@ -23,6 +23,7 @@ The revised manuscript is technically more coherent than V1 because it no longer
 ### Major concerns
 
 - The readout tasks remain lightweight and local. They support model-accessibility of features, not clinical accuracy.
+- The neural compatibility probes improve the model-readability evidence chain, but they are still small deterministic probes rather than realistic clinical neural pipelines.
 - The ARG/SNP tasks are synthetic and in some settings too easy, so they mostly bound claims rather than prove future ARG performance.
 - No industry-pipeline comparison against Kraken2/Centrifuge/Kaiju has been completed.
 - No real FASTQ quality profile or host/background mixture is included.
@@ -48,7 +49,7 @@ The originality is credible if framed as representation diagnostics and controll
 ### Major concerns
 
 - The novelty could look incremental unless the introduction emphasizes the diagnostic framework and advantage-region mapping.
-- Some cited DNA foundation models are large and not directly evaluated. The manuscript correctly places them in motivation, but should avoid implying direct comparison.
+- Some cited DNA foundation models are large and not directly evaluated. The manuscript correctly places them in motivation, and the new tiny Transformer probe should not be described as a foundation-model comparison.
 - The title should remain diagnostic/framework-oriented rather than claiming a new clinical method.
 
 ### Positioning
@@ -79,7 +80,7 @@ The manuscript now reads as a bounded methods paper. The abstract states the mai
 
 - Clearer claim boundary than V1.
 - Stronger stage-2 evidence chain for CSP's true advantage region.
-- Proper downgrading of clinical, Transformer and ARG claims to future work.
+- Proper downgrading of clinical, clinical-scale neural-model and ARG claims to future work.
 - Real references now support the literature review.
 
 ### Consensus risks
@@ -101,6 +102,6 @@ The manuscript now reads as a bounded methods paper. The abstract states the mai
 
 - CSP is better than canonical k-mer for all species identification.
 - CSP can independently call ARG alleles or resistance SNPs.
-- CSP has been proven to improve Transformer models.
+- CSP has been proven to improve clinical-scale Transformer models.
 - Local readout accuracy estimates clinical diagnostic accuracy.
 - The current dataset is representative of all mNGS scenarios.
