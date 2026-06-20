@@ -18,8 +18,8 @@ TABLES = MANUSCRIPT / "tables"
 FIGS = PROJECT_ROOT / "results" / "figures"
 REFERENCES = PROJECT_ROOT / "references" / "references.bib"
 
-TITLE = "Representation diagnostics for ultra-short DNA reads in mNGS-like settings"
-SUBTITLE = "A lightweight study of k-mer, canonical spaced-seed, property-aware and attention-compatible encodings"
+TITLE = "Information-preservation diagnostics for ultra-short DNA read representations"
+SUBTITLE = "A lightweight mNGS-oriented study of k-mer, spaced-seed, biochemical-property and attention-compatible encodings"
 
 
 def read_table_md(path: Path) -> pd.DataFrame:
@@ -75,7 +75,11 @@ def author_year_citation(entries: list[dict[str, str]], key: str) -> str:
 
 
 def ref_text(entry: dict[str, str]) -> str:
-    authors = entry.get("author", "").replace(" and ", "; ")
+    raw_authors = entry.get("author", "").split(" and ") if entry.get("author") else []
+    if len(raw_authors) > 8:
+        authors = "; ".join(raw_authors[:8]) + "; et al."
+    else:
+        authors = "; ".join(raw_authors)
     title = entry.get("title", "")
     year = entry.get("year", "")
     journal = entry.get("journal", "")
@@ -96,15 +100,52 @@ def ref_text(entry: dict[str, str]) -> str:
 
 def build_markdown() -> str:
     refs = bib_entries()
-    cite = lambda key: f"({author_year_citation(refs, key)})"
+    used_ref_keys: list[str] = []
+
+    def cite(key: str) -> str:
+        if key not in used_ref_keys:
+            used_ref_keys.append(key)
+        return f"({author_year_citation(refs, key)})"
+
+    def cited_entries() -> list[dict[str, str]]:
+        entries: list[dict[str, str]] = []
+        for key in used_ref_keys:
+            entry = next((item for item in refs if item.get("key") == key), None)
+            if entry is not None:
+                entries.append(entry)
+        return entries
 
     rep_table = read_table_md(TABLES / "table_representation_taxonomy.md")
     prop_table = read_table_md(TABLES / "table_property_ablation.md")
+    prop_bootstrap = read_table_md(TABLES / "table_property_ablation_bootstrap.md")
     param_stable = read_table_md(TABLES / "table_parameter_sensitivity_best_stability.md")
     param_class = read_table_md(TABLES / "table_parameter_sensitivity_best_classification.md")
     attention = read_table_md(TABLES / "table_attention_context_visibility.md")
 
     prop_short = df_to_markdown(prop_table.head(5))
+    if prop_bootstrap.empty:
+        prop_bootstrap_short = ""
+    else:
+        boot = prop_bootstrap[
+            (prop_bootstrap["condition"] == "N_3pct")
+            & (prop_bootstrap["length"].isin(["69", "75", "100", "125", "150", "300"]))
+        ].copy()
+        boot_display = pd.DataFrame(
+            {
+                "condition": boot["condition"],
+                "length": boot["length"],
+                "n": boot["n_pairs"],
+                "delta cosine": boot.apply(
+                    lambda r: f"{float(r['delta_cosine_mean']):.3f} [{float(r['delta_cosine_ci95_low']):.3f}, {float(r['delta_cosine_ci95_high']):.3f}]",
+                    axis=1,
+                ),
+                "L2 reduction": boot.apply(
+                    lambda r: f"{float(r['l2_improvement_mean']):.3f} [{float(r['l2_improvement_ci95_low']):.3f}, {float(r['l2_improvement_ci95_high']):.3f}]",
+                    axis=1,
+                ),
+            }
+        )
+        prop_bootstrap_short = df_to_markdown(boot_display)
     param_short = df_to_markdown(param_stable[param_stable["condition"] == "N_3pct"])
     class_short = df_to_markdown(param_class)
     attn_short = df_to_markdown(attention[["length", "observed_layout", "pair_visible_rate", "class_motif_visible_rate", "representation", "macro_f1"]])
@@ -112,29 +153,29 @@ def build_markdown() -> str:
     md: list[str] = []
     md.append(f"# {TITLE}\n")
     md.append(f"**{SUBTITLE}**\n")
-    md.append("Manuscript draft generated 2026-06-20.\n")
     md.append("## Abstract\n")
     md.append(
-        "Ultra-short sequencing reads are common after quality control in clinical metagenomic next-generation sequencing (mNGS), "
-        "yet many representation choices for DNA reads are evaluated mainly by downstream classification accuracy. "
-        "Here we frame read representation as an information-diagnostic problem: which encodings preserve strand symmetry, local composition, "
-        "biochemical properties, perturbation stability, positional context and close-relative separability when reads are only 69-150 bp long? "
-        "We compare contiguous k-mers, canonical k-mers, canonical spaced seeds, property-channel encodings, phase-aware encodings and RoPE-like "
-        "property encodings on controlled reads and a lightweight close-relative WGS-slice panel from clinically relevant genera. "
-        "The main proposed representation, canonical spaced-property encoding (`cspaced_property_l2` in code), concatenates reverse-complement canonical spaced-token counts with low-dimensional DNA property summaries. "
-        "It is not a replacement for canonical k-mers. Instead, it acts as a compact, strand-friendly and perturbation-stable auxiliary representation. "
-        "In close-relative WGS-slice perturbation audits, adding property summaries to canonical spaced counts improved clean-versus-perturbed cosine by up to 0.028 and reduced L2 perturbation by up to 0.154 at 75 bp under 3% N masking. "
-        "By contrast, canonical k-mer and canonical spaced variants remained strong baselines in close-relative classification probes. "
+        "Ultra-short sequencing reads are common after adapter and quality trimming in clinical metagenomic next-generation sequencing (mNGS), "
+        "but DNA read representations are often compared mainly by downstream accuracy. "
+        "We instead frame representation choice as an information-preservation problem: which encodings preserve strand symmetry, local composition, "
+        "biochemical properties, perturbation stability, positional context and close-relative separability when observed reads are 69-150 bp long, or when paired-end information is simplified as a PE150 proxy? "
+        "We compare contiguous k-mers, canonical k-mers, canonical spaced seeds, property-channel encodings, phase-aware encodings and RoPE-like property encodings on controlled reads and a lightweight WGS-slice panel from clinically relevant close-relative genera. "
+        "The main proposed representation, canonical spaced-property encoding, concatenates reverse-complement canonical spaced-token counts with low-dimensional DNA property summaries and then applies L2 normalization. "
+        "This representation is not a replacement for canonical k-mers. It is a compact, strand-friendly and perturbation-stable auxiliary feature block. "
+        "In the WGS-slice perturbation audit, adding property summaries to canonical spaced counts improved clean-versus-perturbed cosine under 3% N masking at 75 bp by 0.028 (95% bootstrap interval 0.027-0.028; n=1680 paired reads) and reduced L2 perturbation by 0.154 (0.152-0.155). "
+        "Canonical k-mer and canonical spaced variants remained strong baselines in close-relative classification probes. "
         "A motif-pair diagnostic further showed that read-length effects can be nonlinear for attention-like models: below 150 bp, a class-defining contextual motif pair can be structurally absent, not merely diluted. "
-        "The study therefore supports a restrained claim: biologically informed auxiliary encodings can expose robustness and context properties that are hidden by accuracy-only benchmarks, while full mNGS diagnostic claims require larger server-scale validation."
+        "The study supports a bounded conclusion: biologically informed auxiliary encodings can expose robustness and context properties that are hidden by accuracy-only benchmarks, whereas clinical species identification and antimicrobial-resistance claims require larger server-scale validation."
     )
 
     md.append("## Introduction\n")
     md.append(
         "Clinical mNGS has changed pathogen detection because it can identify unexpected organisms without a fixed target panel "
-        f"{cite('Wilson2014')} {cite('Wilson2019')}. However, the computational problem is not just classification. "
-        "A clinical read can be short, host-contaminated, quality-trimmed, ambiguous at N positions, or derived from either strand. "
-        "These constraints make the representation layer scientifically important: before a classifier can succeed, the encoding must decide what information remains visible."
+        f"{cite('Wilson2014')} {cite('Wilson2019')} {cite('Chiu2019')}. However, the computational problem is not only organism classification. "
+        "Clinical reads may be shortened by adapter and quality trimming, dominated by host or background material, contain ambiguous bases, or originate from either strand "
+        f"{cite('Martin2011')} {cite('Bolger2014')} {cite('Salter2014')}. "
+        "These constraints make the representation layer scientifically important: before a classifier can succeed, the encoding determines which sequence properties remain available. "
+        "We therefore study read representation in a lightweight, reproducible diagnostic setting rather than presenting a clinically validated classifier."
     )
     md.append(
         "Most mature metagenomic classifiers rely on k-mer or related exact-match signals. Kraken, Kraken 2, CLARK, Centrifuge and Kaiju demonstrate how powerful indexed word or translated-word matching can be at scale "
@@ -143,48 +184,77 @@ def build_markdown() -> str:
         f"{cite('Sczyrba2017')} {cite('Meyer2022')}. This argues against using a small local experiment as a clinical leaderboard."
     )
     md.append(
-        "At the same time, DNA language models and self-attention models have made sequence representation a central question. "
-        "DeepMicrobes, MetaTransformer, DNABERT, Nucleotide Transformer and HyenaDNA illustrate the move from simple word counts toward learned embeddings, self-attention and single-nucleotide or long-range modeling "
-        f"{cite('Liang2020')} {cite('Wichmann2023')} {cite('Ji2021')} {cite('DallaTorre2025')} {cite('Nguyen2023')}. "
+        "Deep learning has also shifted attention from hand-designed word counts to learned sequence representations. "
+        "Early DNA and regulatory-sequence models showed that convolutional and recurrent architectures can learn sequence specificity and noncoding regulatory signals "
+        f"{cite('Alipanahi2015')} {cite('Zhou2015')} {cite('Quang2016')}. "
+        "In metagenomics, DeepMicrobes and MetaTransformer illustrate read-level neural classification, including attention-based models "
+        f"{cite('Liang2020')} {cite('Wichmann2023')}. "
+        "In broader genomics, DNABERT, DNABERT-2, Nucleotide Transformer, HyenaDNA, Caduceus, GENA-LM and Evo show how pretraining, long-context modeling, reverse-complement-aware architectures and single-nucleotide modeling can be used for DNA sequences "
+        f"{cite('Ji2021')} {cite('Zhou2024')} {cite('DallaTorre2025')} {cite('Nguyen2023')} {cite('Schiff2024')} {cite('Fishman2025')} {cite('Nguyen2024Evo')}. "
         "These models motivate a more precise question for short mNGS reads: which information should be injected before learning, and which information is absent regardless of model capacity?"
+    )
+    md.append(
+        "This work makes three bounded contributions. First, it organizes short-read encodings by the information they preserve rather than by model family alone. "
+        "Second, it defines and ablates a canonical spaced-property encoding that combines strand-canonical spaced seeds with interpretable biochemical summaries. "
+        "Third, it provides lightweight length, perturbation, close-relative and attention-context diagnostics that identify where the proposed encoding is useful and where conventional canonical k-mers remain stronger."
     )
 
     md.append("## Related Work\n")
     md.append(
-        "k-mer counting is a foundational alignment-free representation, with efficient counting algorithms and wide use in comparison, classification and sketching "
-        f"{cite('Marcais2011')} {cite('Ondov2016')}. Canonical k-mers are not a single named model but a common strand-symmetry operation: a word and its reverse complement are mapped to the same feature index. "
+        "Alignment-free sequence analysis begins from the premise that exact alignment is not always necessary to compare or classify sequences. "
+        "k-mer counting, MinHash sketches and related tools provide efficient word-based representations for genome comparison and metagenomic classification "
+        f"{cite('Marcais2011')} {cite('Ondov2016')} {cite('Zielezinski2017')}. "
+        "Canonical k-mers are not a single named model but a common strand-symmetry operation: a word and its reverse complement are mapped to the same feature index. "
+        "This operation is attractive for mNGS because reads can originate from either strand, but it can also erase strand-specific signals. "
         "Spaced seeds, introduced for sensitive homology search and later adapted to metagenomic classification, provide a mismatch-tolerant alternative to contiguous words "
         f"{cite('Ma2002')} {cite('Brinda2015')}."
     )
     md.append(
-        "DNA can also be treated as a signal. Shannon's information theory gives language for capacity, uncertainty and information loss "
-        f"{cite('Shannon1948')}, while genomic signal processing and numerical DNA mappings provide precedent for converting bases into biochemical or numeric channels "
-        f"{cite('Voss1992')} {cite('Anastassiou2001')} {cite('Cristea2002')}. "
-        "Our property encodings follow this tradition: they are deliberately small, interpretable channels rather than learned embeddings."
+        "DNA can also be treated as a signal or numerical sequence. Shannon information theory provides language for uncertainty and information loss "
+        f"{cite('Shannon1948')}, while chaos game representation, genomic signal processing and EIIP-style mappings show that bases can be converted into numeric, compositional or physicochemical channels "
+        f"{cite('Jeffrey1990')} {cite('Voss1992')} {cite('Anastassiou2001')} {cite('Cristea2002')} {cite('Nair2006')}. "
+        "Vector representations of variable-length k-mers provide another bridge between discrete words and continuous embeddings "
+        f"{cite('Ng2017')}. "
+        "Our property encodings follow this tradition but are intentionally modest: they summarize GC status, purine class, hydrogen-bond class, EIIP-like values, N fraction, length and entropy as interpretable auxiliary features rather than learned embeddings."
     )
     md.append(
-        "Transformer-style encodings add another issue: position and co-occurrence. Self-attention can connect all observed tokens "
+        "Transformer-style encodings add a separate issue: position and co-occurrence. Self-attention can connect all observed tokens "
         f"{cite('Vaswani2017')}, and rotary position embeddings provide a compact relative-position mechanism "
         f"{cite('Su2021')}. But attention cannot attend to a motif that has been trimmed away. This distinction motivates our context-visibility diagnostic."
+    )
+    md.append(
+        "Antimicrobial-resistance (AMR) and ARG detection add a stricter biological target than taxonomic assignment. "
+        "Practical systems and databases such as CARD, AMRFinderPlus, ResFinder and MEGARes/AMR++ encode curated gene families, protein evidence, mutation rules or high-throughput resistome workflows "
+        f"{cite('Alcock2023')} {cite('Feldgarden2021')} {cite('Bortolaia2020')} {cite('Bonin2023')}. "
+        "DeepARG further shows that learned models can be applied to ARG prediction from metagenomic data "
+        f"{cite('ArangoArgoty2018')}. "
+        "Our experiments do not claim AMR calling ability. They instead ask whether compact property-aware representations could serve as auxiliary robustness or interpretability features for future ARG tasks."
     )
 
     md.append("## Problem Formulation\n")
     md.append(
         "Let a DNA read be a sequence x = (x1, ..., xL), xi in {A,C,G,T,N}. A representation is a map phi(x) into either a fixed vector or a token sequence. "
-        "The paper evaluates phi by information properties rather than by assuming one downstream classifier is definitive."
+        "The paper evaluates phi by information properties rather than by assuming one downstream classifier is definitive. "
+        "For a diagnostic representation study, the relevant question is not only whether phi improves one accuracy number, but whether it preserves a stated source of information under a stated constraint."
     )
     md.append(
         "For a contiguous k-mer word w = x_i...x_{i+k-1}, the ordinary count vector stores c_w(x). "
         "The reverse-complement canonical form is canon(w) = min(w, rc(w)) under lexicographic order, so the canonical k-mer count feature is c_canon(w)(x). "
-        "This operation is expected to improve strand consistency but may discard strand-specific information."
+        "This operation is expected to improve strand consistency but may discard strand-specific information. "
+        "In this manuscript, canonical k-mers are therefore treated as a strong strand-symmetric baseline rather than as a method to be displaced."
     )
     md.append(
         "For a spaced seed pattern P = (p1, ..., pm), a spaced token is s_i,P(x) = x_{i+p1}...x_{i+pm}. "
-        "A canonical spaced representation counts canon(s_i,P). The proposed canonical spaced-property representation concatenates this count vector with a compact property summary: "
-        "mean and standard deviation of hydrogen-bond class, GC indicator, purine indicator and EIIP-like numeric value, plus N fraction, length scaling and sequence entropy. "
-        "The final vector is L2-normalized. In code this method is named `cspaced_property_l2`; in the manuscript we call it canonical spaced-property encoding."
+        "In the default implementation P=(0,2,4,6), but the sensitivity audit also evaluates alternative patterns. "
+        "A canonical spaced representation counts canon(s_i,P) over the observed training vocabulary and L2-normalizes the count vector. "
+        "The proposed canonical spaced-property representation adds a property vector g(x). "
+        "For each read, g(x) contains the mean and standard deviation of four base-level channels: hydrogen-bond class H(A,T)=2 and H(C,G)=3; GC indicator; purine indicator R(A,G)=1 and R(C,T)=0; and EIIP-like numerical value. "
+        "It also contains the N fraction, length/200 scaling and Shannon entropy scaled by log2(5). "
+        "The final representation is phi_CSP(x) = L2([L2(c_canon-spaced(x)); g(x)]). "
+        "In code this method is named `cspaced_property_l2`; in the manuscript we call it canonical spaced-property encoding."
     )
     md.append(
+        "The ablation design separates the priors that are otherwise fused in the proposed representation: contiguous versus spaced tokens, noncanonical versus canonical reverse-complement pooling, canonical spaced counts with versus without property summaries, property tokens with versus without phase terms, and RoPE-like position handling with one-hot versus property channels. "
         "We evaluate five information properties: compactness, reverse-complement consistency, perturbation stability, read-length/context visibility and close-relative separability. "
         "Accuracy and macro-F1 are used only as tertiary probes: they test whether a simple readout can extract a signal from a representation, not whether the representation is clinically diagnostic."
     )
@@ -194,7 +264,14 @@ def build_markdown() -> str:
         "The local panel contains 21 genomes from six clinically relevant genera: Acinetobacter, Burkholderia, Candida, Enterobacter, Escherichia and Klebsiella. "
         "Reads were sampled as 69, 75, 100, 125 and 150 bp single-end fragments plus a PE150 proxy represented by 300 bp concatenated end information. "
         "Perturbations included reverse complement, 3% N masking and 1% substitution. "
-        "The panel is intentionally lightweight and close-relative-biased; it is a stress test, not a universal microbial benchmark."
+        "The panel is intentionally lightweight and close-relative-biased; it is a stress test, not a universal microbial benchmark. "
+        "The PE150 proxy captures the information available from two read ends as a simplified 300 bp representation and is not a full paired-end insert, overlap or quality-score simulation."
+    )
+    md.append(
+        "The close-relative panel is intentionally biased toward genera where species-level boundaries can be difficult for short reads. "
+        "It is useful for finding failure modes, but it is not a representative sample of all bacteria, fungi or clinical backgrounds. "
+        "Therefore all classification numbers in this manuscript are treated as signal-readability probes. "
+        "They are not clinical sensitivity, specificity or diagnostic accuracy estimates."
     )
     md.append(
         "We also used a controlled attention/context diagnostic. Latent templates contain a shared anchor motif near position 18 and a class-specific motif near position 138. "
@@ -202,18 +279,25 @@ def build_markdown() -> str:
     )
     md.append(
         "The metric hierarchy is fixed before interpreting results. Primary metrics are dimensionality, sparsity, paired cosine, perturbation L2 delta, component deltas and motif-pair visibility. "
-        "Secondary metrics include close-relative stress probes. Tertiary metrics include accuracy and macro-F1 from nearest-centroid or lightweight linear readouts."
+        "Secondary metrics include close-relative stress probes. Tertiary metrics include accuracy and macro-F1 from nearest-centroid or lightweight linear readouts. "
+        "For the main property-ablation claim we add a paired-read bootstrap interval with 1000 resamples. "
+        "Other p05 and p95 values in the tables are descriptive quantiles of the local sampled audit, not population-level confidence intervals."
     )
 
     md.append("## Results\n")
     md.append("### Canonical spaced-property encoding has its clearest advantage in perturbation stability\n")
     md.append(
         "The strongest supported advantage of canonical spaced-property encoding is robustness, especially under N masking. "
-        "Adding property summaries to canonical spaced counts consistently increased clean-versus-perturbed cosine and reduced L2 change across 75-300 bp. "
-        "The largest effect occurred at 75 bp under 3% N masking: cosine increased by 0.028 and mean L2 perturbation decreased by 0.154. "
+        "Adding property summaries to canonical spaced counts consistently increased clean-versus-perturbed cosine and reduced L2 change across 69 bp, 75 bp, 100 bp, 125 bp, 150 bp and the PE150 proxy. "
+        "Under 3% N masking at 75 bp, cosine increased by 0.028 with a 95% paired bootstrap interval of 0.027-0.028, and mean L2 perturbation decreased by 0.154 with an interval of 0.152-0.155 (n=1680 paired reads; 1000 bootstrap resamples). "
+        "The largest N-masking improvement was observed at 69 bp, where cosine increased by 0.031 and L2 perturbation decreased by 0.163. "
         "The effect decreased with read length, which is plausible because longer reads provide more redundant word evidence."
     )
     md.append(prop_short)
+    md.append(
+        "The table below reports the N-masking bootstrap audit for the fused property component. Brackets denote 95% bootstrap intervals over paired clean-perturbed reads."
+    )
+    md.append(prop_bootstrap_short)
     md.append("![Figure 1. Perturbation stability across read lengths.](../results/figures/fig_publication_perturbation_stability.png)")
     md.append("![Figure 2. Component ablation for DNA property summaries.](../results/figures/fig_publication_property_ablation.png)")
 
@@ -227,18 +311,21 @@ def build_markdown() -> str:
     md.append(
         "A reviewer would reasonably ask why k=5 or why pattern (0,2,4,6) was selected. We therefore ran a lightweight sensitivity audit over k=4-7 and three spaced patterns. "
         "For N masking, canonical spaced-property variants remained the stability winners across all read lengths in the sampled audit, with paired cosine between 0.994 and 0.997. "
-        "However, downstream close-relative probes were parameter-sensitive: the best readout settings changed with task and length. This is evidence for a representation-diagnostics paper, not a universal winner claim."
+        "However, downstream close-relative probes were parameter-sensitive: the best readout settings changed with task and length. "
+        "This result supports a representation-diagnostics paper rather than a universal k or pattern recommendation. "
+        "The practical interpretation is that k and spacing should be selected according to the target information property: exact local resolution, mismatch tolerance, robustness to ambiguous bases or model-compatible dense input."
     )
     md.append(param_short)
     md.append("![Figure 3. Parameter sensitivity for k and spaced-seed patterns.](../results/figures/fig_publication_parameter_sensitivity.png)")
 
     md.append("### Read length can erase context relations relevant to attention-like models\n")
     md.append(
-        "The attention/context diagnostic supports the user's core hypothesis: the loss caused by short reads is not always linear in base count. "
+        "The attention/context diagnostic supports the hypothesis tested here: the loss caused by short reads is not always linear in base count. "
         "At 69, 75 and 100 bp the class-defining motif was absent, pair visibility was 0, and lightweight readouts stayed near chance. "
         "At 125 bp, accidental partial-prefix matches appeared but full pair visibility remained essentially absent. "
         "At 150 bp and PE150, the pair became fully visible and simple readouts reached perfect or near-perfect macro-F1. "
-        "A Transformer with self-attention would have many token pairs even at 69 bp, but those pairs cannot include a missing class motif."
+        "A Transformer with self-attention would have many token pairs even at 69 bp, but those pairs cannot include a missing class motif. "
+        "This is the DNA-read analogue of a language model receiving only the opening fragment of a phrase: the architecture can model relationships among observed tokens, but the intended semantic relation is unavailable if one side of the relation is absent."
     )
     md.append(attn_short)
     md.append("![Figure 4. Context visibility as read length increases.](../results/figures/fig_attention_context_visibility.png)")
@@ -250,18 +337,26 @@ def build_markdown() -> str:
         "It does not support a broad claim that the proposed method is better for species identification. "
         "Canonical k-mer and canonical spaced variants remained strong baselines. In the clean within-genus species probe, the best averaged readout in the core comparison was canonical spaced at 125 bp. "
         "In the target/background probe, canonical spaced-property was best at the PE150 proxy. "
-        "In the k/pattern sensitivity audit, best settings varied by task: target/background at 75 bp favored canonical spaced pattern 0-1-3-6, while within-genus probes favored different k-mer or spaced settings depending on length."
+        "In the k/pattern sensitivity audit, best settings varied by task: target/background at 75 bp favored canonical spaced pattern 0-1-3-6, while within-genus probes favored different k-mer or spaced settings depending on length. "
+        "Because the panel is small and genus-biased, these results define local advantage regions and failure modes; they do not establish broad species-identification superiority."
     )
     md.append(class_short)
     md.append("![Figure 6. Close-relative WGS-slice classification probes.](../results/figures/fig_publication_close_relative_probes.png)")
 
-    md.append("## Model Suitability\n")
+    md.append("## Model Suitability and Application Boundaries\n")
     md.append(
-        "Different encodings suggest different model pairings. Canonical k-mer counts remain strong for nearest-centroid, linear and database-index-like methods because they expose exact local composition with strand symmetry. "
-        "Canonical spaced counts are useful for compact, mismatch-tolerant linear or centroid readouts. "
-        "Canonical spaced-property encoding is best used as an auxiliary dense feature block for QC-like robustness, perturbation-aware screening or concatenation with canonical k-mer features. "
-        "Property channels and RoPE-property encodings are more natural for CNNs or attention models because they preserve per-position numeric channels. "
-        "The present local study does not prove Transformer superiority; it defines when attention-compatible features have enough observed context to be meaningful."
+        "In this diagnostic setting, different encodings suggest different model pairings. "
+        "Canonical k-mer counts remain suitable for nearest-centroid, linear and database-index-like readouts because they expose exact local composition with strand symmetry. "
+        "Canonical spaced counts provide a compact, mismatch-tolerant alternative. "
+        "Canonical spaced-property encoding is best interpreted as an auxiliary dense feature block for robustness audits, perturbation-aware screening or concatenation with stronger exact-match features. "
+        "Property channels and RoPE-property encodings are more natural inputs for CNNs or attention models because they preserve per-position numeric channels and positional phase information. "
+        "The present study does not test Transformer superiority; it identifies when attention-compatible features have enough observed context to be meaningful."
+    )
+    md.append(
+        "The advantage region for canonical spaced-property encoding is therefore narrow but real: ultra-short or lightly degraded reads, strand-ambiguous inputs, N masking, representation drift audits, and small readouts that benefit from low-dimensional biochemical summaries. "
+        "It is expected to be weaker for close-relative strain resolution, allele-level ARG calling, resistance SNPs, mobile-element context, plasmid linkage, abundance estimation and any task where exact gene identity or protein-domain evidence dominates. "
+        "For ARG analysis, a property-aware feature block should be tested as an adjunct to CARD/AMRFinderPlus/ResFinder-style sequence evidence, not as a replacement for curated resistance rules. "
+        "Its plausible value in ARG work is interpretability and robustness auditing: for example, detecting when ambiguous bases or trimming change a read's biochemical summary while exact-match evidence remains uncertain."
     )
 
     md.append("## Discussion\n")
@@ -273,12 +368,13 @@ def build_markdown() -> str:
     md.append(
         "The study also clarifies the role of accuracy. Accuracy and macro-F1 are helpful only when they are interpreted as readout probes. "
         "If written as clinical endpoints, the current experiments would be underpowered and non-representative. "
-        "If written as representation diagnostics, they help map advantage regions and failure modes."
+        "If written as representation diagnostics, they help map advantage regions and failure modes. "
+        "This resolves the apparent tension between the local classification probes and the paper's purpose: accuracy is not the main claim, but it is useful evidence that a representation's preserved signal can be read by a simple model."
     )
     md.append(
         "Several claims require server-scale follow-up. A larger panel should include many strains per close-relative complex, realistic FASTQ quality profiles, host/background mixtures, abundance variation and repeated random seeds. "
         "A tiny CNN/Transformer comparison should test whether property and RoPE-property channels help when the model can learn local or global interactions. "
-        "Kraken2/Centrifuge/Kaiju audits would connect representation diagnostics to clinical-pipeline baselines, and an AMR-gene task would be needed before making resistance-detection claims."
+        "Kraken2/Centrifuge/Kaiju audits would connect representation diagnostics to clinical-pipeline baselines, and a CARD/AMRFinderPlus/ResFinder-grounded ARG task would be needed before making resistance-detection claims."
     )
 
     md.append("## Methods\n")
@@ -291,6 +387,11 @@ def build_markdown() -> str:
         "Reverse-complement consistency was measured by paired cosine between a clean read and its reverse complement after representation. "
         "Perturbation stability was measured by paired cosine and L2 distance between clean and perturbed representations. "
         "Component ablation compared matched representations that differed by one prior: canonicalization, spaced seeding, property summary, phase or RoPE-like position handling."
+    )
+    md.append(
+        "For the WGS-slice property-ablation audit, paired clean-perturbed comparisons used 1680 paired reads for each length and perturbation condition. "
+        "Bootstrap intervals for the difference between canonical spaced-property and canonical spaced counts were computed by resampling paired read-level deltas 1000 times with a fixed seed. "
+        "The interval is therefore conditional on this sampled panel and should not be interpreted as a population-level clinical confidence interval."
     )
     md.append(
         "Parameter sensitivity was run as a sampled audit. Stability used at most 120 paired reads per length/condition, k=4-7 and three spaced patterns. "
@@ -306,10 +407,11 @@ def build_markdown() -> str:
 
     md.append("## Limitations\n")
     md.append(
-        "The experiments are lightweight and not clinically representative. The close-relative panel has 21 genomes from six genera, so it cannot represent the microbial tree or clinical sample complexity. "
+        "The experiments are lightweight and not clinically representative. The close-relative panel has 21 genomes from six genera, so it cannot represent the microbial tree, host background, contamination spectrum, epidemiology or clinical sample complexity. "
         "The classification probes use simple readouts and are intentionally not clinical performance estimates. "
         "The attention diagnostic is synthetic; it demonstrates structural context loss but does not evaluate a full Transformer. "
-        "The property channels are interpretable but may not capture all biologically relevant chemistry or evolutionary constraints."
+        "The property channels are interpretable but may not capture all biologically relevant chemistry or evolutionary constraints. "
+        "The study does not evaluate real AMR/ARG calling, so resistance-detection use remains a hypothesis for future validation."
     )
 
     md.append("## Conclusions\n")
@@ -322,7 +424,7 @@ def build_markdown() -> str:
     )
 
     md.append("## References\n")
-    for i, entry in enumerate(refs, 1):
+    for i, entry in enumerate(cited_entries(), 1):
         md.append(f"{i}. {ref_text(entry)}")
 
     return "\n\n".join(md) + "\n"
@@ -430,7 +532,7 @@ def add_title(doc: Document) -> None:
     r2.font.color.rgb = RGBColor.from_string("555555")
     p3 = doc.add_paragraph()
     p3.paragraph_format.space_after = Pt(18)
-    r3 = p3.add_run("Manuscript draft | Representation diagnostics | Generated 2026-06-20")
+    r3 = p3.add_run("Methods article | Representation diagnostics | Reproducible lightweight evidence package")
     r3.font.size = Pt(9)
     r3.font.color.rgb = RGBColor.from_string("666666")
 
@@ -502,6 +604,9 @@ def build_docx(md: str, output: Path) -> None:
     while i < len(lines):
         line = lines[i].strip()
         if not line:
+            i += 1
+            continue
+        if line == f"**{SUBTITLE}**":
             i += 1
             continue
         if line.startswith("# "):

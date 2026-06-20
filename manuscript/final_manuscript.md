@@ -1,54 +1,57 @@
-# Representation diagnostics for ultra-short DNA reads in mNGS-like settings
+# Information-preservation diagnostics for ultra-short DNA read representations
 
 
-**A lightweight study of k-mer, canonical spaced-seed, property-aware and attention-compatible encodings**
-
-
-Manuscript draft generated 2026-06-20.
+**A lightweight mNGS-oriented study of k-mer, spaced-seed, biochemical-property and attention-compatible encodings**
 
 
 ## Abstract
 
 
-Ultra-short sequencing reads are common after quality control in clinical metagenomic next-generation sequencing (mNGS), yet many representation choices for DNA reads are evaluated mainly by downstream classification accuracy. Here we frame read representation as an information-diagnostic problem: which encodings preserve strand symmetry, local composition, biochemical properties, perturbation stability, positional context and close-relative separability when reads are only 69-150 bp long? We compare contiguous k-mers, canonical k-mers, canonical spaced seeds, property-channel encodings, phase-aware encodings and RoPE-like property encodings on controlled reads and a lightweight close-relative WGS-slice panel from clinically relevant genera. The main proposed representation, canonical spaced-property encoding (`cspaced_property_l2` in code), concatenates reverse-complement canonical spaced-token counts with low-dimensional DNA property summaries. It is not a replacement for canonical k-mers. Instead, it acts as a compact, strand-friendly and perturbation-stable auxiliary representation. In close-relative WGS-slice perturbation audits, adding property summaries to canonical spaced counts improved clean-versus-perturbed cosine by up to 0.028 and reduced L2 perturbation by up to 0.154 at 75 bp under 3% N masking. By contrast, canonical k-mer and canonical spaced variants remained strong baselines in close-relative classification probes. A motif-pair diagnostic further showed that read-length effects can be nonlinear for attention-like models: below 150 bp, a class-defining contextual motif pair can be structurally absent, not merely diluted. The study therefore supports a restrained claim: biologically informed auxiliary encodings can expose robustness and context properties that are hidden by accuracy-only benchmarks, while full mNGS diagnostic claims require larger server-scale validation.
+Ultra-short sequencing reads are common after adapter and quality trimming in clinical metagenomic next-generation sequencing (mNGS), but DNA read representations are often compared mainly by downstream accuracy. We instead frame representation choice as an information-preservation problem: which encodings preserve strand symmetry, local composition, biochemical properties, perturbation stability, positional context and close-relative separability when observed reads are 69-150 bp long, or when paired-end information is simplified as a PE150 proxy? We compare contiguous k-mers, canonical k-mers, canonical spaced seeds, property-channel encodings, phase-aware encodings and RoPE-like property encodings on controlled reads and a lightweight WGS-slice panel from clinically relevant close-relative genera. The main proposed representation, canonical spaced-property encoding, concatenates reverse-complement canonical spaced-token counts with low-dimensional DNA property summaries and then applies L2 normalization. This representation is not a replacement for canonical k-mers. It is a compact, strand-friendly and perturbation-stable auxiliary feature block. In the WGS-slice perturbation audit, adding property summaries to canonical spaced counts improved clean-versus-perturbed cosine under 3% N masking at 75 bp by 0.028 (95% bootstrap interval 0.027-0.028; n=1680 paired reads) and reduced L2 perturbation by 0.154 (0.152-0.155). Canonical k-mer and canonical spaced variants remained strong baselines in close-relative classification probes. A motif-pair diagnostic further showed that read-length effects can be nonlinear for attention-like models: below 150 bp, a class-defining contextual motif pair can be structurally absent, not merely diluted. The study supports a bounded conclusion: biologically informed auxiliary encodings can expose robustness and context properties that are hidden by accuracy-only benchmarks, whereas clinical species identification and antimicrobial-resistance claims require larger server-scale validation.
 
 ## Introduction
 
 
-Clinical mNGS has changed pathogen detection because it can identify unexpected organisms without a fixed target panel (Wilson et al., 2014) (Wilson et al., 2019). However, the computational problem is not just classification. A clinical read can be short, host-contaminated, quality-trimmed, ambiguous at N positions, or derived from either strand. These constraints make the representation layer scientifically important: before a classifier can succeed, the encoding must decide what information remains visible.
+Clinical mNGS has changed pathogen detection because it can identify unexpected organisms without a fixed target panel (Wilson et al., 2014) (Wilson et al., 2019) (Chiu and Miller, 2019). However, the computational problem is not only organism classification. Clinical reads may be shortened by adapter and quality trimming, dominated by host or background material, contain ambiguous bases, or originate from either strand (Martin, 2011) (Bolger et al., 2014) (Salter et al., 2014). These constraints make the representation layer scientifically important: before a classifier can succeed, the encoding determines which sequence properties remain available. We therefore study read representation in a lightweight, reproducible diagnostic setting rather than presenting a clinically validated classifier.
 
 Most mature metagenomic classifiers rely on k-mer or related exact-match signals. Kraken, Kraken 2, CLARK, Centrifuge and Kaiju demonstrate how powerful indexed word or translated-word matching can be at scale (Wood and Salzberg, 2014) (Wood et al., 2019) (Ounit et al., 2015) (Kim et al., 2016) (Menzel et al., 2016). Community benchmarks such as CAMI also show that metagenomic tool performance depends strongly on dataset construction, novelty, abundance and taxonomic difficulty (Sczyrba et al., 2017) (Meyer et al., 2022). This argues against using a small local experiment as a clinical leaderboard.
 
-At the same time, DNA language models and self-attention models have made sequence representation a central question. DeepMicrobes, MetaTransformer, DNABERT, Nucleotide Transformer and HyenaDNA illustrate the move from simple word counts toward learned embeddings, self-attention and single-nucleotide or long-range modeling (Liang et al., 2020) (Wichmann et al., 2023) (Ji et al., 2021) (Dalla-Torre et al., 2025) (Nguyen et al., 2023). These models motivate a more precise question for short mNGS reads: which information should be injected before learning, and which information is absent regardless of model capacity?
+Deep learning has also shifted attention from hand-designed word counts to learned sequence representations. Early DNA and regulatory-sequence models showed that convolutional and recurrent architectures can learn sequence specificity and noncoding regulatory signals (Alipanahi et al., 2015) (Zhou and Troyanskaya, 2015) (Quang and Xie, 2016). In metagenomics, DeepMicrobes and MetaTransformer illustrate read-level neural classification, including attention-based models (Liang et al., 2020) (Wichmann et al., 2023). In broader genomics, DNABERT, DNABERT-2, Nucleotide Transformer, HyenaDNA, Caduceus, GENA-LM and Evo show how pretraining, long-context modeling, reverse-complement-aware architectures and single-nucleotide modeling can be used for DNA sequences (Ji et al., 2021) (Zhou et al., 2024) (Dalla-Torre et al., 2025) (Nguyen et al., 2023) (Schiff et al., 2024) (Fishman et al., 2025) (Nguyen et al., 2024). These models motivate a more precise question for short mNGS reads: which information should be injected before learning, and which information is absent regardless of model capacity?
+
+This work makes three bounded contributions. First, it organizes short-read encodings by the information they preserve rather than by model family alone. Second, it defines and ablates a canonical spaced-property encoding that combines strand-canonical spaced seeds with interpretable biochemical summaries. Third, it provides lightweight length, perturbation, close-relative and attention-context diagnostics that identify where the proposed encoding is useful and where conventional canonical k-mers remain stronger.
 
 ## Related Work
 
 
-k-mer counting is a foundational alignment-free representation, with efficient counting algorithms and wide use in comparison, classification and sketching (Marcais and Kingsford, 2011) (Ondov et al., 2016). Canonical k-mers are not a single named model but a common strand-symmetry operation: a word and its reverse complement are mapped to the same feature index. Spaced seeds, introduced for sensitive homology search and later adapted to metagenomic classification, provide a mismatch-tolerant alternative to contiguous words (Ma et al., 2002) (Brinda et al., 2015).
+Alignment-free sequence analysis begins from the premise that exact alignment is not always necessary to compare or classify sequences. k-mer counting, MinHash sketches and related tools provide efficient word-based representations for genome comparison and metagenomic classification (Marcais and Kingsford, 2011) (Ondov et al., 2016) (Zielezinski et al., 2017). Canonical k-mers are not a single named model but a common strand-symmetry operation: a word and its reverse complement are mapped to the same feature index. This operation is attractive for mNGS because reads can originate from either strand, but it can also erase strand-specific signals. Spaced seeds, introduced for sensitive homology search and later adapted to metagenomic classification, provide a mismatch-tolerant alternative to contiguous words (Ma et al., 2002) (Brinda et al., 2015).
 
-DNA can also be treated as a signal. Shannon's information theory gives language for capacity, uncertainty and information loss (Shannon, 1948), while genomic signal processing and numerical DNA mappings provide precedent for converting bases into biochemical or numeric channels (Voss, 1992) (Anastassiou, 2001) (Cristea, 2002). Our property encodings follow this tradition: they are deliberately small, interpretable channels rather than learned embeddings.
+DNA can also be treated as a signal or numerical sequence. Shannon information theory provides language for uncertainty and information loss (Shannon, 1948), while chaos game representation, genomic signal processing and EIIP-style mappings show that bases can be converted into numeric, compositional or physicochemical channels (Jeffrey, 1990) (Voss, 1992) (Anastassiou, 2001) (Cristea, 2002) (Nair and Sreenadhan, 2006). Vector representations of variable-length k-mers provide another bridge between discrete words and continuous embeddings (Ng, 2017). Our property encodings follow this tradition but are intentionally modest: they summarize GC status, purine class, hydrogen-bond class, EIIP-like values, N fraction, length and entropy as interpretable auxiliary features rather than learned embeddings.
 
-Transformer-style encodings add another issue: position and co-occurrence. Self-attention can connect all observed tokens (Vaswani et al., 2017), and rotary position embeddings provide a compact relative-position mechanism (Su et al., 2021). But attention cannot attend to a motif that has been trimmed away. This distinction motivates our context-visibility diagnostic.
+Transformer-style encodings add a separate issue: position and co-occurrence. Self-attention can connect all observed tokens (Vaswani et al., 2017), and rotary position embeddings provide a compact relative-position mechanism (Su et al., 2021). But attention cannot attend to a motif that has been trimmed away. This distinction motivates our context-visibility diagnostic.
+
+Antimicrobial-resistance (AMR) and ARG detection add a stricter biological target than taxonomic assignment. Practical systems and databases such as CARD, AMRFinderPlus, ResFinder and MEGARes/AMR++ encode curated gene families, protein evidence, mutation rules or high-throughput resistome workflows (Alcock et al., 2023) (Feldgarden et al., 2021) (Bortolaia et al., 2020) (Bonin et al., 2023). DeepARG further shows that learned models can be applied to ARG prediction from metagenomic data (Arango-Argoty et al., 2018). Our experiments do not claim AMR calling ability. They instead ask whether compact property-aware representations could serve as auxiliary robustness or interpretability features for future ARG tasks.
 
 ## Problem Formulation
 
 
-Let a DNA read be a sequence x = (x1, ..., xL), xi in {A,C,G,T,N}. A representation is a map phi(x) into either a fixed vector or a token sequence. The paper evaluates phi by information properties rather than by assuming one downstream classifier is definitive.
+Let a DNA read be a sequence x = (x1, ..., xL), xi in {A,C,G,T,N}. A representation is a map phi(x) into either a fixed vector or a token sequence. The paper evaluates phi by information properties rather than by assuming one downstream classifier is definitive. For a diagnostic representation study, the relevant question is not only whether phi improves one accuracy number, but whether it preserves a stated source of information under a stated constraint.
 
-For a contiguous k-mer word w = x_i...x_{i+k-1}, the ordinary count vector stores c_w(x). The reverse-complement canonical form is canon(w) = min(w, rc(w)) under lexicographic order, so the canonical k-mer count feature is c_canon(w)(x). This operation is expected to improve strand consistency but may discard strand-specific information.
+For a contiguous k-mer word w = x_i...x_{i+k-1}, the ordinary count vector stores c_w(x). The reverse-complement canonical form is canon(w) = min(w, rc(w)) under lexicographic order, so the canonical k-mer count feature is c_canon(w)(x). This operation is expected to improve strand consistency but may discard strand-specific information. In this manuscript, canonical k-mers are therefore treated as a strong strand-symmetric baseline rather than as a method to be displaced.
 
-For a spaced seed pattern P = (p1, ..., pm), a spaced token is s_i,P(x) = x_{i+p1}...x_{i+pm}. A canonical spaced representation counts canon(s_i,P). The proposed canonical spaced-property representation concatenates this count vector with a compact property summary: mean and standard deviation of hydrogen-bond class, GC indicator, purine indicator and EIIP-like numeric value, plus N fraction, length scaling and sequence entropy. The final vector is L2-normalized. In code this method is named `cspaced_property_l2`; in the manuscript we call it canonical spaced-property encoding.
+For a spaced seed pattern P = (p1, ..., pm), a spaced token is s_i,P(x) = x_{i+p1}...x_{i+pm}. In the default implementation P=(0,2,4,6), but the sensitivity audit also evaluates alternative patterns. A canonical spaced representation counts canon(s_i,P) over the observed training vocabulary and L2-normalizes the count vector. The proposed canonical spaced-property representation adds a property vector g(x). For each read, g(x) contains the mean and standard deviation of four base-level channels: hydrogen-bond class H(A,T)=2 and H(C,G)=3; GC indicator; purine indicator R(A,G)=1 and R(C,T)=0; and EIIP-like numerical value. It also contains the N fraction, length/200 scaling and Shannon entropy scaled by log2(5). The final representation is phi_CSP(x) = L2([L2(c_canon-spaced(x)); g(x)]). In code this method is named `cspaced_property_l2`; in the manuscript we call it canonical spaced-property encoding.
 
-We evaluate five information properties: compactness, reverse-complement consistency, perturbation stability, read-length/context visibility and close-relative separability. Accuracy and macro-F1 are used only as tertiary probes: they test whether a simple readout can extract a signal from a representation, not whether the representation is clinically diagnostic.
+The ablation design separates the priors that are otherwise fused in the proposed representation: contiguous versus spaced tokens, noncanonical versus canonical reverse-complement pooling, canonical spaced counts with versus without property summaries, property tokens with versus without phase terms, and RoPE-like position handling with one-hot versus property channels. We evaluate five information properties: compactness, reverse-complement consistency, perturbation stability, read-length/context visibility and close-relative separability. Accuracy and macro-F1 are used only as tertiary probes: they test whether a simple readout can extract a signal from a representation, not whether the representation is clinically diagnostic.
 
 ## Experimental Design
 
 
-The local panel contains 21 genomes from six clinically relevant genera: Acinetobacter, Burkholderia, Candida, Enterobacter, Escherichia and Klebsiella. Reads were sampled as 69, 75, 100, 125 and 150 bp single-end fragments plus a PE150 proxy represented by 300 bp concatenated end information. Perturbations included reverse complement, 3% N masking and 1% substitution. The panel is intentionally lightweight and close-relative-biased; it is a stress test, not a universal microbial benchmark.
+The local panel contains 21 genomes from six clinically relevant genera: Acinetobacter, Burkholderia, Candida, Enterobacter, Escherichia and Klebsiella. Reads were sampled as 69, 75, 100, 125 and 150 bp single-end fragments plus a PE150 proxy represented by 300 bp concatenated end information. Perturbations included reverse complement, 3% N masking and 1% substitution. The panel is intentionally lightweight and close-relative-biased; it is a stress test, not a universal microbial benchmark. The PE150 proxy captures the information available from two read ends as a simplified 300 bp representation and is not a full paired-end insert, overlap or quality-score simulation.
+
+The close-relative panel is intentionally biased toward genera where species-level boundaries can be difficult for short reads. It is useful for finding failure modes, but it is not a representative sample of all bacteria, fungi or clinical backgrounds. Therefore all classification numbers in this manuscript are treated as signal-readability probes. They are not clinical sensitivity, specificity or diagnostic accuracy estimates.
 
 We also used a controlled attention/context diagnostic. Latent templates contain a shared anchor motif near position 18 and a class-specific motif near position 138. Short reads can include the anchor while excluding the class motif. This design tests whether read shortening removes an entire semantic relation rather than only a proportional number of bases.
 
-The metric hierarchy is fixed before interpreting results. Primary metrics are dimensionality, sparsity, paired cosine, perturbation L2 delta, component deltas and motif-pair visibility. Secondary metrics include close-relative stress probes. Tertiary metrics include accuracy and macro-F1 from nearest-centroid or lightweight linear readouts.
+The metric hierarchy is fixed before interpreting results. Primary metrics are dimensionality, sparsity, paired cosine, perturbation L2 delta, component deltas and motif-pair visibility. Secondary metrics include close-relative stress probes. Tertiary metrics include accuracy and macro-F1 from nearest-centroid or lightweight linear readouts. For the main property-ablation claim we add a paired-read bootstrap interval with 1000 resamples. Other p05 and p95 values in the tables are descriptive quantiles of the local sampled audit, not population-level confidence intervals.
 
 ## Results
 
@@ -56,7 +59,7 @@ The metric hierarchy is fixed before interpreting results. Primary metrics are d
 ### Canonical spaced-property encoding has its clearest advantage in perturbation stability
 
 
-The strongest supported advantage of canonical spaced-property encoding is robustness, especially under N masking. Adding property summaries to canonical spaced counts consistently increased clean-versus-perturbed cosine and reduced L2 change across 75-300 bp. The largest effect occurred at 75 bp under 3% N masking: cosine increased by 0.028 and mean L2 perturbation decreased by 0.154. The effect decreased with read length, which is plausible because longer reads provide more redundant word evidence.
+The strongest supported advantage of canonical spaced-property encoding is robustness, especially under N masking. Adding property summaries to canonical spaced counts consistently increased clean-versus-perturbed cosine and reduced L2 change across 69 bp, 75 bp, 100 bp, 125 bp, 150 bp and the PE150 proxy. Under 3% N masking at 75 bp, cosine increased by 0.028 with a 95% paired bootstrap interval of 0.027-0.028, and mean L2 perturbation decreased by 0.154 with an interval of 0.152-0.155 (n=1680 paired reads; 1000 bootstrap resamples). The largest N-masking improvement was observed at 69 bp, where cosine increased by 0.031 and L2 perturbation decreased by 0.163. The effect decreased with read length, which is plausible because longer reads provide more redundant word evidence.
 
 | condition | length | delta_paired_cosine_mean | delta_paired_cosine_p05 | delta_l2_delta_mean | l2_improvement |
 | --------- | ------ | ------------------------ | ----------------------- | ------------------- | -------------- |
@@ -65,6 +68,17 @@ The strongest supported advantage of canonical spaced-property encoding is robus
 | N_3pct    | 125    | 0.026                    | 0.038                   | -0.144              | 0.144          |
 | N_3pct    | 150    | 0.019                    | 0.028                   | -0.126              | 0.126          |
 | N_3pct    | 300    | 0.014                    | 0.019                   | -0.104              | 0.104          |
+
+The table below reports the N-masking bootstrap audit for the fused property component. Brackets denote 95% bootstrap intervals over paired clean-perturbed reads.
+
+| condition | length | n    | delta cosine         | L2 reduction         |
+| --------- | ------ | ---- | -------------------- | -------------------- |
+| N_3pct    | 69     | 1680 | 0.031 [0.031, 0.032] | 0.163 [0.161, 0.164] |
+| N_3pct    | 75     | 1680 | 0.028 [0.027, 0.028] | 0.154 [0.152, 0.155] |
+| N_3pct    | 100    | 1680 | 0.027 [0.027, 0.028] | 0.150 [0.149, 0.151] |
+| N_3pct    | 125    | 1680 | 0.026 [0.025, 0.026] | 0.144 [0.143, 0.146] |
+| N_3pct    | 150    | 1680 | 0.019 [0.019, 0.020] | 0.126 [0.125, 0.127] |
+| N_3pct    | 300    | 1680 | 0.014 [0.013, 0.014] | 0.104 [0.103, 0.104] |
 
 ![Figure 1. Perturbation stability across read lengths.](../results/figures/fig_publication_perturbation_stability.png)
 
@@ -78,7 +92,7 @@ Reverse-complement robustness was dominated by canonicalization. Canonical conti
 ### k and spaced-seed pattern sensitivity argues against a single-parameter claim
 
 
-A reviewer would reasonably ask why k=5 or why pattern (0,2,4,6) was selected. We therefore ran a lightweight sensitivity audit over k=4-7 and three spaced patterns. For N masking, canonical spaced-property variants remained the stability winners across all read lengths in the sampled audit, with paired cosine between 0.994 and 0.997. However, downstream close-relative probes were parameter-sensitive: the best readout settings changed with task and length. This is evidence for a representation-diagnostics paper, not a universal winner claim.
+A reviewer would reasonably ask why k=5 or why pattern (0,2,4,6) was selected. We therefore ran a lightweight sensitivity audit over k=4-7 and three spaced patterns. For N masking, canonical spaced-property variants remained the stability winners across all read lengths in the sampled audit, with paired cosine between 0.994 and 0.997. However, downstream close-relative probes were parameter-sensitive: the best readout settings changed with task and length. This result supports a representation-diagnostics paper rather than a universal k or pattern recommendation. The practical interpretation is that k and spacing should be selected according to the target information property: exact local resolution, mismatch tolerance, robustness to ambiguous bases or model-compatible dense input.
 
 | condition | length | family                      | parameter       | paired_cosine_mean | paired_cosine_p05 | l2_delta_mean | observed_vocab_size |
 | --------- | ------ | --------------------------- | --------------- | ------------------ | ----------------- | ------------- | ------------------- |
@@ -94,7 +108,7 @@ A reviewer would reasonably ask why k=5 or why pattern (0,2,4,6) was selected. W
 ### Read length can erase context relations relevant to attention-like models
 
 
-The attention/context diagnostic supports the user's core hypothesis: the loss caused by short reads is not always linear in base count. At 69, 75 and 100 bp the class-defining motif was absent, pair visibility was 0, and lightweight readouts stayed near chance. At 125 bp, accidental partial-prefix matches appeared but full pair visibility remained essentially absent. At 150 bp and PE150, the pair became fully visible and simple readouts reached perfect or near-perfect macro-F1. A Transformer with self-attention would have many token pairs even at 69 bp, but those pairs cannot include a missing class motif.
+The attention/context diagnostic supports the hypothesis tested here: the loss caused by short reads is not always linear in base count. At 69, 75 and 100 bp the class-defining motif was absent, pair visibility was 0, and lightweight readouts stayed near chance. At 125 bp, accidental partial-prefix matches appeared but full pair visibility remained essentially absent. At 150 bp and PE150, the pair became fully visible and simple readouts reached perfect or near-perfect macro-F1. A Transformer with self-attention would have many token pairs even at 69 bp, but those pairs cannot include a missing class motif. This is the DNA-read analogue of a language model receiving only the opening fragment of a phrase: the architecture can model relationships among observed tokens, but the intended semantic relation is unavailable if one side of the relation is absent.
 
 | length | observed_layout | pair_visible_rate | class_motif_visible_rate | representation    | macro_f1 |
 | ------ | --------------- | ----------------- | ------------------------ | ----------------- | -------- |
@@ -112,7 +126,7 @@ The attention/context diagnostic supports the user's core hypothesis: the loss c
 ### Close-relative classification is a stress probe, not the paper's main endpoint
 
 
-The close-relative WGS-slice benchmark deliberately tests a harder situation than artificial composition tasks. It does not support a broad claim that the proposed method is better for species identification. Canonical k-mer and canonical spaced variants remained strong baselines. In the clean within-genus species probe, the best averaged readout in the core comparison was canonical spaced at 125 bp. In the target/background probe, canonical spaced-property was best at the PE150 proxy. In the k/pattern sensitivity audit, best settings varied by task: target/background at 75 bp favored canonical spaced pattern 0-1-3-6, while within-genus probes favored different k-mer or spaced settings depending on length.
+The close-relative WGS-slice benchmark deliberately tests a harder situation than artificial composition tasks. It does not support a broad claim that the proposed method is better for species identification. Canonical k-mer and canonical spaced variants remained strong baselines. In the clean within-genus species probe, the best averaged readout in the core comparison was canonical spaced at 125 bp. In the target/background probe, canonical spaced-property was best at the PE150 proxy. In the k/pattern sensitivity audit, best settings varied by task: target/background at 75 bp favored canonical spaced pattern 0-1-3-6, while within-genus probes favored different k-mer or spaced settings depending on length. Because the panel is small and genus-biased, these results define local advantage regions and failure modes; they do not establish broad species-identification superiority.
 
 | probe                | length | method           | parameter       | mean_macro_f1 | sd_macro_f1 | mean_accuracy | mean_features | genera |
 | -------------------- | ------ | ---------------- | --------------- | ------------- | ----------- | ------------- | ------------- | ------ |
@@ -125,19 +139,21 @@ The close-relative WGS-slice benchmark deliberately tests a harder situation tha
 
 ![Figure 6. Close-relative WGS-slice classification probes.](../results/figures/fig_publication_close_relative_probes.png)
 
-## Model Suitability
+## Model Suitability and Application Boundaries
 
 
-Different encodings suggest different model pairings. Canonical k-mer counts remain strong for nearest-centroid, linear and database-index-like methods because they expose exact local composition with strand symmetry. Canonical spaced counts are useful for compact, mismatch-tolerant linear or centroid readouts. Canonical spaced-property encoding is best used as an auxiliary dense feature block for QC-like robustness, perturbation-aware screening or concatenation with canonical k-mer features. Property channels and RoPE-property encodings are more natural for CNNs or attention models because they preserve per-position numeric channels. The present local study does not prove Transformer superiority; it defines when attention-compatible features have enough observed context to be meaningful.
+In this diagnostic setting, different encodings suggest different model pairings. Canonical k-mer counts remain suitable for nearest-centroid, linear and database-index-like readouts because they expose exact local composition with strand symmetry. Canonical spaced counts provide a compact, mismatch-tolerant alternative. Canonical spaced-property encoding is best interpreted as an auxiliary dense feature block for robustness audits, perturbation-aware screening or concatenation with stronger exact-match features. Property channels and RoPE-property encodings are more natural inputs for CNNs or attention models because they preserve per-position numeric channels and positional phase information. The present study does not test Transformer superiority; it identifies when attention-compatible features have enough observed context to be meaningful.
+
+The advantage region for canonical spaced-property encoding is therefore narrow but real: ultra-short or lightly degraded reads, strand-ambiguous inputs, N masking, representation drift audits, and small readouts that benefit from low-dimensional biochemical summaries. It is expected to be weaker for close-relative strain resolution, allele-level ARG calling, resistance SNPs, mobile-element context, plasmid linkage, abundance estimation and any task where exact gene identity or protein-domain evidence dominates. For ARG analysis, a property-aware feature block should be tested as an adjunct to CARD/AMRFinderPlus/ResFinder-style sequence evidence, not as a replacement for curated resistance rules. Its plausible value in ARG work is interpretability and robustness auditing: for example, detecting when ambiguous bases or trimming change a read's biochemical summary while exact-match evidence remains uncertain.
 
 ## Discussion
 
 
 The central conclusion is deliberately narrower than a classification claim. Ultra-short DNA read representations differ in what they make stable, compact and visible. Canonical k-mers remain strong close-relative baselines. Canonical spaced-property encoding contributes a different advantage: compact perturbation stability and interpretability. This division is scientifically useful because mNGS workflows face both taxonomic discrimination and robustness/QC problems.
 
-The study also clarifies the role of accuracy. Accuracy and macro-F1 are helpful only when they are interpreted as readout probes. If written as clinical endpoints, the current experiments would be underpowered and non-representative. If written as representation diagnostics, they help map advantage regions and failure modes.
+The study also clarifies the role of accuracy. Accuracy and macro-F1 are helpful only when they are interpreted as readout probes. If written as clinical endpoints, the current experiments would be underpowered and non-representative. If written as representation diagnostics, they help map advantage regions and failure modes. This resolves the apparent tension between the local classification probes and the paper's purpose: accuracy is not the main claim, but it is useful evidence that a representation's preserved signal can be read by a simple model.
 
-Several claims require server-scale follow-up. A larger panel should include many strains per close-relative complex, realistic FASTQ quality profiles, host/background mixtures, abundance variation and repeated random seeds. A tiny CNN/Transformer comparison should test whether property and RoPE-property channels help when the model can learn local or global interactions. Kraken2/Centrifuge/Kaiju audits would connect representation diagnostics to clinical-pipeline baselines, and an AMR-gene task would be needed before making resistance-detection claims.
+Several claims require server-scale follow-up. A larger panel should include many strains per close-relative complex, realistic FASTQ quality profiles, host/background mixtures, abundance variation and repeated random seeds. A tiny CNN/Transformer comparison should test whether property and RoPE-property channels help when the model can learn local or global interactions. Kraken2/Centrifuge/Kaiju audits would connect representation diagnostics to clinical-pipeline baselines, and a CARD/AMRFinderPlus/ResFinder-grounded ARG task would be needed before making resistance-detection claims.
 
 ## Methods
 
@@ -145,6 +161,8 @@ Several claims require server-scale follow-up. A larger panel should include man
 Genome metadata were selected from the local blood-panel spreadsheet and available WGS FASTA sources. Missing close-relative genomes were retrieved using NCBI Datasets when available. The reproducible scripts generate the close-relative manifest, sampled reads, perturbations, representation matrices, ablation metrics, sensitivity audits, figures and this manuscript. No heavy neural model was trained locally. Nearest-centroid and lightweight linear probes were used only to test signal readability.
 
 Reverse-complement consistency was measured by paired cosine between a clean read and its reverse complement after representation. Perturbation stability was measured by paired cosine and L2 distance between clean and perturbed representations. Component ablation compared matched representations that differed by one prior: canonicalization, spaced seeding, property summary, phase or RoPE-like position handling.
+
+For the WGS-slice property-ablation audit, paired clean-perturbed comparisons used 1680 paired reads for each length and perturbation condition. Bootstrap intervals for the difference between canonical spaced-property and canonical spaced counts were computed by resampling paired read-level deltas 1000 times with a fixed seed. The interval is therefore conditional on this sampled panel and should not be interpreted as a population-level clinical confidence interval.
 
 Parameter sensitivity was run as a sampled audit. Stability used at most 120 paired reads per length/condition, k=4-7 and three spaced patterns. Classification sensitivity used 75, 150 and PE150 proxy lengths with at most 80 reads per genus. These limits make the audit reproducible on the local computer and should be expanded on a server for stronger statistical inference.
 
@@ -156,7 +174,7 @@ The code repository contains the read-generation scripts, representation builder
 ## Limitations
 
 
-The experiments are lightweight and not clinically representative. The close-relative panel has 21 genomes from six genera, so it cannot represent the microbial tree or clinical sample complexity. The classification probes use simple readouts and are intentionally not clinical performance estimates. The attention diagnostic is synthetic; it demonstrates structural context loss but does not evaluate a full Transformer. The property channels are interpretable but may not capture all biologically relevant chemistry or evolutionary constraints.
+The experiments are lightweight and not clinically representative. The close-relative panel has 21 genomes from six genera, so it cannot represent the microbial tree, host background, contamination spectrum, epidemiology or clinical sample complexity. The classification probes use simple readouts and are intentionally not clinical performance estimates. The attention diagnostic is synthetic; it demonstrates structural context loss but does not evaluate a full Transformer. The property channels are interpretable but may not capture all biologically relevant chemistry or evolutionary constraints. The study does not evaluate real AMR/ARG calling, so resistance-detection use remains a hypothesis for future validation.
 
 ## Conclusions
 
@@ -166,50 +184,90 @@ The safest conclusion is that no single DNA representation dominates all short-r
 ## References
 
 
-1. Wilson, Michael R.; Naccache, Samia N.; Samayoa, Erika; Biagtan, Mark; Bashir, Ali; Yu, Guixia; Salamat, S. M.; Somasekar, Sneha; Federman, Scot; Miller, Steve; Sokolic, Robert; Garabedian, Elitza; Candotti, Fabio; Buckley, Rebecca H.; Reed, Kurt D.; Meyer, Terry L.; Seroogy, Christine M.; Galloway, Renee; Henderson, Stuart L.; Gern, James E.; DeRisi, Joseph L.; Chiu, Charles Y. (2014). Actionable Diagnosis of Neuroleptospirosis by Next-Generation Sequencing. New England Journal of Medicine. 370. 2408--2417. https://doi.org/10.1056/NEJMoa1401268
+1. Wilson, Michael R.; Naccache, Samia N.; Samayoa, Erika; Biagtan, Mark; Bashir, Ali; Yu, Guixia; Salamat, S. M.; Somasekar, Sneha; et al. (2014). Actionable Diagnosis of Neuroleptospirosis by Next-Generation Sequencing. New England Journal of Medicine. 370. 2408--2417. https://doi.org/10.1056/NEJMoa1401268
 
-2. Wilson, Michael R.; Sample, Heather A.; Zorn, Kaitlyn C.; Arevalo, Samuel; Yu, Guixia; Neuhaus, John; Federman, Scot; Stryke, Deborah; Briggs, Brian; Langelier, Charles; Berger, Adam; Douglas, Victoria; Josephson, S. Andrew; Chow, Felicia C.; Fulton, Blair D.; DeRisi, Joseph L.; Gelfand, Jeffrey M.; Naccache, Samia N.; Bender, Jeffrey M.; Chiu, Charles Y. (2019). Clinical Metagenomic Sequencing for Diagnosis of Meningitis and Encephalitis. New England Journal of Medicine. 380. 2327--2340. https://doi.org/10.1056/NEJMoa1803396
+2. Wilson, Michael R.; Sample, Heather A.; Zorn, Kaitlyn C.; Arevalo, Samuel; Yu, Guixia; Neuhaus, John; Federman, Scot; Stryke, Deborah; et al. (2019). Clinical Metagenomic Sequencing for Diagnosis of Meningitis and Encephalitis. New England Journal of Medicine. 380. 2327--2340. https://doi.org/10.1056/NEJMoa1803396
 
-3. Sczyrba, Alexander; Hofmann, Peter; Belmann, Peter; Koslicki, David; Janssen, Stefan; Droege, Johannes; Gregor, Ivan; Majda, Stephan; Fiedler, Jessika; Dahms, Eik; Bremges, Andreas; Fritz, Adrian; Garrido-Oter, Ruben; Jorgensen, Tue Sparholt; Shapiro, Nicole; Blood, Philip D.; Gurevich, Alexey; Bai, Yang; Turaev, Dmitrij; DeMaere, Matthew Z.; Chikhi, Rayan; Nagarajan, Niranjan; Quince, Christopher; Meyer, Fernando; Balvociute, Monika; Hansen, Lars Hestbjerg; Sorensen, Soren J.; Chia, Nicholas; Denis, Bertrand; Froula, Jeff L.; Wang, Zhong; Egan, Rob; Don Kang, Dongwan; Cook, Jeffrey J.; Deltel, Charles; Beckstette, Michael; Lemaitre, Claire; Peterlongo, Pierre; Rizk, Guillaume; Lavenier, Dominique; Wu, Yu-Wei; Singer, Steven W.; Jain, Chirag; Strous, Marc; Klingenberg, Heiner; Meinicke, Peter; Barton, Michael D.; Lingner, Thomas; Lin, Hsin-Hung; Liao, Yu-Chieh; Silva, Genivaldo Gueiros Z.; Cuevas, Daniel A.; Edwards, Robert A.; Saha, Surya; Piro, Vitor C.; Renard, Bernhard Y.; Pop, Mihai; Klenk, Hans-Peter; Goeker, Markus; Kyrpides, Nikos C.; Woyke, Tanja; Vorholt, Julia A.; Schulze-Lefert, Paul; Rubin, Edward M.; Darling, Aaron E.; Rattei, Thomas; McHardy, Alice C. (2017). Critical Assessment of Metagenome Interpretation - a Benchmark of Metagenomics Software. Nature Methods. 14. 1063--1071. https://doi.org/10.1038/nmeth.4458
+3. Chiu, Charles Y.; Miller, Steven A. (2019). Clinical Metagenomics. Nature Reviews Genetics. 20. 341--355. https://doi.org/10.1038/s41576-019-0113-7
 
-4. Meyer, Fernando; Fritz, Adrian; Deng, Zhi-Luo; Koslicki, David; Gurevich, Alexey; Robertson, Gary; Alser, Mohammed; Antipov, Dmitry; Beghini, Francesco; Bertrand, Denis; Brito, Jaqueline J.; Brown, C. Titus; Buchmann, Jan; Buluc, Aydin; Chen, Bo; Chikhi, Rayan; Clausen, Philip T. L. C.; Cristian, Alesia; Dabrowski, Piotr W.; Darling, Aaron E.; Egan, Rob; Eskin, Eleazar; Georganas, Evangelos; Goltsman, Eugene; Gray, Melissa A.; Hansen, Lars Hestbjerg; Hofmeyr, Steven; Huang, Pingqin; Irber, Luiz; Jia, Hongying; Jrgensen, Tue Sparholt; Karim, Md. Rezaul; Klemetsen, Terje; Kola, Axel; Koren, Sergey; Kwan, Jason; LaPierre, Nathan; Lemaitre, Claire; Li, Chen; Limasset, Antoine; Malcher-Miranda, Fabio; Mangul, Serghei; Marcelino, Vanessa R.; Marchet, Camille; Marijon, Pierre; Meleshko, Dmitry; Mende, Daniel R.; Milanese, Alessio; Nagarajan, Niranjan; Nissen, Jakob; Nurk, Sergey; Oliker, Leonid; Paez-Espino, David; Peterlongo, Pierre; Piro, Vitor C.; Porter, Jacob S.; Rasmussen, Simon; Rees, Evan R.; Reinert, Knut; Renard, Bernhard Y.; Robertsen, Espen M.; Rosen, Gail L.; Ruscheweyh, Hans-Joachim; Sarwal, Varuni; Segata, Nicola; Seiler, Enrico; Shi, Lizhen; Sun, Fengzhu; Sunagawa, Shinichi; Srensen, Sren J.; Thomas, Torsten; Tong, Chengchen; Trajkovski, Mirko; Tremblay, Julien; Uritskiy, Gherman V.; Vicedomini, Riccardo; Wang, Zhong; Ye, Yuzhen; Yilmaz, Pelin; You, Ronghui; Zeller, Georg; Zhao, Sen; Zhu, Shanfeng; Zhu, Shaochun; Garrido-Oter, Ruben; Gastmeier, Petra; Hacquard, Stephane; Haussler, Susanne; Khaledi, Ariane; Maechler, Friederike; Mesny, Fantin; Radutoiu, Simona; Schulze-Lefert, Paul; Smit, Nathiana; Strowig, Till; Bremges, Andreas; Sczyrba, Alexander; McHardy, Alice C. (2022). Critical Assessment of Metagenome Interpretation: the Second Round of Challenges. Nature Methods. 19. 429--440. https://doi.org/10.1038/s41592-022-01431-4
+4. Martin, Marcel (2011). Cutadapt Removes Adapter Sequences from High-throughput Sequencing Reads. EMBnet.journal. 17. 10--12. https://doi.org/10.14806/ej.17.1.200
 
-5. Marcais, Guillaume; Kingsford, Carl (2011). A Fast, Lock-Free Approach for Efficient Parallel Counting of Occurrences of k-mers. Bioinformatics. 27. 764--770. https://doi.org/10.1093/bioinformatics/btr011
+5. Bolger, Anthony M.; Lohse, Marc; Usadel, Bjoern (2014). Trimmomatic: A Flexible Trimmer for Illumina Sequence Data. Bioinformatics. 30. 2114--2120. https://doi.org/10.1093/bioinformatics/btu170
 
-6. Ma, Bin; Tromp, John; Li, Ming (2002). PatternHunter: Faster and More Sensitive Homology Search. Bioinformatics. 18. 440--445. https://doi.org/10.1093/bioinformatics/18.3.440
+6. Salter, Susannah J.; Cox, Michael J.; Turek, Elina M.; Calus, Szymon T.; Cookson, William O.; Moffatt, Miriam F.; Turner, Paul; Parkhill, Julian; et al. (2014). Reagent and Laboratory Contamination Can Critically Impact Sequence-based Microbiome Analyses. BMC Biology. 12. 87. https://doi.org/10.1186/s12915-014-0087-z
 
-7. Brinda, Karel; Sykulski, Michal; Kucherov, Gregory (2015). Spaced Seeds Improve k-mer-based Metagenomic Classification. Bioinformatics. 31. 3584--3592. https://doi.org/10.1093/bioinformatics/btv419
+7. Wood, Derrick E.; Salzberg, Steven L. (2014). Kraken: Ultrafast Metagenomic Sequence Classification Using Exact Alignments. Genome Biology. 15. R46. https://doi.org/10.1186/gb-2014-15-3-r46
 
-8. Ondov, Brian D.; Treangen, Todd J.; Melsted, Pall; Mallonee, Adam B.; Bergman, Nicholas H.; Koren, Sergey; Phillippy, Adam M. (2016). Mash: Fast Genome and Metagenome Distance Estimation Using MinHash. Genome Biology. 17. 132. https://doi.org/10.1186/s13059-016-0997-x
+8. Wood, Derrick E.; Lu, Jennifer; Langmead, Ben (2019). Improved Metagenomic Analysis with Kraken 2. Genome Biology. 20. 257. https://doi.org/10.1186/s13059-019-1891-0
 
-9. Wood, Derrick E.; Salzberg, Steven L. (2014). Kraken: Ultrafast Metagenomic Sequence Classification Using Exact Alignments. Genome Biology. 15. R46. https://doi.org/10.1186/gb-2014-15-3-r46
+9. Ounit, Rachid; Wanamaker, Steve; Close, Timothy J.; Lonardi, Stefano (2015). CLARK: Fast and Accurate Classification of Metagenomic and Genomic Sequences Using Discriminative k-mers. BMC Genomics. 16. 236. https://doi.org/10.1186/s12864-015-1419-2
 
-10. Wood, Derrick E.; Lu, Jennifer; Langmead, Ben (2019). Improved Metagenomic Analysis with Kraken 2. Genome Biology. 20. 257. https://doi.org/10.1186/s13059-019-1891-0
+10. Kim, Daehwan; Song, Li; Breitwieser, Florian P.; Salzberg, Steven L. (2016). Centrifuge: Rapid and Sensitive Classification of Metagenomic Sequences. Genome Research. 26. 1721--1729. https://doi.org/10.1101/gr.210641.116
 
-11. Ounit, Rachid; Wanamaker, Steve; Close, Timothy J.; Lonardi, Stefano (2015). CLARK: Fast and Accurate Classification of Metagenomic and Genomic Sequences Using Discriminative k-mers. BMC Genomics. 16. 236. https://doi.org/10.1186/s12864-015-1419-2
+11. Menzel, Peter; Ng, Kim Lee; Krogh, Anders (2016). Fast and Sensitive Taxonomic Classification for Metagenomics with Kaiju. Nature Communications. 7. 11257. https://doi.org/10.1038/ncomms11257
 
-12. Kim, Daehwan; Song, Li; Breitwieser, Florian P.; Salzberg, Steven L. (2016). Centrifuge: Rapid and Sensitive Classification of Metagenomic Sequences. Genome Research. 26. 1721--1729. https://doi.org/10.1101/gr.210641.116
+12. Sczyrba, Alexander; Hofmann, Peter; Belmann, Peter; Koslicki, David; Janssen, Stefan; Droege, Johannes; Gregor, Ivan; Majda, Stephan; et al. (2017). Critical Assessment of Metagenome Interpretation - a Benchmark of Metagenomics Software. Nature Methods. 14. 1063--1071. https://doi.org/10.1038/nmeth.4458
 
-13. Menzel, Peter; Ng, Kim Lee; Krogh, Anders (2016). Fast and Sensitive Taxonomic Classification for Metagenomics with Kaiju. Nature Communications. 7. 11257. https://doi.org/10.1038/ncomms11257
+13. Meyer, Fernando; Fritz, Adrian; Deng, Zhi-Luo; Koslicki, David; Gurevich, Alexey; Robertson, Gary; Alser, Mohammed; Antipov, Dmitry; et al. (2022). Critical Assessment of Metagenome Interpretation: the Second Round of Challenges. Nature Methods. 19. 429--440. https://doi.org/10.1038/s41592-022-01431-4
 
-14. Liang, Qiaoxing; Bible, Paul W.; Liu, Youping; Zou, Bin; Wei, Li (2020). DeepMicrobes: Taxonomic Classification for Metagenomics with Deep Learning. NAR Genomics and Bioinformatics. 2. lqaa009. https://doi.org/10.1093/nargab/lqaa009
+14. Alipanahi, Babak; Delong, Andrew; Weirauch, Matthew T.; Frey, Brendan J. (2015). Predicting the Sequence Specificities of DNA- and RNA-binding Proteins by Deep Learning. Nature Biotechnology. 33. 831--838. https://doi.org/10.1038/nbt.3300
 
-15. Wichmann, Felix; Zamudio, Jose R.; Eils, Roland; Schlesner, Matthias (2023). MetaTransformer: Deep Metagenomic Sequencing Read Classification Using Self-attention Models. NAR Genomics and Bioinformatics. 5. lqad082. https://doi.org/10.1093/nargab/lqad082
+15. Zhou, Jian; Troyanskaya, Olga G. (2015). Predicting Effects of Noncoding Variants with Deep Learning-based Sequence Model. Nature Methods. 12. 931--934. https://doi.org/10.1038/nmeth.3547
 
-16. Ji, Yanrong; Zhou, Zhihan; Liu, Han; Davuluri, Ramana V. (2021). DNABERT: Pre-trained Bidirectional Encoder Representations from Transformers Model for DNA-language in Genome. Bioinformatics. 37. 2112--2120. https://doi.org/10.1093/bioinformatics/btab083
+16. Quang, Daniel; Xie, Xiaohui (2016). DanQ: A Hybrid Convolutional and Recurrent Deep Neural Network for Quantifying the Function of DNA Sequences. Nucleic Acids Research. 44. e107. https://doi.org/10.1093/nar/gkw226
 
-17. Dalla-Torre, Hugo; Gonzalez, Liam; Mendoza-Revilla, Javier; Carranza, Nicolas Lopez; Grzywaczewski, Adam H.; Oteri, Francesco; Dallago, Christian; Trop, Evan; Sirelkhatim, Hassan; Richard, Guillaume; Skwark, Marcin J.; Beguir, Karim; Lopez, Monica; Pierrot, Thomas (2025). Nucleotide Transformer: Building and Evaluating Robust Foundation Models for Human Genomics. Nature Methods. https://doi.org/10.1038/s41592-024-02523-z
+17. Liang, Qiaoxing; Bible, Paul W.; Liu, Youping; Zou, Bin; Wei, Li (2020). DeepMicrobes: Taxonomic Classification for Metagenomics with Deep Learning. NAR Genomics and Bioinformatics. 2. lqaa009. https://doi.org/10.1093/nargab/lqaa009
 
-18. Nguyen, Eric; Poli, Michael; Faizi, Marjan; Thomas, Armin W.; Birch-Sykes, Camden; Wornow, Michael; Patel, Aman; Rabideau, Charles; Massaroli, Stefano; Bengio, Yoshua; Ermon, Stefano; Baccus, Stephen A.; Re, Christopher (2023). HyenaDNA: Long-Range Genomic Sequence Modeling at Single Nucleotide Resolution. arXiv:2306.15794
+18. Wichmann, Felix; Zamudio, Jose R.; Eils, Roland; Schlesner, Matthias (2023). MetaTransformer: Deep Metagenomic Sequencing Read Classification Using Self-attention Models. NAR Genomics and Bioinformatics. 5. lqad082. https://doi.org/10.1093/nargab/lqad082
 
-19. Shannon, Claude E. (1948). A Mathematical Theory of Communication. Bell System Technical Journal. 27. 379--423, 623--656. https://doi.org/10.1002/j.1538-7305.1948.tb01338.x
+19. Ji, Yanrong; Zhou, Zhihan; Liu, Han; Davuluri, Ramana V. (2021). DNABERT: Pre-trained Bidirectional Encoder Representations from Transformers Model for DNA-language in Genome. Bioinformatics. 37. 2112--2120. https://doi.org/10.1093/bioinformatics/btab083
 
-20. Voss, Richard F. (1992). Evolution of Long-range Fractal Correlations and 1/f Noise in DNA Base Sequences. Physical Review Letters. 68. 3805--3808. https://doi.org/10.1103/PhysRevLett.68.3805
+20. Zhou, Zhihan; Ji, Yanrong; Li, Weijian; Dutta, Pratik; Davuluri, Ramana V.; Liu, Han (2024). DNABERT-2: Efficient Foundation Model and Benchmark for Multi-Species Genome. https://doi.org/10.48550/arXiv.2306.15006
 
-21. Anastassiou, Dimitris (2001). Genomic Signal Processing. IEEE Signal Processing Magazine. 18. 8--20. https://doi.org/10.1109/79.939833
+21. Dalla-Torre, Hugo; Gonzalez, Liam; Mendoza-Revilla, Javier; Carranza, Nicolas Lopez; Grzywaczewski, Adam H.; Oteri, Francesco; Dallago, Christian; Trop, Evan; et al. (2025). Nucleotide Transformer: Building and Evaluating Robust Foundation Models for Human Genomics. Nature Methods. 22. 287--297. https://doi.org/10.1038/s41592-024-02523-z
 
-22. Cristea, Paul D. (2002). Conversion of Nucleotides Sequences into Genomic Signals. Journal of Cellular and Molecular Medicine. 6. 279--303. https://doi.org/10.1111/j.1582-4934.2002.tb00196.x
+22. Nguyen, Eric; Poli, Michael; Faizi, Marjan; Thomas, Armin W.; Birch-Sykes, Camden; Wornow, Michael; Patel, Aman; Rabideau, Charles; et al. (2023). HyenaDNA: Long-Range Genomic Sequence Modeling at Single Nucleotide Resolution. arXiv:2306.15794
 
-23. Vaswani, Ashish; Shazeer, Noam; Parmar, Niki; Uszkoreit, Jakob; Jones, Llion; Gomez, Aidan N.; Kaiser, Lukasz; Polosukhin, Illia (2017). Attention Is All You Need. Advances in Neural Information Processing Systems. 30. arXiv:1706.03762
+23. Schiff, Yair; Kao, Chia-Hsiang; Gokaslan, Aaron; Dao, Tri; Gu, Albert; Kuleshov, Volodymyr (2024). Caduceus: Bi-Directional Equivariant Long-Range DNA Sequence Modeling. https://doi.org/10.48550/arXiv.2403.03234
 
-24. Su, Jianlin; Lu, Yu; Pan, Shengfeng; Wen, Bo; Liu, Yunfeng (2021). RoFormer: Enhanced Transformer with Rotary Position Embedding. arXiv:2104.09864
+24. Fishman, Veniamin; Kuratov, Yuri; Shmelev, Aleksei; Petrov, Maxim; Penzar, Dmitry; Shepelin, Denis; Chekanov, Nikolay; Kardymon, Olga; et al. (2025). GENA-LM: A Family of Open-source Foundational DNA Language Models for Long Sequences. Nucleic Acids Research. 53. gkae1310. https://doi.org/10.1093/nar/gkae1310
+
+25. Nguyen, Eric; Poli, Michael; Durrant, Matthew G.; Kang, Brian; Katrekar, Dhruva; Li, David B.; Bartie, Liam J.; Thomas, Armin W.; et al. (2024). Sequence Modeling and Design from Molecular to Genome Scale with Evo. Science. 386. eado9336. https://doi.org/10.1126/science.ado9336
+
+26. Marcais, Guillaume; Kingsford, Carl (2011). A Fast, Lock-Free Approach for Efficient Parallel Counting of Occurrences of k-mers. Bioinformatics. 27. 764--770. https://doi.org/10.1093/bioinformatics/btr011
+
+27. Ondov, Brian D.; Treangen, Todd J.; Melsted, Pall; Mallonee, Adam B.; Bergman, Nicholas H.; Koren, Sergey; Phillippy, Adam M. (2016). Mash: Fast Genome and Metagenome Distance Estimation Using MinHash. Genome Biology. 17. 132. https://doi.org/10.1186/s13059-016-0997-x
+
+28. Zielezinski, Andrzej; Vinga, Susana; Almeida, Jonas; Karlowski, Wojciech M. (2017). Alignment-free Sequence Comparison: Benefits, Applications, and Tools. Genome Biology. 18. 186. https://doi.org/10.1186/s13059-017-1319-7
+
+29. Ma, Bin; Tromp, John; Li, Ming (2002). PatternHunter: Faster and More Sensitive Homology Search. Bioinformatics. 18. 440--445. https://doi.org/10.1093/bioinformatics/18.3.440
+
+30. Brinda, Karel; Sykulski, Michal; Kucherov, Gregory (2015). Spaced Seeds Improve k-mer-based Metagenomic Classification. Bioinformatics. 31. 3584--3592. https://doi.org/10.1093/bioinformatics/btv419
+
+31. Shannon, Claude E. (1948). A Mathematical Theory of Communication. Bell System Technical Journal. 27. 379--423, 623--656. https://doi.org/10.1002/j.1538-7305.1948.tb01338.x
+
+32. Jeffrey, H. Joel (1990). Chaos Game Representation of Gene Structure. Nucleic Acids Research. 18. 2163--2170. https://doi.org/10.1093/nar/18.8.2163
+
+33. Voss, Richard F. (1992). Evolution of Long-range Fractal Correlations and 1/f Noise in DNA Base Sequences. Physical Review Letters. 68. 3805--3808. https://doi.org/10.1103/PhysRevLett.68.3805
+
+34. Anastassiou, Dimitris (2001). Genomic Signal Processing. IEEE Signal Processing Magazine. 18. 8--20. https://doi.org/10.1109/79.939833
+
+35. Cristea, Paul D. (2002). Conversion of Nucleotides Sequences into Genomic Signals. Journal of Cellular and Molecular Medicine. 6. 279--303. https://doi.org/10.1111/j.1582-4934.2002.tb00196.x
+
+36. Nair, Achuthsankar S.; Sreenadhan, Sivarama Pillai (2006). A Coding Measure Scheme Employing Electron-Ion Interaction Pseudopotential. Bioinformation. 1. 197--202.
+
+37. Ng, Patrick (2017). dna2vec: Consistent Vector Representations of Variable-length k-mers. arXiv:1701.06279
+
+38. Vaswani, Ashish; Shazeer, Noam; Parmar, Niki; Uszkoreit, Jakob; Jones, Llion; Gomez, Aidan N.; Kaiser, Lukasz; Polosukhin, Illia (2017). Attention Is All You Need. Advances in Neural Information Processing Systems. 30. arXiv:1706.03762
+
+39. Su, Jianlin; Lu, Yu; Pan, Shengfeng; Wen, Bo; Liu, Yunfeng (2021). RoFormer: Enhanced Transformer with Rotary Position Embedding. arXiv:2104.09864
+
+40. Alcock, Brian P.; Huynh, William; Chalil, Romeo; Smith, Keaton W.; Raphenya, Amogelang R.; Wlodarski, Mateusz A.; McArthur, Andrew G. (2023). CARD 2023: Expanded Curation, Support for Machine Learning, and Resistome Prediction at the Comprehensive Antibiotic Resistance Database. Nucleic Acids Research. 51. D690--D699. https://doi.org/10.1093/nar/gkac920
+
+41. Feldgarden, Michael; Brover, Vyacheslav; Gonzalez-Escalona, Narjol; Frye, Jonathan G.; Haendiges, Julie; Haft, Daniel H.; Hoffmann, Maria; Pettengill, James B.; et al. (2021). AMRFinderPlus and the Reference Gene Catalog Facilitate Examination of the Genomic Links among Antimicrobial Resistance, Stress Response, and Virulence. Scientific Reports. 11. 12728. https://doi.org/10.1038/s41598-021-91456-0
+
+42. Bortolaia, Valeria; Kaas, Rolf S.; Ruppe, Etienne; Roberts, Marilyn C.; Schwarz, Stefan; Cattoir, Vincent; Philippon, Arnaud; Allesoe, Rosa Lundbye; et al. (2020). ResFinder 4.0 for Predictions of Phenotypes from Genotypes. Journal of Antimicrobial Chemotherapy. 75. 3491--3500. https://doi.org/10.1093/jac/dkaa345
+
+43. Bonin, Nathalie; Doster, Enrique; Worley, Hannah; Pinnell, Lee J.; Bravo, Jonathan E.; Ferm, Peter; Marini, Simone; Prosperi, Mattia; et al. (2023). MEGARes and AMR++, v3.0: An Updated Comprehensive Database of Antimicrobial Resistance Determinants and an Improved Software Pipeline for Classification Using High-throughput Sequencing. Nucleic Acids Research. 51. D744--D752. https://doi.org/10.1093/nar/gkac1047
+
+44. Arango-Argoty, Gustavo; Garner, Elizabeth; Pruden, Amy; Heath, Lenwood S.; Vikesland, Peter; Zhang, Liqing (2018). DeepARG: A Deep Learning Approach for Predicting Antibiotic Resistance Genes from Metagenomic Data. Microbiome. 6. 23. https://doi.org/10.1186/s40168-018-0401-z
