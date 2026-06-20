@@ -112,17 +112,70 @@ spaced seed 的错配容忍性
 
 ## 5. 我们比较了哪些表征方案
 
-本项目不是只比较 CSP 和一个基线，而是把常见和新提出的表征放在同一个受控网格中比较。
+这里需要分清三件事：我们最初构思过的表征池、早期实际探索过的扩展方案、最终进入主论文核心网格的方案。前一版表格只列了主论文核心方案，所以看起来像“我们只比较了这些”。实际并不是这样。
 
-| 表征方案 | 基本原理 | 预期优势 | 预期弱点 |
+### 5.1 最初注册和构思过的方案池
+
+最初的 `feature_scheme_registry` 中，我们把 DNA 表征方案分成了更大的候选池。它们大致包括：
+
+| 类别 | 代表方案 | 当时想回答的问题 |
+|---|---|---|
+| k-mer composition | raw count、relative frequency、TF-IDF、SVD compressed k-mer、multi-k fusion | k-mer 计数、归一化、降维、多尺度融合是否影响短读长分类和稳定性 |
+| token/order 表征 | ordered k-mer token、token-id pseudo-sequence | 顺序信息是否比 composition 更重要，token 编号是否会引入伪连续性 |
+| 链方向表征 | canonical k-mer、RC-consistent token、strand flag | 合并反向互补是否提升双链一致性，是否损失方向信息 |
+| hash/近似词表 | hash / LSH k-mer token | 大 k 词表是否可以压缩，hash collision 是否可接受 |
+| 碱基级表征 | one-hot、Voss raw-base、tetrahedron representation | 单碱基身份和几何编码是否足以让模型学习 motif/composition |
+| 生化属性表征 | EIIP、GC、purine、hydrogen-bond、property channels | 生化先验是否提供可解释、扰动稳定的连续信息 |
+| 三碱基/相位先验 | three-phase signal、codon-frame channels、spaced property + phase | 是否能利用三碱基周期或位置相位先验 |
+| 位置编码表征 | sinusoidal/attribute-gated positional encoding、RoPE-like one-hot/property | Transformer/attention 风格位置关系在短读长下是否有意义 |
+| spaced/mismatch-tolerant 表征 | spaced k-mer、mismatch-tolerant aggregation | 局部错配、N、替换是否可以通过非连续 seed 缓解 |
+| 可解释 motif 表征 | prototype / interpretable motif representation | 是否能得到可解释判别片段，而不是只得到黑箱向量 |
+| 预训练方向 | small-k token with pretraining | 如果未来训练 DNA language model，小 k 或 BPE token 是否更合适 |
+
+这些方案不是都进入了最终主实验。原因很简单：论文如果把所有方向都展开，会变成一个庞大的 DNA 表征综述和模型 benchmark，而不是一篇聚焦的 CSP 方法学论文。
+
+### 5.2 早期实际探索过的扩展方案
+
+早期实验里，我们确实跑过比最终表格更多的方案。例如：
+
+| 早期探索方案 | 基本思想 | 后续处理 |
+|---|---|---|
+| raw k-mer count / canonical k-mer / TF-IDF k-mer | 比较普通 k-mer、canonical k-mer 和 TF-IDF 权重 | 保留 canonical k-mer 作为核心强基线，TF-IDF 不作为主线 |
+| one-hot / Voss / base signal | 直接保留碱基身份或标量信号 | 作为神经网络输入和底层对照，不作为 CSP 主结果 |
+| property channels | 每个位置编码氢键、GC、purine、EIIP、N mask | 保留为 CNN/tiny Transformer 兼容性探针 |
+| three-phase / codon-frame channels | 注入三碱基周期或阅读框式相位 | 结果不足以成为主张，作为探索性路线降级 |
+| spaced_kmer_no_phase / spaced_kmer_phase | spaced token 加属性或相位 | 用于消融 phase 是否带来独立收益；未成为最终主方案 |
+| RoPE-onehot / RoPE-property / rc_rope_pool | 将 one-hot 或 property channel 与位置旋转结合 | 用于 attention/position 诊断和模型适配性探索 |
+| kmer_property / attribute-gated position | 将 k-mer/base 属性与位置调制结合 | 思路有启发性，但当前证据不足，放入后续方向 |
+| oracle motif pair | attention 断点实验中的理想可见性对照 | 只用于证明“上下文是否可见”的机制，不是实际可用表征 |
+
+这些探索帮助我们排除了几类不适合作为当前主线的方向：有些方案过于依赖模型训练，有些方案解释性不够，有些方案在轻量数据上没有稳定优势，还有些方案只是为了诊断 attention/position 机制，不适合作为实际表征方法。
+
+### 5.3 最终进入主论文核心网格的方案
+
+最终主论文网格收敛到下面几类，是因为它们能直接回答本文的核心问题：在短读长和扰动下，精确身份信息、spaced seed 容错、生化属性稳定性和 hybrid 互补性分别有什么作用。
+
+| 表征方案 | 基本原理 | 为什么保留进主论文 | 预期优势 | 预期弱点 |
 |---|---|---|---|
-| 单碱基 one-hot | 每个位置用 A/C/G/T/N 通道表示 | 保留位置信息，适合 CNN/Transformer | 需要模型学习组合规律，不直接给出身份索引 |
-| canonical 5-mer | 连续 5-mer 计数，并合并反向互补 | 身份信息强，维度适中 | 对局部错误敏感 |
-| canonical 7-mer | 连续 7-mer 计数，并合并反向互补 | 身份分辨率更高 | 维度更高，短读长下更稀疏 |
-| canonical spaced seed | 隔位 token 计数，并合并反向互补 | 比连续 k-mer 更容忍局部错配 | 仍主要是离散 token，缺少生化摘要 |
-| CSP | canonical spaced seed 加 property block | 低维、链方向友好、扰动稳定、可解释 | 不适合单独做精确近缘/等位基因/SNP 判定 |
-| canonical k-mer + CSP hybrid | 精确 k-mer 证据加 CSP 稳定性辅助 | 兼顾身份和鲁棒性 | 维度增加，是否提升取决于下游任务 |
-| property channels | 将碱基转为生化属性通道 | 适合 CNN/Transformer 探针 | 单独使用时身份分辨率不足 |
+| canonical 5-mer | 连续 5-mer 计数，并合并反向互补 | 作为传统、维度适中、身份信息强的核心基线 | 身份信息强，维度适中 | 对局部错误敏感 |
+| canonical 7-mer | 连续 7-mer 计数，并合并反向互补 | 测试更大 k 是否增强身份分辨率 | 身份分辨率更高 | 维度更高，短读长下更稀疏 |
+| canonical spaced seed | 隔位 token 计数，并合并反向互补 | 单独测试 spaced seed 的贡献 | 比连续 k-mer 更容忍局部错配 | 仍主要是离散 token，缺少生化摘要 |
+| CSP | canonical spaced seed 加 property block | 本文主方法，测试 spaced seed + 生化属性是否提升稳定性 | 低维、链方向友好、扰动稳定、可解释 | 不适合单独做精确近缘/等位基因/SNP 判定 |
+| canonical 5-mer + CSP hybrid | 精确 k-mer 证据加 CSP 稳定性辅助 | 测试“身份信息 + 稳定辅助信息”是否互补 | 兼顾身份和鲁棒性 | 维度增加，是否提升取决于下游任务 |
+| canonical 7-mer + CSP hybrid | 更高分辨率 k-mer 加 CSP | 测试更强身份词表和 CSP 的组合 | 身份分辨率更高，兼具辅助稳定性 | 更稀疏，维度更高 |
+| one-hot / property channels | 单碱基身份或生化属性通道 | 主要用于 CNN/tiny Transformer 模型适配性 probe | 保留位置结构，适合 CNN/Transformer | 单独使用时身份索引不足，需要模型学习 |
+
+所以，第 5 节的准确理解应该是：我们不是只想了这些方案，而是从更大的候选池中逐步收敛。当前论文主线保留这些方案，是因为它们正好构成一条清晰证据链：
+
+```text
+canonical k-mer 代表精确身份信息；
+canonical spaced seed 代表局部错配容忍；
+CSP 代表 spaced seed + 生化属性辅助稳定性；
+hybrid 代表身份信息和稳定性信息的分层互补；
+one-hot/property channels 用于验证不同表征适合不同模型输入。
+```
+
+这样做的好处是论文不会散。没有进入核心网格的方案并不是“不存在”或“没想过”，而是当前证据不足、主张不集中，或者更适合作为后续研究方向。
 
 ## 6. 实验设计：为什么用 WGS-derived reads
 
