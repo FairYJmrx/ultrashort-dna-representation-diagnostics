@@ -4,7 +4,7 @@
 **Canonical k-mers preserve high-resolution identity evidence, whereas canonical spaced-property encoding provides compact perturbation-stable auxiliary evidence for mNGS-like reads**
 
 
-Author: MEI ruixiang
+Author: MEI Ruixiang
 
 
 ## Abstract
@@ -319,7 +319,7 @@ The WGS panel contained 21 genomes from six genera and was not designed to repre
 ## Code and Data Availability
 
 
-All code, generated lightweight reads, result tables, figures and manuscript builders are maintained in the project repository (https://github.com/FairYJmrx/ultrashort-dna-representation-diagnostics; release tag v0.2-stage2-mei-submission; exact commit hash to be reported from the public archive or cover letter at submission). Random seeds are fixed in the stage-2 scripts, and the earlier manuscript/results snapshot was preserved as an internal project archive before the stage-2 rerun. The submitted code package includes executable scripts, configuration files, generated summary tables, figures, manuscript builders and the 21-genome close-relative WGS-slice manifest; bulky downloaded reference FASTA files are intentionally excluded and can be regenerated from the manifest and preparation scripts. If journal policy requires public access, the private repository should be made public or archived with a DOI after double-blind constraints are resolved.
+All code, generated lightweight reads, result tables, figures and manuscript builders are maintained in the project repository (https://github.com/FairYJmrx/ultrashort-dna-representation-diagnostics; release tag v0.2.1-stage2-mei-submission; exact commit hash to be reported from the public archive or cover letter at submission). Random seeds are fixed in the stage-2 scripts, and the earlier manuscript/results snapshot was preserved as an internal project archive before the stage-2 rerun. The submitted code package includes executable scripts, configuration files, generated summary tables, figures, manuscript builders and the 21-genome close-relative WGS-slice manifest; bulky downloaded reference FASTA files are intentionally excluded and can be regenerated from the manifest and preparation scripts. If journal policy requires public access, the private repository should be made public or archived with a DOI after double-blind constraints are resolved.
 
 ## Conclusions
 

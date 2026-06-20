@@ -24,9 +24,9 @@ SUBTITLE = (
     "Canonical k-mers preserve high-resolution identity evidence, whereas canonical spaced-property encoding "
     "provides compact perturbation-stable auxiliary evidence for mNGS-like reads"
 )
-AUTHORS = "MEI ruixiang"
+AUTHORS = "MEI Ruixiang"
 REPO_URL = "https://github.com/FairYJmrx/ultrashort-dna-representation-diagnostics"
-SUBMISSION_TAG = "v0.2-stage2-mei-submission"
+SUBMISSION_TAG = "v0.2.1-stage2-mei-submission"
 MD_PATH = MANUSCRIPT / "stage2_manuscript_v2.md"
 DOCX_PATH = MANUSCRIPT / "stage2_manuscript_v2.docx"
 

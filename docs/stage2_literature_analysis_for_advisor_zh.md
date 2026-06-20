@@ -3,7 +3,7 @@
 生成日期：2026-06-20  
 项目：超短 mNGS 读段 DNA 表征诊断  
 当前代码仓库：`https://github.com/FairYJmrx/ultrashort-dna-representation-diagnostics`  
-建议投稿归档标签：`v0.2-stage2-mei-submission`  
+建议投稿归档标签：`v0.2.1-stage2-mei-submission`  
 当前基础实验快照：`c383ac73822dbad957d87244bd3affea3f57aa82`。注意：若在手稿中加入作者和 manifest 后再次提交，最终精确 commit hash 应以新提交或 GitHub release/Zenodo archive 为准。
 
 ## 1. 一句话给老师讲清楚
