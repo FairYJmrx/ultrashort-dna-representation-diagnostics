@@ -1,319 +1,413 @@
-# 文献脉络与论文定位分析
+# 超短 mNGS 读段 DNA 表征研究：启发式脉络与阶段性结论
 
-生成日期：2026-06-20  
-项目：超短 mNGS 读段 DNA 表征诊断  
-当前代码仓库：`https://github.com/FairYJmrx/ultrashort-dna-representation-diagnostics`  
-建议投稿归档标签：`v0.2.1-stage2-mei-submission`  
-当前基础实验快照：`c383ac73822dbad957d87244bd3affea3f57aa82`。注意：若在手稿中加入作者和 manifest 后再次提交，最终精确 commit hash 应以新提交或 GitHub release/Zenodo archive 为准。
+生成日期：2026-06-20
+项目目录：`D:/AI-NGS/信息学`
+代码仓库：`https://github.com/FairYJmrx/ultrashort-dna-representation-diagnostics`
+当前建议归档标签：`v0.2.1-stage2-mei-submission`
 
-## 1. 一句话给老师讲清楚
+## 0. 给老师汇报时的核心一句话
 
-这篇论文不是声称提出了一个可以全面替代 canonical k-mer、Kraken2 或比对流程的新分类器，而是提出一个受控的信息保持诊断框架：在 69/75 bp 这类临床 mNGS 超短读长场景中，canonical k-mer 更适合保留精确身份信息，而我们提出的 CSP 表征更适合作为低维、链方向友好、扰动稳定、可解释的辅助特征块；二者的合理关系是分层互补，而不是互相取代。
+本项目研究的不是“再做一个物种分类器”，而是先回到 mNGS 算法的输入层，讨论超短 DNA reads 在不同表征方式下到底保留了哪些信息。我们的阶段性结论是：canonical k-mer 更适合作为精确身份信息，CSP 更适合作为低维、链方向友好、扰动稳定、可解释的辅助表征；在 69/75 bp 这类短读长、N 碱基、替换、截断、局部错配等场景中，二者应被看作分层互补，而不是互相替代。
 
-## 2. 目前是否达到可发表级别
+## 1. 这个问题最初从哪里来
 
-我的判断比 Gemini 更保守。
+我们最初关心的是一个很朴素的问题：如果临床 mNGS 的 reads 本身很短，例如 75 bp 单端，质控后可能只有约 69 bp，那么把 DNA 序列交给后续模型或数据库之前，不同“表示方式”会不会已经决定了后续任务的上限。
 
-可以说：当前手稿和源码仓库已经接近“可预印本发布”和“面向生物信息学方法学期刊投稿初稿”的水平。如果把定位牢牢控制在 representation diagnostics，而不是临床物种鉴定工具或 ARG/SNP 判定工具，论文逻辑是成立的。
+常规思路往往直接比较分类准确率。但准确率本身混合了很多因素：参考数据库是否覆盖目标物种、物种之间是否近缘、k 值怎么选、模型容量是否足够、训练数据是否充足、reads 是否带有 N 或测序错误、测序片段是否被截断等。这样一来，如果某个方法准确率低，我们很难判断是表征不好，还是模型不够，还是数据不够，还是任务本身太难。
 
-不建议说：这篇文章“极难被拒稿”。这个表述过强。审稿人仍可能抓住数据规模、真实 FASTQ、外部泛化、行业工具对照和真实 ARG 数据库任务不足等问题。
+因此我们把问题前移到“表征层”：在训练复杂模型之前，先问不同 DNA 表征是否能在短读长和扰动条件下保持原始信息。这个角度类似信息论中的问题：不是先问分类器是否成功，而是先问输入被编码以后损失了哪些信息，保留了哪些信息。
 
-更稳妥的投稿判断：
+## 2. 初始直觉：为什么不能只用一种 DNA 表征
 
-| 层级 | 当前状态 | 判断 |
+DNA 序列最直接的表示是 A/C/G/T 字符串，或者单碱基 one-hot。它保留了每一个位置的碱基信息，但它本身并不提供物种身份索引，也需要模型去学习局部组合规律。
+
+k-mer 表征把连续 k 个碱基当成词。它和自然语言处理中把文本 token 化有相似之处，所以很适合进入词表、计数、索引或 Transformer 类模型。更重要的是，k-mer 是 Kraken、Kraken2、CLARK、Centrifuge 等宏基因组分类工具的核心思想之一。它的优势是身份分辨率高，缺点是对局部错误较敏感：一个碱基替换、N mask 或局部错配可能破坏多个连续 k-mer。
+
+spaced seed 提供了另一个直觉：如果不连续取碱基，而是隔位取，例如 `(0,2,4,6)`，那么局部错配不一定破坏整个 token。这来自同源搜索和 alignment-free 方法的传统。
+
+再往前想，DNA 不是普通文本。A/C/G/T 有生物化学属性，例如 GC 含量、嘌呤/嘧啶、氢键数量、EIIP-like 数值，以及 N 碱基比例、读长、熵等。这些信息不一定能精确区分近缘物种，但它们可能在短读长和扰动场景下提供更稳定的连续摘要。
+
+所以我们最初的思维路线是：是否能把 k-mer 的身份信息、spaced seed 的错配容忍性、双链 DNA 的反向互补先验、生化属性的可解释性合并起来，形成一种不依赖大模型训练的辅助表征。
+
+## 3. 文献如何启发这个方案
+
+### 3.1 临床 mNGS 文献给出的场景约束
+
+临床 mNGS 的价值在于不依赖预设靶标，可以发现常规检测覆盖不到的病原体。Wilson 等人在 NEJM 中展示了 mNGS 在感染诊断中的价值，Chiu 和 Miller 的 Nature Reviews Genetics 综述系统总结了临床宏基因组的应用背景。
+
+但是临床样本并不等于理想 clean reads。实际流程会经历 adapter 去除、质量修剪、宿主背景、低生物量污染、N 碱基、末端错误和读长缩短。Cutadapt、Trimmomatic 和污染研究说明，输入 reads 的质量和长度本身就是问题的一部分。
+
+这条文献线启发我们：如果要研究 mNGS 的底层表征，应该重点关注短读长、N、替换、截断、局部错配等输入扰动，而不是只在理想 clean reads 上比较准确率。
+
+### 3.2 k-mer 分类器文献给出的强基线
+
+Kraken、Kraken2、CLARK、Centrifuge 和 Kaiju 证明了离散 word evidence 在宏基因组分类中的强大作用。尤其 Kraken2 这类工具使用 k-mer/minimizer 与数据库索引进行快速匹配，本质上是将 reads 转化为数据库可检索的身份信号。
+
+这条文献线告诉我们两件事。第一，canonical k-mer 是强基线，不能轻易宣称新方法全面替代它。第二，k-mer 的优势集中在“精确身份识别”，而不是“扰动后仍保持连续相似性”。所以我们的论文不能写成“CSP 打败 k-mer”，而应该写成“k-mer 和 CSP 保留的信息类型不同”。
+
+### 3.3 alignment-free 与 spaced seed 文献提供了错配容忍思路
+
+alignment-free 方法用 k-mer、sketch 或 word composition 估计序列相似性，Mash、Jellyfish、alignment-free review 等工作证明了这条路线的价值。spaced seed 则来自 PatternHunter 等同源搜索方法，后来也被用于 k-mer based metagenomic classification。
+
+spaced seed 的启发是：连续 k-mer 把相邻碱基绑定得太紧，局部错误会影响多个 token；如果隔位取样，局部错误的影响可能被分散。这为我们后来的 canonical spaced seed count 提供了直接基础。
+
+### 3.4 DNA 数值信号与信息论文献提供了生化属性思路
+
+DNA 也可以被看成数值信号。Shannon entropy、Chaos Game Representation、Voss indicator、EIIP、GC content、嘌呤/嘧啶、氢键类别等方法说明，序列可以被转化为带有生物化学含义的数值特征。
+
+这些属性不一定适合单独做精确分类，但它们的优势是低维、可解释、对轻微扰动不那么脆弱。例如一个 read 中少数碱基被替换，整体 GC、氢键均值、N fraction 或 entropy 不会像连续 k-mer 词表那样发生剧烈离散跳变。
+
+这条文献线启发我们：可以把生化属性作为辅助块，而不是把 DNA 完全当作无先验文本。
+
+### 3.5 DNA foundation model 文献提醒我们区分“表征”和“模型”
+
+DNABERT、DNABERT-2、Nucleotide Transformer、HyenaDNA、Caduceus、GENA-LM、Evo 等模型说明，DNA 序列表征已经从传统 k-mer 扩展到 BPE、单碱基、长上下文、反向互补等方向。尤其 DNABERT-2 讨论了 k-mer tokenization 的效率和泛化问题，Caduceus 强调 reverse-complement equivariance，HyenaDNA 和 Evo 强调单碱基长上下文建模。
+
+这条线给我们的启发不是“我们已经证明 CSP 能让大模型更好”，而是“DNA 表征不应只被固定 k-mer 词表束缚”。在本项目中，大模型相关内容应作为动机和未来方向，而当前硬证据仍应来自受控表征诊断实验。
+
+## 4. 我们最终形成的方法：CSP 是什么
+
+CSP 全称是 canonical spaced-property encoding。它不是一个分类器，也不是一个训练得到的 embedding，而是一个确定性的 DNA read 表征。
+
+它包含两个核心部分。
+
+第一部分是 canonical spaced seed count。设一个 read 为：
+
+```text
+x = x1, x2, ..., xL
+```
+
+我们使用默认 spaced pattern：
+
+```text
+P = (0, 2, 4, 6)
+```
+
+也就是从局部窗口中隔位取碱基，形成 spaced token。然后把 token 和它的 reverse complement 映射到同一个 canonical index。这样做的目的有两个：一是让表征对双链方向更友好，二是让局部错配不至于像连续 k-mer 那样破坏所有相邻 token。
+
+第二部分是 property block。它把整个 read 的低维属性拼接进去，包括：
+
+- GC indicator 的均值和标准差；
+- purine indicator 的均值和标准差；
+- hydrogen-bond class 的均值和标准差；
+- EIIP-like value 的均值和标准差；
+- N fraction；
+- normalized length；
+- Shannon entropy。
+
+最后对 spaced count 和整体向量进行 L2 normalization。简化写法是：
+
+```text
+CSP(x) = L2([L2(canonical_spaced_count(x)); property_block(x)])
+```
+
+因此，CSP 的设计逻辑可以概括为：
+
+```text
+spaced seed 的错配容忍性
++ reverse-complement canonicalization 的链方向先验
++ 生化属性摘要的低维可解释性
+= 一个扰动稳定的辅助表征
+```
+
+## 5. 我们比较了哪些表征方案
+
+本项目不是只比较 CSP 和一个基线，而是把常见和新提出的表征放在同一个受控网格中比较。
+
+| 表征方案 | 基本原理 | 预期优势 | 预期弱点 |
+|---|---|---|---|
+| 单碱基 one-hot | 每个位置用 A/C/G/T/N 通道表示 | 保留位置信息，适合 CNN/Transformer | 需要模型学习组合规律，不直接给出身份索引 |
+| canonical 5-mer | 连续 5-mer 计数，并合并反向互补 | 身份信息强，维度适中 | 对局部错误敏感 |
+| canonical 7-mer | 连续 7-mer 计数，并合并反向互补 | 身份分辨率更高 | 维度更高，短读长下更稀疏 |
+| canonical spaced seed | 隔位 token 计数，并合并反向互补 | 比连续 k-mer 更容忍局部错配 | 仍主要是离散 token，缺少生化摘要 |
+| CSP | canonical spaced seed 加 property block | 低维、链方向友好、扰动稳定、可解释 | 不适合单独做精确近缘/等位基因/SNP 判定 |
+| canonical k-mer + CSP hybrid | 精确 k-mer 证据加 CSP 稳定性辅助 | 兼顾身份和鲁棒性 | 维度增加，是否提升取决于下游任务 |
+| property channels | 将碱基转为生化属性通道 | 适合 CNN/Transformer 探针 | 单独使用时身份分辨率不足 |
+
+## 6. 实验设计：为什么用 WGS-derived reads
+
+本项目需要的是 read-level ground truth 和可控扰动。真实临床 mNGS 数据往往有样本级诊断标签，但很难知道每一条 read 的真实来源、真实突变状态和真实扰动强度。因此，用 WGS 参考基因组切片生成 reads 是合理的受控方法。
+
+我们当前使用 21 个 WGS 参考基因组，覆盖 6 个临床相关属：
+
+- Acinetobacter；
+- Burkholderia；
+- Candida；
+- Enterobacter；
+- Escherichia；
+- Klebsiella。
+
+实验不是为了声称覆盖所有临床 mNGS 情况，而是为了控制变量：固定物种来源、读长、扰动类型和表征方式，然后观察不同表征的信息保持差异。
+
+## 7. 实验网格
+
+### 7.1 读长设置
+
+我们重点覆盖了医院短读长场景和更长读长对照：
+
+```text
+69, 75, 100, 110, 125, 150 bp, PE150 proxy
+```
+
+其中 69/75 bp 用来模拟单端短读长和质控后读长，100/110/125/150 bp 用来观察信息随长度增长的变化，PE150 proxy 用来近似双端测序信息增加后的情况。
+
+### 7.2 扰动设置
+
+我们构建了多种输入扰动：
+
+- clean；
+- 1% substitution；
+- 3% N mask；
+- trim；
+- 1% substitution + 3% N；
+- 短 indel；
+- 6-bp local mismatch。
+
+这些扰动不是“多物种污染”的含义，而是模拟测序错误、N 碱基、不完整读长、局部错配或真实轻微变异导致的 read 与标准参考不完全一致。
+
+### 7.3 指标设置
+
+主指标不是临床准确率，而是表征层的信息保持：
+
+- clean-perturbed paired cosine；
+- L2 drift；
+- nearest-clean retrieval；
+- feature dimension；
+- feature density；
+- observed vocabulary coverage。
+
+下游 readout 只作为辅助探针：
+
+- nearest centroid；
+- logistic regression；
+- MLP；
+- 1D-CNN；
+- tiny Transformer。
+
+这些模型的作用是看表征是否容易被轻量读出，而不是证明真实临床分类器已经完成。
+
+## 8. 主实验结果一：CSP 在扰动稳定性上最强
+
+在 WGS-slice 网格中，CSP 在 42/42 个“读长 × 扰动”组合中都是 clean-perturbed stability 的最优表征。平均来看：
+
+| 比较 | 平均 cosine gain | 最小 gain | 最大 gain | 胜出次数 |
+|---|---:|---:|---:|---:|
+| CSP 相对 canonical 5-mer | 0.045 | 0.004 | 0.111 | 42/42 |
+| CSP 相对 canonical 7-mer | 0.080 | 0.008 | 0.163 | 42/42 |
+| CSP 相对 canonical spaced seed | 0.028 | 0.002 | 0.102 | 42/42 |
+| CSP 相对 canonical 5-mer + CSP | 0.022 | 0.002 | 0.055 | 42/42 |
+
+这说明 CSP 的优势不是某一个读长或某一个扰动条件下的偶然现象，而是在受控网格中表现出稳定的 perturbation-preserving 特征。
+
+## 9. 主实验结果二：69/75 bp 医院式场景中优势最清楚
+
+69/75 bp 是本项目最重要的应用动机。以 69 bp 为例：
+
+| 扰动 | 表征 | mean paired cosine | mean L2 drift |
+|---|---|---:|---:|
+| 1% substitution | canonical 5-mer | 0.963 | 0.182 |
+| 1% substitution | canonical spaced seed | 0.977 | 0.142 |
+| 1% substitution | CSP | 0.998 | 0.047 |
+| 3% N mask | canonical 5-mer | 0.940 | 0.344 |
+| 3% N mask | canonical spaced seed | 0.963 | 0.270 |
+| 3% N mask | CSP | 0.994 | 0.107 |
+| 1% substitution + 3% N | canonical 5-mer | 0.902 | 0.428 |
+| 1% substitution + 3% N | canonical spaced seed | 0.938 | 0.340 |
+| 1% substitution + 3% N | CSP | 0.991 | 0.128 |
+| 6-bp local mismatch | canonical 5-mer | 0.877 | 0.494 |
+| 6-bp local mismatch | canonical spaced seed | 0.885 | 0.476 |
+| 6-bp local mismatch | CSP | 0.988 | 0.157 |
+
+这个结果支持一个比较明确的结论：当 reads 很短，而且存在 N、替换或局部错配时，连续 k-mer 的向量漂移更明显，而 CSP 更能把 perturbed read 保持在 clean read 附近。
+
+这里需要注意，稳定性不等于分类准确率。CSP 更稳定，说明它更适合做辅助鲁棒特征；但精确物种、菌株、ARG allele 或 SNP 判定仍需要高分辨率身份信息。
+
+## 10. 主实验结果三：分类 readout 没有证明 CSP 全面替代 k-mer
+
+轻量分类 readout 的结果反而帮助我们确认了论文边界。
+
+在 target/background probe 中，CSP 的 mean macro-F1 为 0.507，canonical 5-mer 为 0.491，canonical spaced seed 为 0.481，差异方向支持 CSP 有一定辅助价值，但绝对值并不高。
+
+在 within-genus species probe 中，canonical 5-mer 的 mean macro-F1 为 0.309，canonical 7-mer 为 0.307，canonical 5-mer + CSP 为 0.307，CSP 为 0.301。这个结果说明，在近缘属内物种区分中，canonical k-mer 仍然是强基线，CSP 不能被表述为全面替代。
+
+因此，本研究的主张应该是：
+
+```text
+canonical k-mer 负责精确身份信息；
+CSP 负责扰动稳定和辅助置信信息；
+hybrid 或分层证据更适合真实 mNGS 场景。
+```
+
+## 11. 主实验结果四：CSP 的优势来自组合，而不是单一属性
+
+我们做了 CSP 内部消融，把 spaced seed、GC、purine、hydrogen bond、EIIP、N fraction、entropy、length 等组成拆开比较。
+
+消融结果支持两个判断。
+
+第一，property block 对稳定性有贡献。只用 canonical spaced seed 已经比连续 k-mer 更稳，但加入生化属性后，CSP 的 clean-perturbed proximity 进一步改善。
+
+第二，没有任何单一属性可以独立解释全部优势。GC、purine、hydrogen bond、EIIP、N fraction、entropy、length 各自只覆盖某一种信息；完整 CSP 更像一个小型信息摘要集合，把局部 token、链方向和全局生化属性结合起来。
+
+这点对论文很重要，因为它回答了审稿人可能提出的问题：CSP 不是简单堆特征，而是把多个有文献来源的生物信息先验组织成一个用于短读长扰动诊断的辅助表征。
+
+## 12. 主实验结果五：attention 断点不是 125 到 150 的单一跳变
+
+我们曾经观察到 125 bp 到 150 bp 之间有明显变化，但单独比较这两个点不足以说明机制。因此后续增加了更密集的长度网格：
+
+```text
+110, 115, 120, 125, 130, 135, 138, 140, 142, 145, 148, 150, 155, 160 bp
+```
+
+同时改变 motif 位置，避免结论只来自固定位置。结果显示，full motif-pair visibility 的出现位置随 motif position 改变：
+
+| motif position | first length with full pair visibility |
+|---:|---:|
+| 120 | 130 |
+| 130 | 140 |
+| 138 | 148 |
+| 145 | 155 |
+
+这说明读长影响不是简单的“多了多少 bp”，而是“关键上下文是否同时可见”。如果一个模型需要学习类似 motif pair 或上下文组合的信号，那么短读长截断可能导致语义关系断裂。这个结果为我们讨论 Transformer/attention 下的短读长信息缺失提供了更清楚的诊断证据。
+
+## 13. 主实验结果六：模型适配性是任务依赖的
+
+我们还比较了 MLP、1D-CNN 和 tiny Transformer 的轻量 probe。
+
+结果显示没有一个模型或表征在所有任务中普遍最优。例如：
+
+- global species probe 中，MLP + canonical 5-mer 或 hybrid 相对更好，但整体 F1 较低；
+- target/background probe 中，CNN + one-hot 和 MLP + CSP 都有一定表现；
+- within-genus Enterobacter probe 中，MLP + hybrid 最好，CSP 次之，说明 hybrid 在近缘任务上更合理。
+
+这个结果说明，表征和模型应该匹配：
+
+| 输入类型 | 更自然的模型 | 原因 |
 |---|---|---|
-| 预印本 / 组内汇报 | 已基本足够 | 可以发布或汇报 |
-| BMC Bioinformatics / Frontiers in Bioinformatics / 方法学友好期刊 | 有机会 | 需要保持 modest claim，并补好代码可复现性 |
-| Bioinformatics / NAR Genomics and Bioinformatics | 有潜力但不稳 | 最好补服务器级外部验证、Kraken2/Centrifuge/Kaiju 对照、真实 ARG 数据库任务 |
-| 临床 mNGS 或耐药检测强应用期刊 | 暂不建议 | 当前证据不是临床验证或真实诊断 pipeline |
+| CSP 这种全局低维向量 | logistic / MLP / nearest-centroid | 表征已经是聚合后的特征向量 |
+| one-hot 或 property channels | CNN / tiny Transformer | 保留位置序列结构，适合局部卷积或 attention |
+| canonical k-mer count | 线性模型 / MLP / 数据库索引 | 离散身份证据强 |
+| hybrid | MLP / ensemble / 分层 pipeline | 同时包含身份与稳定性证据 |
 
-## 3. 为什么这篇论文有意义
+因此，论文不能声称“CSP 适合所有模型”，更稳妥的说法是：CSP 适合作为轻量、可解释、扰动稳定的 tabular auxiliary block。
 
-传统 mNGS 论文常把问题直接落在“分类准确率”上。但对于短读长，尤其 69/75 bp 这种输入，准确率的来源混合了很多因素：数据库覆盖、物种近缘程度、k 的选择、模型容量、训练样本量、错误模式、读长截断位置等。我们现在做的是把问题前移到“表征层”：先问一个 read 被扰动后，编码向量是否仍接近它的 clean 版本，是否保留链方向鲁棒性，是否在更少维度中保留可解释的生物化学信息。
+## 14. ARG/SNP 相关实验如何理解
 
-这使论文从“我们的小模型准确率更高”转为“不同 DNA 表征负责不同类型的信息证据”。这个定位更科学，也更能防止审稿人质疑轻量数据集的临床普适性。
+我们做了 synthetic ARG/SNP boundary probe，但这部分不能被过度解释。当前结果只能说明一个边界：稳定性和精确身份判定不是同一个问题。
 
-## 4. 文献主线一：临床 mNGS 与短读长现实问题
+ARG family、ARG allele、resistance SNP 的 readout 在 synthetic task 上都可以达到较高数值，但这并不等于真实耐药检测已经解决。真实 ARG/AMR 任务需要 CARD、ResFinder、AMRFinderPlus、MEGARes 等数据库支持，还需要考虑 allele boundary、耐药 SNP、蛋白功能、基因上下文、质粒和移动元件。
 
-临床 mNGS 的价值在于不依赖预设靶标，可以发现常规检测难覆盖的病原体。Wilson 等人的 NEJM 病例和临床脑膜炎/脑炎测序研究，以及 Chiu 和 Miller 在 Nature Reviews Genetics 的临床宏基因组综述，奠定了 mNGS 作为感染诊断工具的背景。
+因此，当前论文可以把 ARG/SNP 作为边界讨论和未来方向，而不应把它作为主卖点。更合适的表述是：CSP 可能帮助处理 degraded/ambiguous reads 的辅助相似性判断，但最终 ARG/SNP 判定仍应依赖 canonical k-mer、alignment、蛋白域或 curated database evidence。
 
-但是临床样本常伴随低生物量、宿主背景、污染、adapter、低质量末端、N 碱基、测序错误和读长质控缩短。Cutadapt、Trimmomatic 和污染研究说明，真实测序前处理会改变输入序列，而不是把标准长度、完全 clean 的 DNA 直接交给算法。
+## 15. 目前形成的科学结论
 
-本论文与这条文献线的关系：
+第一，短读长 DNA 表征不能只看分类准确率。准确率是模型、数据库、数据量、扰动和任务难度共同作用的结果，而表征层信息保持可以更早、更清楚地揭示输入信息损失。
 
-- 我们不是验证临床 mNGS 敏感性或特异性。
-- 我们抓住了临床 mNGS 输入侧的一个底层问题：69/75 bp 短读长经过 substitution、N mask、trim、局部 mismatch 后，哪种表征能更稳定地保存原始信息。
-- 因此“协和式 75 bp 单端、质控后约 69 bp”的场景可以作为论文动机，但不能直接写成临床诊断结论。
+第二，canonical k-mer 仍然是精确身份信息的强基线。尤其在近缘物种、菌株、ARG allele、耐药 SNP 等任务中，离散 k-mer 或数据库比对仍不可替代。
 
-代表文献：
+第三，CSP 的优势区间是低维、链方向友好、N/替换/截断/局部错配下的扰动稳定和可解释辅助。它更适合回答“这个 read 被扰动后是否仍接近原始信号”，而不是单独回答“它属于哪个物种或哪个耐药等位基因”。
 
-- Wilson et al., 2014, NEJM, actionable diagnosis by NGS.
-- Wilson et al., 2019, NEJM, clinical metagenomic sequencing for meningitis and encephalitis.
-- Chiu and Miller, 2019, Nature Reviews Genetics, clinical metagenomics.
-- Martin, 2011, Cutadapt.
-- Bolger et al., 2014, Trimmomatic.
-- Salter et al., 2014, reagent and laboratory contamination.
+第四，hybrid 或分层证据可能是更合理路线。真实 mNGS pipeline 可以让 canonical k-mer、alignment 或数据库工具提供身份判定，让 CSP 提供扰动稳定、质量审计或辅助置信度信息。
 
-## 5. 文献主线二：canonical k-mer 与主流宏基因组分类器
+第五，attention 类模型下的读长缺失不只是少了几个碱基，而是可能导致关键上下文关系不可见。这个结果给后续 DNA Transformer 或 DNA LLM 方向提供了一个可解释的短读长诊断角度。
 
-Kraken、Kraken2、CLARK、Centrifuge 和 Kaiju 都证明了离散 word evidence 的强大。Kraken/Kraken2 的基本思想是通过 k-mer/minimizer 与参考数据库匹配来进行分类。CLARK 强调用 discriminative k-mers，Centrifuge 强调压缩索引，Kaiju 使用蛋白层面的翻译匹配提高敏感性。
+## 16. 这篇论文现在适合怎样定位
 
-这条线说明两点：
+建议论文定位为：
 
-1. canonical k-mer 在物种精确识别上是非常强的基线。  
-2. 如果论文声称 CSP 全面超过 canonical k-mer 或 Kraken2，审稿人一定会质疑。
-
-本论文的合理定位：
-
-- canonical k-mer 是高分辨率身份信息。
-- CSP 不是替代这个身份证据，而是在短读长扰动场景下提供稳定辅助证据。
-- hybrid 或 layered evidence 才更接近真实 mNGS/ARG pipeline。
-
-代表文献：
-
-- Wood and Salzberg, 2014, Kraken.
-- Wood et al., 2019, Kraken2.
-- Ounit et al., 2015, CLARK.
-- Kim et al., 2016, Centrifuge.
-- Menzel et al., 2016, Kaiju.
-- CAMI I/II benchmark 强调 metagenomic 结果受数据库、未知物种、群落结构和工具假设影响。
-
-## 6. 文献主线三：alignment-free、MinHash 与 spaced seed
-
-alignment-free 方法用序列 word 或 sketch 表征替代全局/局部比对。Jellyfish、Mash、alignment-free reviews 说明 k-mer/count/sketch 是生物信息学中的经典表示方式。Mash 用 MinHash 把大规模基因组和宏基因组距离估计变成轻量 sketch 问题。
-
-spaced seed 则来自 PatternHunter 等 homology search 传统。它不连续读取碱基位置，而是按 pattern 采样，例如保留第 0、2、4、6 位。这样局部错配不一定破坏整个 token，因此有一定 mismatch tolerance。Brinda 等人进一步说明 spaced seed 可改善 k-mer based metagenomic classification。
-
-本论文与这条文献线的关系：
-
-- CSP 的第一部分不是凭空发明，而是从 canonical spaced seed count 出发。
-- 我们的新意在于把 spaced seed 的错配容忍性，与 reverse-complement canonicalization 及低维生化属性块合并到一个 deterministic auxiliary representation。
-- 这使 CSP 的理论来源更清楚：它不是深度学习 embedding，而是 alignment-free/spaced-seed/biochemical-summary 三条线的组合。
-
-代表文献：
-
-- Ma et al., 2002, PatternHunter.
-- Brinda et al., 2015, spaced seeds improve k-mer-based metagenomic classification.
-- Ondov et al., 2016, Mash.
-- Zielezinski et al., 2017, alignment-free sequence comparison review.
-
-## 7. 文献主线四：DNA 数值化、信息论与生化属性表征
-
-DNA 序列不只能被看成 A/C/G/T 字符串，也可以被编码成信号或属性通道。经典方向包括 Shannon entropy、Chaos Game Representation、Voss indicator、EIIP、GC content、purine/pyrimidine、氢键强弱等。这些方法不一定在物种精确识别上超过 k-mer，但它们提供了可解释的低维属性。
-
-本论文中的 CSP property block 包括：
-
-- GC indicator：反映 GC composition。
-- purine indicator：A/G 与 C/T 的化学类别差异。
-- hydrogen-bond class：A/T 两个氢键，G/C 三个氢键。
-- EIIP-like value：把碱基映射到电子-离子相互作用势相关数值。
-- N fraction：显式记录不确定碱基比例。
-- normalized length：记录读长变化。
-- Shannon entropy：记录碱基分布复杂度。
-
-这个组合的科学意义不是“生化属性必然提高分类准确率”，而是：当 read 被 N、substitution、trim 或局部 mismatch 破坏时，低维属性摘要可以保存一部分连续空间中的相似性，使 clean 与 perturbed read 在向量空间中不至于完全漂移。
-
-## 8. 文献主线五：DNA 深度学习与 foundation model
-
-DNA 深度学习已经从 CNN/RNN 扩展到 Transformer 和长上下文模型。DeepBind、DeepSEA、DanQ 说明神经网络可以学习序列调控特征。DeepMicrobes 和 MetaTransformer 将深度模型用于 metagenomic read 分类。DNABERT、DNABERT-2、Nucleotide Transformer、HyenaDNA、Caduceus、GENA-LM、Evo 等进一步把 DNA 当作“语言”来预训练。
-
-这条线对我们很重要，但也需要谨慎。
-
-能支持我们的地方：
-
-- DNA 表征不必局限于固定 k-mer 词表。
-- k-mer tokenization 本身存在效率、上下文和近似问题，DNABERT-2 明确讨论了 k-mer tokenization 的限制并引入 BPE。
-- HyenaDNA 和 Evo 强调单碱基分辨率与长上下文，说明深度模型并非必须依赖 k-mer word。
-- Caduceus 强调 reverse-complement equivariance，支持“链方向先验”是合理的 DNA 模型设计因素。
-
-不能过度外推的地方：
-
-- 我们没有训练大模型，因此不能声称 CSP 会让 Transformer 或 LLM 表现更好。
-- 我们的 tiny Transformer/CNN/MLP 只是兼容性 probe，用于说明不同表征适合不同模型输入，而不是证明模型 SOTA。
-- 与 foundation model 相关的论证应该放在 Introduction/Discussion/Future Work 中，而不是 Results 的硬结论。
-
-代表文献：
-
-- Alipanahi et al., 2015, DeepBind.
-- Zhou and Troyanskaya, 2015, DeepSEA.
-- Quang and Xie, 2016, DanQ.
-- Liang et al., 2020, DeepMicrobes.
-- Wichmann et al., 2023, MetaTransformer.
-- Ji et al., 2021, DNABERT.
-- Zhou et al., 2024, DNABERT-2.
-- Dalla-Torre et al., 2025, Nucleotide Transformer.
-- Nguyen et al., 2023, HyenaDNA.
-- Schiff et al., 2024, Caduceus.
-- Nguyen et al., 2024, Evo.
-
-## 9. 文献主线六：ARG 与耐药数据库
-
-耐药检测不只是“像不像某个 ARG”。临床可解释的 ARG/SNP 判断需要数据库、等位基因边界、耐药位点、蛋白结构/功能、基因上下文、质粒或移动元件信息。CARD、AMRFinderPlus、ResFinder、MEGARes/AMR++ 和 DeepARG 分别代表了 curated database、规则/数据库判定、耐药表型预测和深度学习预测等方向。
-
-本论文可以讨论 ARG，但要严格降级：
-
-- 可以说：CSP 在 synthetic ARG/SNP boundary probe 中表现出扰动后相似性保持能力。
-- 不能说：CSP 可以独立完成 ARG allele calling、耐药 SNP 判定或临床耐药解释。
-- 更合理说法：未来真实 ARG pipeline 中，CSP 可以作为 degraded/ambiguous reads 的辅助鲁棒性特征，而最终判定仍需要 canonical k-mer、alignment、蛋白域或 curated database evidence。
-
-代表文献：
-
-- CARD 2023.
-- AMRFinderPlus.
-- ResFinder 4.0.
-- MEGARes/AMR++ v3.0.
-- DeepARG.
-
-## 10. 我们提出的 CSP 到底是什么
-
-CSP 是 canonical spaced-property encoding。它包含两部分：
-
-第一部分是 canonical spaced seed count。  
-例如默认 pattern 取非连续位置 `(0,2,4,6)`，将读段中的 spaced token 计数，并将 token 与其 reverse complement 映射到同一个 canonical index。这一部分提供链方向友好的、错配相对容忍的离散证据。
-
-第二部分是 property block。  
-它把整个 read 的 GC、purine、氢键、EIIP-like 值、N fraction、length、entropy 等低维属性拼接进去。这一部分不是为了精确定位某个 SNP，而是保留可解释的连续摘要。
-
-最后进行 L2 normalization。  
-这让向量比较可以使用 cosine/L2 drift 等稳定性指标。
-
-所以 CSP 的本质是：spaced seed 的局部错配容忍性 + reverse-complement canonicalization 的链方向友好性 + 生化属性摘要的低维可解释性。
-
-## 11. CSP 的优势区间和弱势区间
-
-优势区间：
-
-- 69/75 bp 超短读长。
-- substitution、N mask、trim、短 indel、局部 mismatch 这类轻度测序错误或真实变异导致的输入扰动。
-- 需要比较 clean 与 perturbed read 是否仍在向量空间中接近。
-- 需要低维、可解释、可作为 MLP/logistic/nearest-centroid 辅助输入的特征。
-- 需要辅助判断一个 read 是否仍保留“像原始信号”的整体证据。
-
-弱势区间：
-
-- 近缘种、菌株和等位基因精确区分。
-- ARG allele 精确识别。
-- 耐药 SNP 位点判定。
-- 基因上下文、质粒连接、移动元件归属。
-- 追求纯粹临床分类准确率的完整 pipeline。
-
-一句话：CSP 更像鲁棒性和解释性辅助块，canonical k-mer 更像精确身份识别证据。
-
-## 12. 当前实验已经支持什么
-
-已经支持的硬结论：
-
-- 在 WGS-slice 网格中，CSP 在 42/42 个读长-扰动组合中都是 clean-perturbed stability 的最优表征。
-- 69/75 bp 医院式场景中，CSP 在 N mask、substitution、local mismatch、combined perturbation 下显著降低 L2 drift。
-- CSP 内部消融显示，property block 对稳定性有贡献，完整组合比单一属性更合理。
-- readout probe 没有证明 CSP 普遍提高分类准确率，这反而支持论文的边界表述。
-- attention 断点实验说明 125-150 bp 不是一个单一魔法阈值，motif 位置改变会导致可见性断点移动到 130、140、148 或 155 bp。
-- 神经网络兼容性实验说明 MLP/CNN/tiny Transformer 的表现依赖任务和输入形式，不能强行说某个模型普遍适配所有表征。
-- ARG/SNP boundary probe 支持“稳定性”和“精确身份判定”必须区分。
-
-需要降级为 Discussion/Future Work 的内容：
-
-- CSP 让大 Transformer 更好。
-- CSP 可以单独完成临床物种鉴定。
-- CSP 可以单独完成 ARG allele calling 或耐药 SNP 判定。
-- 当前轻量数据可以代表全部 mNGS 场景。
-
-## 13. 审稿人可能会问什么
-
-问题 1：为什么不用真实临床准确率作为主结论？  
-回答：因为本文研究的是表征层的信息保持，不是完整临床 pipeline。用小规模数据硬做临床准确率会造成过度声明。本文把准确率 probe 作为辅助读出，而把 clean-perturbed stability、L2 drift、retrieval、维度和稀疏度作为主证据。
-
-问题 2：CSP 为什么不是简单堆特征？  
-回答：CSP 的组成有明确来源。spaced seed 来自 homology search 和 metagenomic classification，reverse-complement canonicalization 是双链 DNA 的必要先验，property block 来自 DNA 数值化和生化属性表征。消融实验用于证明 property block 的贡献不是单一属性偶然造成。
-
-问题 3：为什么 canonical k-mer 仍然重要？  
-回答：k-mer 是物种精确身份证据，主流 metagenomic classifier 已经证明其有效性。CSP 的目标是稳定辅助，不是替代。论文应该把二者写成分层证据关系。
-
-问题 4：为什么实验数据较小仍有价值？  
-回答：因为论文定位是受控诊断。小规模 WGS-slice panel 可以控制读长、扰动、表征和模型读出，适合回答“表征保留什么信息”。但外部泛化和临床 accuracy 需要服务器阶段实验。
-
-问题 5：如果要冲更高期刊，最该补什么？  
-回答：扩展真实 WGS panel，多菌株 genome-held-out；加入真实 FASTQ quality profile、host/background、abundance mixture；用同一 FASTQ 输入对 Kraken2/Centrifuge/Kaiju 做独立 pipeline 漂移审计；用 CARD/ResFinder/AMRFinderPlus marker 做真实 ARG 任务。
-
-## 14. 对 Gemini 评价的逐条判断
-
-合理部分：
-
-- 把 lightweight 改写为 controlled diagnostic framework 是正确的。
-- 明确 CSP 是 auxiliary feature block，而非替代 canonical k-mer，是正确的。
-- 固定随机种子、WGS manifest、GitHub commit hash 是必须的。
-- 补轻量 CNN/MLP/tiny Transformer probe 对“模型兼容性”有帮助。
-
-需要修正的部分：
-
-- “极难被拒稿”过度乐观。当前证据链能支持方法学初稿，但不能保证二区以上接收。
-- “只需补 CNN 噪声消融就完全具备主流期刊档次”也偏乐观。主流生信期刊很可能继续要求更大外部 panel 或标准 pipeline 对照。
-- Kraken2 对比应写成现实 pipeline sanity check，而不是公平表征层对照，因为 Kraken2 不能直接接收 CSP 数值向量。
-
-## 15. 建议的最终论文主题
-
-英文主题可保持：
-
+```text
 Controlled information-preservation diagnostics for ultra-short DNA read representations.
+```
 
-中文主题：
+中文可以概括为：
 
-面向超短 mNGS 读段的 DNA 表征信息保持诊断：canonical k-mer 负责精确身份证据，CSP 提供紧凑、链方向友好、扰动稳定的辅助证据。
+```text
+面向超短 mNGS 读段的 DNA 表征信息保持诊断：
+canonical k-mer 提供精确身份信息，
+CSP 提供紧凑、链方向友好、扰动稳定的辅助证据。
+```
 
-这个主题比“提出一个更好的分类器”更稳，也更符合当前实验证据。
+这个定位的好处是符合当前证据。我们不是把论文写成临床分类器，也不是写成 ARG 检测工具，而是写成一个受控方法学研究：不同 DNA 表征在短读长扰动下保留的信息类型不同。
 
-## 16. 建议投递策略
+## 17. 距离发表还有多远
 
-短期：
+如果目标是尽快投稿，当前核心实验已经可以支撑一篇方法学初稿。最关键的是保持主张边界，不把结论推到临床诊断或真实 ARG 识别。
 
-- 先作为预印本或组内/院内项目报告完善。
-- 若投稿，优先选择方法学友好、允许 proof-of-concept/controlled benchmark 的期刊。
+投稿前建议完成的最低修订：
 
-中期增强：
+1. 在论文中明确说明 WGS-derived reads 的必要性：它提供 read-level ground truth、可控读长和可控扰动，而真实临床 mNGS 通常只有样本级标签。
+2. 明确 CSP 的优势区间：69/75 bp、N、substitution、trim、local mismatch、低维、链方向友好、可解释、辅助稳定性。
+3. 明确 CSP 的弱势区间：近缘种、菌株、ARG allele、耐药 SNP、基因上下文、质粒连接和单独临床分类准确率。
+4. 把 Kraken2/Centrifuge/Kaiju 独立 pipeline 对照、真实 FASTQ quality profile、更大 WGS panel 和真实 ARG 数据库任务写成 Future Work，而不是当前必须完成的主实验。
+5. 把代码仓库、manifest、固定随机种子、环境文件和提交标签整理到 Code Availability 中。
+6. 完成正式 title page：作者姓名、单位、通讯作者、邮箱、贡献声明、利益冲突、基金或致谢。
 
-- 服务器上补真实 FASTQ 和更大 WGS panel。
-- 做 Kraken2/Centrifuge/Kaiju 同输入独立 pipeline 对照。
-- 做真实 CARD/ResFinder/AMRFinderPlus marker 任务。
+如果目标是冲更高档次期刊，最好进一步补强：
 
-增强后：
+- 扩大 WGS panel，引入更多菌株和 genome-held-out 测试；
+- 加入更真实的 FASTQ quality profile 模拟；
+- 用同一批 raw FASTQ 输入做 Kraken2/Centrifuge/Kaiju 的现实 pipeline sanity check；
+- 使用 CARD/ResFinder/AMRFinderPlus marker 构建真实 ARG 子任务。
 
-- 再考虑 Bioinformatics 或 NAR Genomics and Bioinformatics。
+这些增强项会提高说服力，但不是当前“表征诊断论文”能否形成初稿的必要条件。
 
-## 17. 给老师汇报时的三分钟版本
+## 18. 给老师展示时的推荐讲述顺序
 
-第一段：临床 mNGS 的问题不是只有分类器，输入读长短、质控后可能只有 69 bp，而且有 N、错配、替换和截断。我们想问不同 DNA 表征在这些扰动下到底保留了什么信息。
+可以按下面顺序讲，大约 8 到 10 分钟。
 
-第二段：经典 canonical k-mer 很强，适合精确身份识别，这是 Kraken2 等工具的基础。但它在短读长扰动下容易因为少数碱基变化导致 token 破碎。我们提出 CSP，把 canonical spaced seed 与 GC、purine、氢键、EIIP、N fraction、length、entropy 等生化属性合并，形成一个低维、链方向友好、扰动稳定的辅助表征。
+第一步，讲问题背景。
+临床 mNGS reads 很短，质控、N、错配、截断会改变输入。我们不先问分类器准不准，而先问不同 DNA 表征在输入受损时保留什么信息。
 
-第三段：实验发现 CSP 在所有长度-扰动稳定性组合中都最稳定，尤其 69/75 bp 下对 N mask 和 local mismatch 更稳；但 CSP 不应该单独承担近缘物种、ARG allele 或耐药 SNP 精确判定。我们的结论是分层：canonical k-mer 保留身份，CSP 保留扰动稳定辅助信息，hybrid 是面向真实 mNGS/ARG pipeline 的更合理方向。
+第二步，讲初始直觉。
+k-mer 像 DNA 的 token，身份信息强，但局部错误会导致 token 破碎。spaced seed 可以缓解局部错配。DNA 生化属性可以提供低维、可解释、连续的稳定信息。双链 DNA 还需要考虑 reverse complement。
 
-第四段：当前工作可以作为受控表征诊断论文初稿，但如果要冲更好期刊，还需要补更大真实 WGS panel、真实 FASTQ quality profile、标准工具 pipeline 对照和真实 ARG 数据库任务。
+第三步，讲文献脉络。
+临床 mNGS 文献给出短读长和低质量输入场景；Kraken2 等工具证明 k-mer 是强基线；PatternHunter 和 spaced seed 文献启发错配容忍；信息论和 DNA signal 文献启发生化属性；DNA foundation model 文献提示表征不应只限于固定 k-mer token。
 
-## 18. 关键参考文献清单
+第四步，讲 CSP。
+CSP = canonical spaced seed count + property block + L2 normalization。它不是分类器，而是辅助表征。
 
-临床 mNGS：
+第五步，讲实验网格。
+21 个 WGS 基因组，6 个属；读长 69/75/100/110/125/150/PE150 proxy；扰动包括 substitution、N、trim、combined、indel、local mismatch；比较 canonical k-mer、spaced seed、CSP、hybrid 和序列模型输入。
 
-- Wilson MR et al. Actionable Diagnosis of Neuroleptospirosis by Next-Generation Sequencing. NEJM, 2014. DOI: 10.1056/NEJMoa1401268.
-- Wilson MR et al. Clinical Metagenomic Sequencing for Diagnosis of Meningitis and Encephalitis. NEJM, 2019. DOI: 10.1056/NEJMoa1803396.
+第六步，讲结果。
+CSP 在 42/42 个稳定性设置中最优，尤其 69/75 bp 的 N mask 和 local mismatch 中 L2 drift 明显更低；但分类 readout 没有证明 CSP 全面替代 k-mer，近缘任务中 canonical k-mer 仍是强基线；attention 断点随 motif 位置变化，说明读长影响是上下文可见性问题。
+
+第七步，讲结论和边界。
+本研究的主张是分层表征：canonical k-mer 负责身份，CSP 负责扰动稳定辅助。当前工作可以支撑受控表征诊断论文，但真实临床 mNGS pipeline 和真实 ARG 数据库任务属于后续扩展。
+
+## 19. 关键参考文献
+
+### 临床 mNGS 与输入质量
+
+- Wilson MR et al. Actionable Diagnosis of Neuroleptospirosis by Next-Generation Sequencing. New England Journal of Medicine, 2014. DOI: 10.1056/NEJMoa1401268.
+- Wilson MR et al. Clinical Metagenomic Sequencing for Diagnosis of Meningitis and Encephalitis. New England Journal of Medicine, 2019. DOI: 10.1056/NEJMoa1803396.
 - Chiu CY and Miller SA. Clinical Metagenomics. Nature Reviews Genetics, 2019. DOI: 10.1038/s41576-019-0113-7.
+- Martin M. Cutadapt Removes Adapter Sequences from High-throughput Sequencing Reads. EMBnet.journal, 2011. DOI: 10.14806/ej.17.1.200.
+- Bolger AM et al. Trimmomatic: A Flexible Trimmer for Illumina Sequence Data. Bioinformatics, 2014. DOI: 10.1093/bioinformatics/btu170.
+- Salter SJ et al. Reagent and Laboratory Contamination Can Critically Impact Sequence-based Microbiome Analyses. BMC Biology, 2014. DOI: 10.1186/s12915-014-0087-z.
 
-主流 metagenomic classifier：
+### k-mer 与宏基因组分类器
 
-- Wood DE and Salzberg SL. Kraken. Genome Biology, 2014. DOI: 10.1186/gb-2014-15-3-r46.
-- Wood DE et al. Kraken2. Genome Biology, 2019. DOI: 10.1186/s13059-019-1891-0.
-- Ounit R et al. CLARK. BMC Genomics, 2015. DOI: 10.1186/s12864-015-1419-2.
-- Kim D et al. Centrifuge. Genome Research, 2016. DOI: 10.1101/gr.210641.116.
-- Menzel P et al. Kaiju. Nature Communications, 2016. DOI: 10.1038/ncomms11257.
+- Wood DE and Salzberg SL. Kraken: Ultrafast Metagenomic Sequence Classification Using Exact Alignments. Genome Biology, 2014. DOI: 10.1186/gb-2014-15-3-r46.
+- Wood DE et al. Improved Metagenomic Analysis with Kraken 2. Genome Biology, 2019. DOI: 10.1186/s13059-019-1891-0.
+- Ounit R et al. CLARK: Fast and Accurate Classification of Metagenomic and Genomic Sequences Using Discriminative k-mers. BMC Genomics, 2015. DOI: 10.1186/s12864-015-1419-2.
+- Kim D et al. Centrifuge: Rapid and Sensitive Classification of Metagenomic Sequences. Genome Research, 2016. DOI: 10.1101/gr.210641.116.
+- Menzel P et al. Fast and Sensitive Taxonomic Classification for Metagenomics with Kaiju. Nature Communications, 2016. DOI: 10.1038/ncomms11257.
+- Sczyrba A et al. Critical Assessment of Metagenome Interpretation. Nature Methods, 2017. DOI: 10.1038/nmeth.4458.
+- Meyer F et al. Critical Assessment of Metagenome Interpretation: the Second Round of Challenges. Nature Methods, 2022. DOI: 10.1038/s41592-022-01431-4.
 
-alignment-free 与 spaced seed：
+### alignment-free、sketch 与 spaced seed
 
-- Ma B et al. PatternHunter. Bioinformatics, 2002. DOI: 10.1093/bioinformatics/18.3.440.
-- Brinda K et al. Spaced seeds improve k-mer-based metagenomic classification. Bioinformatics, 2015. DOI: 10.1093/bioinformatics/btv419.
-- Ondov BD et al. Mash. Genome Biology, 2016. DOI: 10.1186/s13059-016-0997-x.
-- Zielezinski A et al. Alignment-free sequence comparison. Genome Biology, 2017. DOI: 10.1186/s13059-017-1319-7.
+- Ma B et al. PatternHunter: Faster and More Sensitive Homology Search. Bioinformatics, 2002. DOI: 10.1093/bioinformatics/18.3.440.
+- Brinda K et al. Spaced Seeds Improve k-mer-based Metagenomic Classification. Bioinformatics, 2015. DOI: 10.1093/bioinformatics/btv419.
+- Ondov BD et al. Mash: Fast Genome and Metagenome Distance Estimation Using MinHash. Genome Biology, 2016. DOI: 10.1186/s13059-016-0997-x.
+- Zielezinski A et al. Alignment-free Sequence Comparison: Benefits, Applications, and Tools. Genome Biology, 2017. DOI: 10.1186/s13059-017-1319-7.
 
-DNA deep learning / foundation model：
+### DNA 数值化与深度学习表征
 
+- Shannon CE. A Mathematical Theory of Communication. Bell System Technical Journal, 1948. DOI: 10.1002/j.1538-7305.1948.tb01338.x.
+- Jeffrey HJ. Chaos Game Representation of Gene Structure. Nucleic Acids Research, 1990. DOI: 10.1093/nar/18.8.2163.
+- Voss RF. Evolution of Long-range Fractal Correlations and 1/f Noise in DNA Base Sequences. Physical Review Letters, 1992. DOI: 10.1103/PhysRevLett.68.3805.
 - Alipanahi B et al. DeepBind. Nature Biotechnology, 2015. DOI: 10.1038/nbt.3300.
 - Zhou J and Troyanskaya OG. DeepSEA. Nature Methods, 2015. DOI: 10.1038/nmeth.3547.
 - Quang D and Xie X. DanQ. Nucleic Acids Research, 2016. DOI: 10.1093/nar/gkw226.
@@ -326,10 +420,10 @@ DNA deep learning / foundation model：
 - Schiff Y et al. Caduceus. arXiv:2403.03234.
 - Nguyen E et al. Evo. Science, 2024. DOI: 10.1126/science.ado9336.
 
-ARG / AMR：
+### ARG/AMR 后续方向
 
 - Alcock BP et al. CARD 2023. Nucleic Acids Research, 2023. DOI: 10.1093/nar/gkac920.
-- Feldgarden M et al. AMRFinderPlus. Scientific Reports, 2021. DOI: 10.1038/s41598-021-91456-0.
-- Bortolaia V et al. ResFinder 4.0. Journal of Antimicrobial Chemotherapy, 2020. DOI: 10.1093/jac/dkaa345.
-- Bonin N et al. MEGARes and AMR++ v3.0. Nucleic Acids Research, 2023. DOI: 10.1093/nar/gkac1047.
+- Feldgarden M et al. AMRFinderPlus and the Reference Gene Catalog. Scientific Reports, 2021. DOI: 10.1038/s41598-021-91456-0.
+- Bortolaia V et al. ResFinder 4.0 for Predictions of Phenotypes from Genotypes. Journal of Antimicrobial Chemotherapy, 2020. DOI: 10.1093/jac/dkaa345.
+- Bonin N et al. MEGARes and AMR++, v3.0. Nucleic Acids Research, 2023. DOI: 10.1093/nar/gkac1047.
 - Arango-Argoty G et al. DeepARG. Microbiome, 2018. DOI: 10.1186/s40168-018-0401-z.
