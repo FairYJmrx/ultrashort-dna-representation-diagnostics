@@ -177,6 +177,26 @@ one-hot/property channels 用于验证不同表征适合不同模型输入。
 
 这样做的好处是论文不会散。没有进入核心网格的方案并不是“不存在”或“没想过”，而是当前证据不足、主张不集中，或者更适合作为后续研究方向。
 
+### 5.4 这些探索会如何写进论文
+
+论文里应该包含对不同方案的探索，但写法需要分层，而不是把所有早期方案都放进主结果表里同等比较。
+
+第一层是主文核心证据。这里保留 canonical k-mer、canonical spaced seed、CSP、hybrid、one-hot/property channels 等方案，因为它们能够直接支撑本文的中心问题：短读长和扰动下，精确身份信息、错配容忍、生化属性稳定性和模型输入形态分别有什么作用。
+
+第二层是方法和消融中的证据边界。比如 TF-IDF、Voss/base signal、three-phase、RoPE-property、attribute-gated position 等方案，可以在 Methods、Supplementary 或 Discussion 中说明：我们曾将它们作为候选表征或机制探针，用于判断信息来源、模型适配性或位置上下文问题，但它们当前不构成本文的主方法。
+
+第三层是未来方向。对于需要更大模型或更大数据才能公平验证的方案，例如 RoPE-property、预训练 token、prototype motif 和 attention-compatible property channels，论文中应降级为 future work，而不是在本地轻量实验上过度宣称。
+
+因此，准确说法不是“早期有对比，后来把效果不好的方案抛弃了”，而是：
+
+```text
+早期探索用于确定候选空间和排除不稳定主张；
+核心网格用于回答本文最重要、证据最充分的问题；
+模型依赖或证据不足的方向保留为补充材料、讨论或后续研究。
+```
+
+这样写对审稿更稳妥。审稿人能看到我们不是只挑了一个新方法和弱基线比较，也能看到我们没有把证据不足的早期想法包装成主结论。
+
 ## 6. 实验设计：为什么用 WGS-derived reads
 
 本项目需要的是 read-level ground truth 和可控扰动。真实临床 mNGS 数据往往有样本级诊断标签，但很难知道每一条 read 的真实来源、真实突变状态和真实扰动强度。因此，用 WGS 参考基因组切片生成 reads 是合理的受控方法。
