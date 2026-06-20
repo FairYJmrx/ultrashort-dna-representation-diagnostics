@@ -1,0 +1,37 @@
+{
+  "elapsed_seconds": 237.01791882514954,
+  "lengths": [
+    110,
+    115,
+    120,
+    125,
+    130,
+    135,
+    138,
+    140,
+    142,
+    145,
+    148,
+    150,
+    155,
+    160
+  ],
+  "motif_positions": [
+    120,
+    130,
+    138,
+    145
+  ],
+  "reads_per_class": 120,
+  "representations": [
+    "kmer5_count_l2",
+    "ckmer5_count_l2",
+    "property_channels",
+    "rope_property",
+    "spaced_kmer_phase",
+    "cspaced_property_l2",
+    "oracle_motif_pair"
+  ],
+  "seed": 404,
+  "n_rows": 392
+}

@@ -1,0 +1,21 @@
+{
+  "elapsed_seconds": 245.95585823059082,
+  "input": "results\\stage2\\representation_grid\\stage2_derived_reads.csv",
+  "lengths": [
+    69,
+    75,
+    100,
+    150
+  ],
+  "conditions": [
+    "substitution_1pct",
+    "N_3pct",
+    "trim_5bp",
+    "substitution_1pct_N_3pct",
+    "short_indel",
+    "local_mismatch_6bp"
+  ],
+  "max_pairs": 600,
+  "seed": 303,
+  "n_metric_rows": 456
+}

@@ -1,0 +1,7 @@
+﻿Probe,Length,Method,Parameter,Mean macro-F1,SD macro-F1,Mean features
+target_background,69,canonical spaced,pattern=0-2-5-7,0.5552358252076562,0.08488544951904,136.0
+target_background,75,k-mer,k=5,0.5433537580595368,0.10956479764602593,983.8
+target_background,150,canonical k-mer,k=6,0.5818387553903492,0.07509593376112597,1957.2
+within_genus_species,69,canonical spaced + property,pattern=0-3-5-8,0.35050664357639155,0.12392413088719637,147.0
+within_genus_species,75,k-mer,k=5,0.372675812686671,0.1347130988760899,979.5
+within_genus_species,150,canonical k-mer,k=6,0.397967655047321,0.18076714239895422,1971.3333333333333

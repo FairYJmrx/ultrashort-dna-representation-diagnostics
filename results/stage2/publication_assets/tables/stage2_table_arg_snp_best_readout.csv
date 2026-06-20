@@ -1,0 +1,61 @@
+﻿Boundary task,Condition,Length,Representation,Best readout,Macro-F1,Accuracy,Features
+arg_allele,3% N mask,69,Canonical 5-mer,nearest_centroid,1.0,1.0,95
+arg_allele,3% N mask,75,Canonical 5-mer,nearest_centroid,1.0,1.0,100
+arg_allele,3% N mask,100,Canonical 5-mer,nearest_centroid,1.0,1.0,123
+arg_allele,3% N mask,150,Canonical 5-mer,nearest_centroid,1.0,1.0,163
+arg_allele,Clean,69,Canonical 5-mer,nearest_centroid,1.0,1.0,95
+arg_allele,Clean,75,Canonical 5-mer,nearest_centroid,1.0,1.0,100
+arg_allele,Clean,100,Canonical 5-mer,nearest_centroid,1.0,1.0,123
+arg_allele,Clean,150,Canonical 5-mer,nearest_centroid,1.0,1.0,163
+arg_allele,6-bp local mismatch,69,Canonical 5-mer,nearest_centroid,1.0,1.0,511
+arg_allele,6-bp local mismatch,75,Canonical 5-mer,nearest_centroid,1.0,1.0,511
+arg_allele,6-bp local mismatch,100,Canonical 5-mer,nearest_centroid,1.0,1.0,512
+arg_allele,6-bp local mismatch,150,Canonical 5-mer,nearest_centroid,1.0,1.0,511
+arg_allele,1% substitution,69,Canonical 5-mer,nearest_centroid,1.0,1.0,404
+arg_allele,1% substitution,75,Canonical 5-mer,nearest_centroid,1.0,1.0,408
+arg_allele,1% substitution,100,Canonical 5-mer,nearest_centroid,1.0,1.0,453
+arg_allele,1% substitution,150,Canonical 5-mer,nearest_centroid,0.9907389542735868,0.9907407407407408,501
+arg_allele,1% substitution + 3% N,69,Canonical 5-mer,nearest_centroid,1.0,1.0,378
+arg_allele,1% substitution + 3% N,75,Canonical 5-mer,nearest_centroid,1.0,1.0,404
+arg_allele,1% substitution + 3% N,100,Canonical 5-mer,nearest_centroid,1.0,1.0,446
+arg_allele,1% substitution + 3% N,150,Canonical 5-mer,nearest_centroid,1.0,1.0,487
+arg_allele,5-bp trim,69,Canonical 5-mer,nearest_centroid,1.0,1.0,90
+arg_allele,5-bp trim,75,Canonical 5-mer,nearest_centroid,1.0,1.0,95
+arg_allele,5-bp trim,100,Canonical 5-mer,nearest_centroid,1.0,1.0,118
+arg_allele,5-bp trim,150,Canonical 5-mer,nearest_centroid,1.0,1.0,158
+arg_family,3% N mask,69,Canonical 5-mer,nearest_centroid,1.0,1.0,161
+arg_family,3% N mask,75,Canonical 5-mer,nearest_centroid,1.0,1.0,175
+arg_family,3% N mask,100,Canonical 5-mer,nearest_centroid,1.0,1.0,219
+arg_family,3% N mask,150,Canonical 5-mer,nearest_centroid,1.0,1.0,301
+arg_family,Clean,69,Canonical 5-mer,nearest_centroid,1.0,1.0,161
+arg_family,Clean,75,Canonical 5-mer,nearest_centroid,1.0,1.0,175
+arg_family,Clean,100,Canonical 5-mer,nearest_centroid,1.0,1.0,219
+arg_family,Clean,150,Canonical 5-mer,nearest_centroid,1.0,1.0,301
+arg_family,6-bp local mismatch,69,Canonical 5-mer,nearest_centroid,1.0,1.0,510
+arg_family,6-bp local mismatch,75,Canonical 5-mer,nearest_centroid,1.0,1.0,512
+arg_family,6-bp local mismatch,100,Canonical 5-mer,nearest_centroid,1.0,1.0,512
+arg_family,6-bp local mismatch,150,Canonical 5-mer,nearest_centroid,1.0,1.0,512
+arg_family,1% substitution,69,Canonical 5-mer,nearest_centroid,1.0,1.0,440
+arg_family,1% substitution,75,Canonical 5-mer,nearest_centroid,1.0,1.0,448
+arg_family,1% substitution,100,Canonical 5-mer,nearest_centroid,1.0,1.0,490
+arg_family,1% substitution,150,Canonical 5-mer,nearest_centroid,1.0,1.0,507
+arg_family,1% substitution + 3% N,69,Canonical 5-mer,nearest_centroid,1.0,1.0,435
+arg_family,1% substitution + 3% N,75,Canonical 5-mer,nearest_centroid,1.0,1.0,427
+arg_family,1% substitution + 3% N,100,Canonical 5-mer,nearest_centroid,1.0,1.0,482
+arg_family,1% substitution + 3% N,150,Canonical 5-mer,nearest_centroid,1.0,1.0,503
+arg_family,5-bp trim,69,Canonical 5-mer,nearest_centroid,1.0,1.0,152
+arg_family,5-bp trim,75,Canonical 5-mer,nearest_centroid,1.0,1.0,165
+arg_family,5-bp trim,100,Canonical 5-mer,nearest_centroid,1.0,1.0,211
+arg_family,5-bp trim,150,Canonical 5-mer,nearest_centroid,1.0,1.0,293
+resistance_snp,3% N mask,69,Canonical spaced seed,nearest_centroid,0.9788649706457926,0.9814814814814816,45
+resistance_snp,3% N mask,75,Canonical spaced seed,logistic,0.9895094706168044,0.9907407407407408,46
+resistance_snp,Clean,69,Canonical 5-mer,nearest_centroid,1.0,1.0,63
+resistance_snp,Clean,75,Canonical 5-mer,nearest_centroid,1.0,1.0,66
+resistance_snp,6-bp local mismatch,69,Canonical 5-mer,nearest_centroid,0.9680567879325644,0.9722222222222222,511
+resistance_snp,6-bp local mismatch,75,Canonical 5-mer,nearest_centroid,0.9482709071750168,0.9537037037037036,506
+resistance_snp,1% substitution,69,Canonical spaced seed,nearest_centroid,0.9895094706168044,0.9907407407407408,126
+resistance_snp,1% substitution,75,Canonical 5-mer,logistic,1.0,1.0,355
+resistance_snp,1% substitution + 3% N,69,Canonical 5-mer,nearest_centroid,0.9788649706457926,0.9814814814814816,346
+resistance_snp,1% substitution + 3% N,75,Canonical spaced seed,nearest_centroid,0.9467613132209404,0.9537037037037036,125
+resistance_snp,5-bp trim,69,Canonical 5-mer,nearest_centroid,1.0,1.0,61
+resistance_snp,5-bp trim,75,Canonical 5-mer,nearest_centroid,1.0,1.0,62

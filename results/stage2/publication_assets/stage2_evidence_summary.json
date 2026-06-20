@@ -1,0 +1,415 @@
+{
+  "stability_best_csp_count": 42,
+  "stability_best_total": 42,
+  "csp_gain_summary": [
+    {
+      "Comparison": "CSP minus Canonical 5-mer",
+      "Mean cosine gain": 0.04450493268587187,
+      "Minimum gain": 0.004154714519316038,
+      "Maximum gain": 0.11087179993767893,
+      "Wins": 42,
+      "Comparisons": 42
+    },
+    {
+      "Comparison": "CSP minus Canonical 7-mer",
+      "Mean cosine gain": 0.0799941125713037,
+      "Minimum gain": 0.007548016342807218,
+      "Maximum gain": 0.16284885224552692,
+      "Wins": 42,
+      "Comparisons": 42
+    },
+    {
+      "Comparison": "CSP minus Canonical spaced seed",
+      "Mean cosine gain": 0.028466176276825555,
+      "Minimum gain": 0.002014944764084814,
+      "Maximum gain": 0.10240641801373329,
+      "Wins": 42,
+      "Comparisons": 42
+    },
+    {
+      "Comparison": "CSP minus Canonical 5-mer + CSP",
+      "Mean cosine gain": 0.022252466342935935,
+      "Minimum gain": 0.0020773572596580747,
+      "Maximum gain": 0.055435899968839575,
+      "Wins": 42,
+      "Comparisons": 42
+    }
+  ],
+  "readout_aggregate": [
+    {
+      "Task": "Target/background",
+      "Representation": "CSP",
+      "Mean_macro_F1": 0.5068419629112376,
+      "Mean_accuracy": 0.5532955695320303,
+      "Mean_features": 146.99
+    },
+    {
+      "Task": "Target/background",
+      "Representation": "Canonical 5-mer",
+      "Mean_macro_F1": 0.4914607044554642,
+      "Mean_accuracy": 0.5519889918040185,
+      "Mean_features": 505.68
+    },
+    {
+      "Task": "Target/background",
+      "Representation": "Canonical 5-mer + CSP",
+      "Mean_macro_F1": 0.4900537097356005,
+      "Mean_accuracy": 0.5417632515081027,
+      "Mean_features": 652.67
+    },
+    {
+      "Task": "Target/background",
+      "Representation": "Canonical spaced seed",
+      "Mean_macro_F1": 0.4808516735146215,
+      "Mean_accuracy": 0.5486688062946644,
+      "Mean_features": 135.99
+    },
+    {
+      "Task": "Target/background",
+      "Representation": "Canonical 7-mer",
+      "Mean_macro_F1": 0.4532638780931692,
+      "Mean_accuracy": 0.5739015833085245,
+      "Mean_features": 4395.8
+    },
+    {
+      "Task": "Within-genus species",
+      "Representation": "Canonical 5-mer",
+      "Mean_macro_F1": 0.3089735844057698,
+      "Mean_accuracy": 0.3289321974912167,
+      "Mean_features": 507.78333333333336
+    },
+    {
+      "Task": "Within-genus species",
+      "Representation": "Canonical 7-mer",
+      "Mean_macro_F1": 0.30719854114035056,
+      "Mean_accuracy": 0.33100776564540124,
+      "Mean_features": 4946.208333333333
+    },
+    {
+      "Task": "Within-genus species",
+      "Representation": "Canonical 5-mer + CSP",
+      "Mean_macro_F1": 0.3068566447923496,
+      "Mean_accuracy": 0.3255319156405429,
+      "Mean_features": 654.7583333333333
+    },
+    {
+      "Task": "Within-genus species",
+      "Representation": "CSP",
+      "Mean_macro_F1": 0.3007084219170881,
+      "Mean_accuracy": 0.31941268748991375,
+      "Mean_features": 146.975
+    },
+    {
+      "Task": "Within-genus species",
+      "Representation": "Canonical spaced seed",
+      "Mean_macro_F1": 0.296698212820133,
+      "Mean_accuracy": 0.3159424262317116,
+      "Mean_features": 135.975
+    }
+  ],
+  "best_rows": 40,
+  "full_csp_mean_cosine_gain": 0.03337855477344359,
+  "full_csp_mean_l2_reduction": 0.15701828697965592,
+  "top_single_component": {
+    "component": "hydrogen",
+    "Mean_cosine_gain": 0.03231360937233271,
+    "Mean_L2_change": -0.14775440958098499,
+    "Max_cosine_gain": 0.0984483706203963,
+    "Min_L2_change": -0.3000180883587406
+  },
+  "attention_change_points": [
+    {
+      "motif_position": 120,
+      "first_length_pair_visible_ge_0_5": 130,
+      "max_pair_visible_rate": 1.0,
+      "lengths_tested": "110,115,120,125,130,135,138,140,142,145,148,150,155,160"
+    },
+    {
+      "motif_position": 130,
+      "first_length_pair_visible_ge_0_5": 140,
+      "max_pair_visible_rate": 1.0,
+      "lengths_tested": "110,115,120,125,130,135,138,140,142,145,148,150,155,160"
+    },
+    {
+      "motif_position": 138,
+      "first_length_pair_visible_ge_0_5": 148,
+      "max_pair_visible_rate": 1.0,
+      "lengths_tested": "110,115,120,125,130,135,138,140,142,145,148,150,155,160"
+    },
+    {
+      "motif_position": 145,
+      "first_length_pair_visible_ge_0_5": 155,
+      "max_pair_visible_rate": 1.0,
+      "lengths_tested": "110,115,120,125,130,135,138,140,142,145,148,150,155,160"
+    }
+  ],
+  "arg_snp_stability_best_csp": 50,
+  "arg_snp_stability_total": 50,
+  "arg_snp_readout_aggregate": [
+    {
+      "task": "arg_allele",
+      "Representation": "Canonical 5-mer + CSP",
+      "Mean_macro_F1": 0.9996141230947329,
+      "Mean_accuracy": 0.9996141975308642,
+      "Mean_features": 407.4166666666667
+    },
+    {
+      "task": "arg_allele",
+      "Representation": "Canonical 7-mer + CSP",
+      "Mean_macro_F1": 0.9996141230947329,
+      "Mean_accuracy": 0.9996141975308642,
+      "Mean_features": 1160.875
+    },
+    {
+      "task": "arg_allele",
+      "Representation": "CSP",
+      "Mean_macro_F1": 0.9994211846420992,
+      "Mean_accuracy": 0.9994212962962963,
+      "Mean_features": 117.875
+    },
+    {
+      "task": "arg_allele",
+      "Representation": "Canonical 5-mer",
+      "Mean_macro_F1": 0.9994211846420992,
+      "Mean_accuracy": 0.9994212962962963,
+      "Mean_features": 289.5416666666667
+    },
+    {
+      "task": "arg_allele",
+      "Representation": "Canonical 7-mer",
+      "Mean_macro_F1": 0.9994211846420992,
+      "Mean_accuracy": 0.9994212962962963,
+      "Mean_features": 1043.0
+    },
+    {
+      "task": "arg_allele",
+      "Representation": "Canonical spaced seed",
+      "Mean_macro_F1": 0.9992282461894656,
+      "Mean_accuracy": 0.9992283950617283,
+      "Mean_features": 106.875
+    },
+    {
+      "task": "arg_family",
+      "Representation": "CSP",
+      "Mean_macro_F1": 1.0,
+      "Mean_accuracy": 1.0,
+      "Mean_features": 131.0
+    },
+    {
+      "task": "arg_family",
+      "Representation": "Canonical 5-mer",
+      "Mean_macro_F1": 1.0,
+      "Mean_accuracy": 1.0,
+      "Mean_features": 346.2916666666667
+    },
+    {
+      "task": "arg_family",
+      "Representation": "Canonical 5-mer + CSP",
+      "Mean_macro_F1": 1.0,
+      "Mean_accuracy": 1.0,
+      "Mean_features": 477.2916666666667
+    },
+    {
+      "task": "arg_family",
+      "Representation": "Canonical 7-mer",
+      "Mean_macro_F1": 1.0,
+      "Mean_accuracy": 1.0,
+      "Mean_features": 1264.5
+    },
+    {
+      "task": "arg_family",
+      "Representation": "Canonical 7-mer + CSP",
+      "Mean_macro_F1": 1.0,
+      "Mean_accuracy": 1.0,
+      "Mean_features": 1395.5
+    },
+    {
+      "task": "arg_family",
+      "Representation": "Canonical spaced seed",
+      "Mean_macro_F1": 1.0,
+      "Mean_accuracy": 1.0,
+      "Mean_features": 120.0
+    },
+    {
+      "task": "resistance_snp",
+      "Representation": "Canonical 5-mer + CSP",
+      "Mean_macro_F1": 0.9791227973211801,
+      "Mean_accuracy": 0.9818672839506174,
+      "Mean_features": 329.25
+    },
+    {
+      "task": "resistance_snp",
+      "Representation": "CSP",
+      "Mean_macro_F1": 0.9756514251790488,
+      "Mean_accuracy": 0.9787808641975309,
+      "Mean_features": 97.58333333333333
+    },
+    {
+      "task": "resistance_snp",
+      "Representation": "Canonical spaced seed",
+      "Mean_macro_F1": 0.975378163957819,
+      "Mean_accuracy": 0.9783950617283951,
+      "Mean_features": 86.58333333333333
+    },
+    {
+      "task": "resistance_snp",
+      "Representation": "Canonical 5-mer",
+      "Mean_macro_F1": 0.9745950335134942,
+      "Mean_accuracy": 0.9780092592592592,
+      "Mean_features": 231.66666666666666
+    },
+    {
+      "task": "resistance_snp",
+      "Representation": "Canonical 7-mer + CSP",
+      "Mean_macro_F1": 0.9729824896345945,
+      "Mean_accuracy": 0.9768518518518517,
+      "Mean_features": 875.6666666666666
+    },
+    {
+      "task": "resistance_snp",
+      "Representation": "Canonical 7-mer",
+      "Mean_macro_F1": 0.9705958307020456,
+      "Mean_accuracy": 0.9749228395061729,
+      "Mean_features": 778.0833333333334
+    }
+  ],
+  "parameter_stability_best": [
+    {
+      "Perturbation": "3% N mask",
+      "Length": 69,
+      "Family": "canonical spaced + property",
+      "Parameter": "pattern=0-1-2-3",
+      "Mean paired cosine": 0.9943406197100082,
+      "Mean L2 drift": 0.1058595283757474,
+      "Observed vocabulary/features": 147
+    },
+    {
+      "Perturbation": "3% N mask",
+      "Length": 75,
+      "Family": "canonical spaced + property",
+      "Parameter": "pattern=0-1-2-3",
+      "Mean paired cosine": 0.9951156862292492,
+      "Mean L2 drift": 0.0983330155265326,
+      "Observed vocabulary/features": 147
+    },
+    {
+      "Perturbation": "3% N mask",
+      "Length": 150,
+      "Family": "canonical spaced + property",
+      "Parameter": "pattern=0-1-2-3",
+      "Mean paired cosine": 0.9962871958291992,
+      "Mean L2 drift": 0.0859286375475248,
+      "Observed vocabulary/features": 147
+    },
+    {
+      "Perturbation": "reverse_complement",
+      "Length": 69,
+      "Family": "canonical k-mer",
+      "Parameter": "k=6",
+      "Mean paired cosine": 1.0000000000000009,
+      "Mean L2 drift": 0.0,
+      "Observed vocabulary/features": 2052
+    },
+    {
+      "Perturbation": "reverse_complement",
+      "Length": 75,
+      "Family": "canonical k-mer",
+      "Parameter": "k=8",
+      "Mean paired cosine": 1.0000000000000018,
+      "Mean L2 drift": 0.0,
+      "Observed vocabulary/features": 11656
+    },
+    {
+      "Perturbation": "reverse_complement",
+      "Length": 150,
+      "Family": "canonical k-mer",
+      "Parameter": "k=8",
+      "Mean paired cosine": 1.0000000000000004,
+      "Mean L2 drift": 0.0,
+      "Observed vocabulary/features": 18791
+    },
+    {
+      "Perturbation": "1% substitution",
+      "Length": 69,
+      "Family": "canonical spaced + property",
+      "Parameter": "pattern=0-1-2-3",
+      "Mean paired cosine": 0.9974993799062608,
+      "Mean L2 drift": 0.0485735657524826,
+      "Observed vocabulary/features": 147
+    },
+    {
+      "Perturbation": "1% substitution",
+      "Length": 75,
+      "Family": "canonical spaced + property",
+      "Parameter": "pattern=0-1-2-3",
+      "Mean paired cosine": 0.9978789623767768,
+      "Mean L2 drift": 0.0443941133118562,
+      "Observed vocabulary/features": 147
+    },
+    {
+      "Perturbation": "1% substitution",
+      "Length": 150,
+      "Family": "canonical spaced + property",
+      "Parameter": "pattern=0-1-2-3",
+      "Mean paired cosine": 0.9983120530374276,
+      "Mean L2 drift": 0.0507872135663538,
+      "Observed vocabulary/features": 147
+    }
+  ],
+  "parameter_readout_best": [
+    {
+      "Probe": "target_background",
+      "Length": 69,
+      "Method": "canonical spaced",
+      "Parameter": "pattern=0-2-5-7",
+      "Mean macro-F1": 0.5552358252076562,
+      "SD macro-F1": 0.08488544951904,
+      "Mean features": 136.0
+    },
+    {
+      "Probe": "target_background",
+      "Length": 75,
+      "Method": "k-mer",
+      "Parameter": "k=5",
+      "Mean macro-F1": 0.5433537580595368,
+      "SD macro-F1": 0.10956479764602593,
+      "Mean features": 983.8
+    },
+    {
+      "Probe": "target_background",
+      "Length": 150,
+      "Method": "canonical k-mer",
+      "Parameter": "k=6",
+      "Mean macro-F1": 0.5818387553903492,
+      "SD macro-F1": 0.07509593376112597,
+      "Mean features": 1957.2
+    },
+    {
+      "Probe": "within_genus_species",
+      "Length": 69,
+      "Method": "canonical spaced + property",
+      "Parameter": "pattern=0-3-5-8",
+      "Mean macro-F1": 0.35050664357639155,
+      "SD macro-F1": 0.12392413088719637,
+      "Mean features": 147.0
+    },
+    {
+      "Probe": "within_genus_species",
+      "Length": 75,
+      "Method": "k-mer",
+      "Parameter": "k=5",
+      "Mean macro-F1": 0.372675812686671,
+      "SD macro-F1": 0.1347130988760899,
+      "Mean features": 979.5
+    },
+    {
+      "Probe": "within_genus_species",
+      "Length": 150,
+      "Method": "canonical k-mer",
+      "Parameter": "k=6",
+      "Mean macro-F1": 0.397967655047321,
+      "SD macro-F1": 0.18076714239895422,
+      "Mean features": 1971.3333333333333
+    }
+  ]
+}

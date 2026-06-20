@@ -22,11 +22,20 @@ data/real_slices/*.csv
 
 # Render QA intermediates
 manuscript/rendered_final/
+manuscript/rendered_stage2_pdf/
+manuscript/latex_build_stage2/
 manuscript/draft_manuscript.md
 manuscript/stage*.md
+!manuscript/stage2_manuscript_v2.md
+!manuscript/stage2_reviewer_self_audit.md
 *.tmp
 
 # Logs and scratch
 *.log
 tmp/
 scratch/
+
+# Bulky generated experiment intermediates; summary tables and figures are tracked.
+results/stage2/**/stage2_derived_reads.csv
+results/stage2/**/arg_snp_reads.csv
+results/stage2/**/attention_breakpoint_reads.csv

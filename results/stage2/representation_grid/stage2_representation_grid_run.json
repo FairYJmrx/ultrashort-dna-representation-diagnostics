@@ -1,0 +1,51 @@
+{
+  "elapsed_seconds": 757.83709192276,
+  "input": "data\\real_slices\\stage2_close_relative_base_reads.csv",
+  "lengths": [
+    69,
+    75,
+    100,
+    110,
+    125,
+    150,
+    300
+  ],
+  "readout_lengths": [
+    69,
+    75,
+    100,
+    150
+  ],
+  "conditions": [
+    "clean",
+    "substitution_1pct",
+    "N_3pct",
+    "trim_5bp",
+    "substitution_1pct_N_3pct",
+    "short_indel",
+    "local_mismatch_6bp"
+  ],
+  "representations": [
+    "ckmer5_count_l2",
+    "ckmer7_count_l2",
+    "cspaced_count_l2",
+    "cspaced_property_l2",
+    "hybrid_ckmer5_csp",
+    "hybrid_ckmer7_csp"
+  ],
+  "readout_representations": [
+    "ckmer5_count_l2",
+    "ckmer7_count_l2",
+    "cspaced_count_l2",
+    "cspaced_property_l2",
+    "hybrid_ckmer5_csp"
+  ],
+  "classifiers": [
+    "nearest_centroid",
+    "logistic",
+    "mlp"
+  ],
+  "n_stage2_reads": 44100,
+  "n_stability_rows": 252,
+  "n_readout_rows": 3300
+}

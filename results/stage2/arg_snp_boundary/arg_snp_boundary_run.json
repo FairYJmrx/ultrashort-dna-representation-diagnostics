@@ -1,0 +1,30 @@
+{
+  "elapsed_seconds": 167.01915168762207,
+  "lengths": [
+    69,
+    75,
+    100,
+    150
+  ],
+  "conditions": [
+    "clean",
+    "substitution_1pct",
+    "N_3pct",
+    "trim_5bp",
+    "substitution_1pct_N_3pct",
+    "local_mismatch_6bp"
+  ],
+  "representations": [
+    "ckmer5_count_l2",
+    "ckmer7_count_l2",
+    "cspaced_count_l2",
+    "cspaced_property_l2",
+    "hybrid_ckmer5_csp",
+    "hybrid_ckmer7_csp"
+  ],
+  "reads_per_label": 120,
+  "seed": 505,
+  "n_reads": 21600,
+  "n_stability_rows": 300,
+  "n_readout_rows": 720
+}
