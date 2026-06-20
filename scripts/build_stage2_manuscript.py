@@ -24,6 +24,9 @@ SUBTITLE = (
     "Canonical k-mers preserve high-resolution identity evidence, whereas canonical spaced-property encoding "
     "provides compact perturbation-stable auxiliary evidence for mNGS-like reads"
 )
+AUTHORS = "MEI ruixiang"
+REPO_URL = "https://github.com/FairYJmrx/ultrashort-dna-representation-diagnostics"
+SUBMISSION_TAG = "v0.2-stage2-mei-submission"
 MD_PATH = MANUSCRIPT / "stage2_manuscript_v2.md"
 DOCX_PATH = MANUSCRIPT / "stage2_manuscript_v2.docx"
 
@@ -188,6 +191,7 @@ def build_markdown() -> str:
     md: list[str] = []
     md.append(f"# {TITLE}\n")
     md.append(f"**{SUBTITLE}**\n")
+    md.append(f"Author: {AUTHORS}\n")
 
     md.append("## Abstract\n")
     md.append(
@@ -476,9 +480,14 @@ def build_markdown() -> str:
     md.append("## Code and Data Availability\n")
     md.append(
         "All code, generated lightweight reads, result tables, figures and manuscript builders are maintained in the project "
-        "repository. Random seeds are fixed in the stage-2 scripts, and the earlier manuscript/results snapshot was preserved "
-        "as an internal project archive before the stage-2 rerun. A public release should include the executable scripts, "
-        "configuration files, generated summary tables and exact commit hash used for the submitted manuscript."
+        f"repository ({REPO_URL}; release tag {SUBMISSION_TAG}; exact commit hash to be reported from the public archive or "
+        "cover letter at submission). Random seeds are fixed in the stage-2 scripts, "
+        "and the earlier manuscript/results snapshot was preserved as an internal project archive before the stage-2 rerun. "
+        "The submitted code package includes executable scripts, configuration files, generated summary tables, figures, "
+        "manuscript builders and the 21-genome close-relative WGS-slice manifest; bulky downloaded reference FASTA files "
+        "are intentionally excluded and can be regenerated from the manifest and preparation scripts. If journal policy "
+        "requires public access, the private repository should be made public or archived with a DOI after double-blind "
+        "constraints are resolved."
     )
 
     md.append("## Conclusions\n")
@@ -609,6 +618,11 @@ def build_docx(md: str) -> None:
     sub_run.italic = True
     sub_run.font.name = "Arial"
     sub_run.font.size = Pt(10.5)
+    authors = doc.add_paragraph()
+    authors.alignment = WD_ALIGN_PARAGRAPH.CENTER
+    author_run = authors.add_run(AUTHORS)
+    author_run.font.name = "Arial"
+    author_run.font.size = Pt(10.5)
     doc.add_paragraph()
 
     lines = md.splitlines()
@@ -623,6 +637,9 @@ def build_docx(md: str) -> None:
             i += 1
             continue
         if stripped.startswith("**") and stripped.endswith("**"):
+            i += 1
+            continue
+        if stripped.startswith("Author: "):
             i += 1
             continue
         if stripped.startswith("## "):

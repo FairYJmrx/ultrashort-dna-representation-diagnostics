@@ -12,6 +12,8 @@ Thumbs.db
 # Bulky downloaded references; regenerate from manifests.
 data/reference_genomes/
 data/real_slices/*.csv
+!data/real_slices/close_relative_genomes_manifest.csv
+!data/real_slices/close_relative_genomes_manifest_preview.csv
 *.fna
 *.fa
 *.fasta

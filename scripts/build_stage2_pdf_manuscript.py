@@ -128,6 +128,7 @@ def markdown_to_latex(md: str, manuscript_dir: Path) -> str:
     lines = md.splitlines()
     out: list[str] = []
     in_refs = False
+    title_block_done = False
     i = 0
     while i < len(lines):
         line = lines[i].strip()
@@ -141,11 +142,20 @@ def markdown_to_latex(md: str, manuscript_dir: Path) -> str:
         if line.startswith("**") and line.endswith("**"):
             subtitle = inline_math(line.strip("*"))
             out.append(r"\author{\parbox{0.88\linewidth}{\centering\small " + subtitle + r"}}")
-            out.append(r"\date{}")
+            i += 1
+            continue
+        if line.startswith("Author: "):
+            authors = inline_math(line.replace("Author: ", "", 1).strip())
+            out.append(r"\date{\small " + authors + r"}")
             out.append(r"\maketitle")
+            title_block_done = True
             i += 1
             continue
         if line.startswith("## "):
+            if not title_block_done:
+                out.append(r"\date{}")
+                out.append(r"\maketitle")
+                title_block_done = True
             title = line[3:].strip()
             in_refs = title == "References"
             out.append(r"\section*{" + inline_math(title) + "}")
