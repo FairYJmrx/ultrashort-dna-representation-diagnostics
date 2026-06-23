@@ -1,0 +1,26 @@
+{
+  "elapsed_seconds": 102.20404005050659,
+  "art_exe": "D:\\AI-NGS\\信息学\\tools\\art\\extracted_bp\\Win64\\art_illumina.exe",
+  "genome_manifest": "D:\\AI-NGS\\信息学\\data\\real_slices\\close_relative_genomes_manifest.csv",
+  "lengths": [
+    69,
+    75,
+    100,
+    125,
+    150
+  ],
+  "representations": [
+    "ckmer5_count_l2",
+    "ckmer7_count_l2",
+    "cspaced_count_l2",
+    "cspaced_property_l2",
+    "hybrid_ckmer5_csp",
+    "minhash_k5_s128",
+    "eiip_l2",
+    "eiip_summary_l2"
+  ],
+  "fold_coverage": 0.005,
+  "n_reads_rows": 75592,
+  "n_clean_ids": 37796,
+  "n_stability_rows": 40
+}

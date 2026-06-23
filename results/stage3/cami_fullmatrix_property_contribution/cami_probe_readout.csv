@@ -1,0 +1,97 @@
+﻿error,representation,classifier,task,length,condition,label_col,n_samples,n_classes,n_features,accuracy,macro_f1
+not enough labels,ckmer5_count_l2,all,label_probe,69,clean,label,,,,,
+not enough labels,ckmer4_property_multiscale_mean_l2,all,label_probe,69,clean,label,,,,,
+not enough labels,one_hot,all,label_probe,69,clean,label,,,,,
+not enough labels,property_channels,all,label_probe,69,clean,label,,,,,
+not enough labels,base_property,all,label_probe,69,clean,label,,,,,
+not enough labels,rope_onehot,all,label_probe,69,clean,label,,,,,
+not enough labels,rope_property,all,label_probe,69,clean,label,,,,,
+not enough labels,kmer_property,all,label_probe,69,clean,label,,,,,
+,ckmer5_count_l2,nearest_centroid,target_background,69,clean,target_binary,60.0,2.0,508.0,0.5555555555555556,0.5324675324675324
+,ckmer5_count_l2,logistic,target_background,69,clean,target_binary,60.0,2.0,508.0,0.6111111111111112,0.6
+,ckmer4_property_multiscale_mean_l2,nearest_centroid,target_background,69,clean,target_binary,60.0,2.0,222.0,0.6111111111111112,0.5785953177257526
+,ckmer4_property_multiscale_mean_l2,logistic,target_background,69,clean,target_binary,60.0,2.0,222.0,0.5,0.4857142857142857
+,one_hot,nearest_centroid,target_background,69,clean,target_binary,60.0,2.0,345.0,0.3888888888888889,0.38699690402476783
+,one_hot,logistic,target_background,69,clean,target_binary,60.0,2.0,345.0,0.4444444444444444,0.4375
+,property_channels,nearest_centroid,target_background,69,clean,target_binary,60.0,2.0,345.0,0.4444444444444444,0.4375
+,property_channels,logistic,target_background,69,clean,target_binary,60.0,2.0,345.0,0.5555555555555556,0.5555555555555556
+,base_property,nearest_centroid,target_background,69,clean,target_binary,60.0,2.0,690.0,0.3333333333333333,0.3333333333333333
+,base_property,logistic,target_background,69,clean,target_binary,60.0,2.0,690.0,0.4444444444444444,0.4444444444444444
+,rope_onehot,nearest_centroid,target_background,69,clean,target_binary,60.0,2.0,1104.0,0.3888888888888889,0.38699690402476783
+,rope_onehot,logistic,target_background,69,clean,target_binary,60.0,2.0,1104.0,0.5,0.4857142857142857
+,rope_property,nearest_centroid,target_background,69,clean,target_binary,60.0,2.0,1104.0,0.3888888888888889,0.37142857142857144
+,rope_property,logistic,target_background,69,clean,target_binary,60.0,2.0,1104.0,0.4444444444444444,0.4375
+,kmer_property,nearest_centroid,target_background,69,clean,target_binary,60.0,2.0,1040.0,0.5,0.4857142857142857
+,kmer_property,logistic,target_background,69,clean,target_binary,60.0,2.0,1040.0,0.5,0.4984520123839009
+not enough labels,ckmer5_count_l2,all,label_probe,69,N_3pct,label,,,,,
+not enough labels,ckmer4_property_multiscale_mean_l2,all,label_probe,69,N_3pct,label,,,,,
+not enough labels,one_hot,all,label_probe,69,N_3pct,label,,,,,
+not enough labels,property_channels,all,label_probe,69,N_3pct,label,,,,,
+not enough labels,base_property,all,label_probe,69,N_3pct,label,,,,,
+not enough labels,rope_onehot,all,label_probe,69,N_3pct,label,,,,,
+not enough labels,rope_property,all,label_probe,69,N_3pct,label,,,,,
+not enough labels,kmer_property,all,label_probe,69,N_3pct,label,,,,,
+,ckmer5_count_l2,nearest_centroid,target_background,69,N_3pct,target_binary,60.0,2.0,507.0,0.6111111111111112,0.5785953177257526
+,ckmer5_count_l2,logistic,target_background,69,N_3pct,target_binary,60.0,2.0,507.0,0.6111111111111112,0.6
+,ckmer4_property_multiscale_mean_l2,nearest_centroid,target_background,69,N_3pct,target_binary,60.0,2.0,222.0,0.6111111111111112,0.5785953177257526
+,ckmer4_property_multiscale_mean_l2,logistic,target_background,69,N_3pct,target_binary,60.0,2.0,222.0,0.5,0.4857142857142857
+,one_hot,nearest_centroid,target_background,69,N_3pct,target_binary,60.0,2.0,345.0,0.3333333333333333,0.3333333333333333
+,one_hot,logistic,target_background,69,N_3pct,target_binary,60.0,2.0,345.0,0.3888888888888889,0.38699690402476783
+,property_channels,nearest_centroid,target_background,69,N_3pct,target_binary,60.0,2.0,345.0,0.4444444444444444,0.4375
+,property_channels,logistic,target_background,69,N_3pct,target_binary,60.0,2.0,345.0,0.5,0.4984520123839009
+,base_property,nearest_centroid,target_background,69,N_3pct,target_binary,60.0,2.0,690.0,0.3333333333333333,0.3333333333333333
+,base_property,logistic,target_background,69,N_3pct,target_binary,60.0,2.0,690.0,0.5,0.4984520123839009
+,rope_onehot,nearest_centroid,target_background,69,N_3pct,target_binary,60.0,2.0,1104.0,0.3333333333333333,0.3333333333333333
+,rope_onehot,logistic,target_background,69,N_3pct,target_binary,60.0,2.0,1104.0,0.5,0.4984520123839009
+,rope_property,nearest_centroid,target_background,69,N_3pct,target_binary,60.0,2.0,1104.0,0.2777777777777778,0.27554179566563464
+,rope_property,logistic,target_background,69,N_3pct,target_binary,60.0,2.0,1104.0,0.3333333333333333,0.325
+,kmer_property,nearest_centroid,target_background,69,N_3pct,target_binary,60.0,2.0,1040.0,0.5,0.4857142857142857
+,kmer_property,logistic,target_background,69,N_3pct,target_binary,60.0,2.0,1040.0,0.3888888888888889,0.38699690402476783
+not enough labels,ckmer5_count_l2,all,label_probe,100,clean,label,,,,,
+not enough labels,ckmer4_property_multiscale_mean_l2,all,label_probe,100,clean,label,,,,,
+not enough labels,one_hot,all,label_probe,100,clean,label,,,,,
+not enough labels,property_channels,all,label_probe,100,clean,label,,,,,
+not enough labels,base_property,all,label_probe,100,clean,label,,,,,
+not enough labels,rope_onehot,all,label_probe,100,clean,label,,,,,
+not enough labels,rope_property,all,label_probe,100,clean,label,,,,,
+not enough labels,kmer_property,all,label_probe,100,clean,label,,,,,
+,ckmer5_count_l2,nearest_centroid,target_background,100,clean,target_binary,60.0,2.0,512.0,0.8888888888888888,0.8888888888888888
+,ckmer5_count_l2,logistic,target_background,100,clean,target_binary,60.0,2.0,512.0,0.9444444444444444,0.9442724458204335
+,ckmer4_property_multiscale_mean_l2,nearest_centroid,target_background,100,clean,target_binary,60.0,2.0,222.0,1.0,1.0
+,ckmer4_property_multiscale_mean_l2,logistic,target_background,100,clean,target_binary,60.0,2.0,222.0,0.9444444444444444,0.9442724458204335
+,one_hot,nearest_centroid,target_background,100,clean,target_binary,60.0,2.0,500.0,0.7777777777777778,0.7777777777777778
+,one_hot,logistic,target_background,100,clean,target_binary,60.0,2.0,500.0,0.7222222222222222,0.7213622291021672
+,property_channels,nearest_centroid,target_background,100,clean,target_binary,60.0,2.0,500.0,0.7777777777777778,0.7777777777777778
+,property_channels,logistic,target_background,100,clean,target_binary,60.0,2.0,500.0,0.7222222222222222,0.7213622291021672
+,base_property,nearest_centroid,target_background,100,clean,target_binary,60.0,2.0,1000.0,0.8333333333333334,0.8328173374613003
+,base_property,logistic,target_background,100,clean,target_binary,60.0,2.0,1000.0,0.6666666666666666,0.6666666666666666
+,rope_onehot,nearest_centroid,target_background,100,clean,target_binary,60.0,2.0,1600.0,0.7777777777777778,0.7777777777777778
+,rope_onehot,logistic,target_background,100,clean,target_binary,60.0,2.0,1600.0,0.7222222222222222,0.7213622291021672
+,rope_property,nearest_centroid,target_background,100,clean,target_binary,60.0,2.0,1600.0,0.8333333333333334,0.8328173374613003
+,rope_property,logistic,target_background,100,clean,target_binary,60.0,2.0,1600.0,0.7222222222222222,0.7213622291021672
+,kmer_property,nearest_centroid,target_background,100,clean,target_binary,60.0,2.0,1536.0,0.8333333333333334,0.8328173374613003
+,kmer_property,logistic,target_background,100,clean,target_binary,60.0,2.0,1536.0,0.8888888888888888,0.8888888888888888
+not enough labels,ckmer5_count_l2,all,label_probe,100,N_3pct,label,,,,,
+not enough labels,ckmer4_property_multiscale_mean_l2,all,label_probe,100,N_3pct,label,,,,,
+not enough labels,one_hot,all,label_probe,100,N_3pct,label,,,,,
+not enough labels,property_channels,all,label_probe,100,N_3pct,label,,,,,
+not enough labels,base_property,all,label_probe,100,N_3pct,label,,,,,
+not enough labels,rope_onehot,all,label_probe,100,N_3pct,label,,,,,
+not enough labels,rope_property,all,label_probe,100,N_3pct,label,,,,,
+not enough labels,kmer_property,all,label_probe,100,N_3pct,label,,,,,
+,ckmer5_count_l2,nearest_centroid,target_background,100,N_3pct,target_binary,60.0,2.0,512.0,0.8888888888888888,0.8888888888888888
+,ckmer5_count_l2,logistic,target_background,100,N_3pct,target_binary,60.0,2.0,512.0,0.9444444444444444,0.9442724458204335
+,ckmer4_property_multiscale_mean_l2,nearest_centroid,target_background,100,N_3pct,target_binary,60.0,2.0,222.0,0.9444444444444444,0.9442724458204335
+,ckmer4_property_multiscale_mean_l2,logistic,target_background,100,N_3pct,target_binary,60.0,2.0,222.0,0.8333333333333334,0.8328173374613003
+,one_hot,nearest_centroid,target_background,100,N_3pct,target_binary,60.0,2.0,500.0,0.8333333333333334,0.8328173374613003
+,one_hot,logistic,target_background,100,N_3pct,target_binary,60.0,2.0,500.0,0.6666666666666666,0.6666666666666666
+,property_channels,nearest_centroid,target_background,100,N_3pct,target_binary,60.0,2.0,500.0,0.7777777777777778,0.7777777777777778
+,property_channels,logistic,target_background,100,N_3pct,target_binary,60.0,2.0,500.0,0.7222222222222222,0.7213622291021672
+,base_property,nearest_centroid,target_background,100,N_3pct,target_binary,60.0,2.0,1000.0,0.7777777777777778,0.7777777777777778
+,base_property,logistic,target_background,100,N_3pct,target_binary,60.0,2.0,1000.0,0.7222222222222222,0.7213622291021672
+,rope_onehot,nearest_centroid,target_background,100,N_3pct,target_binary,60.0,2.0,1600.0,0.7777777777777778,0.7777777777777778
+,rope_onehot,logistic,target_background,100,N_3pct,target_binary,60.0,2.0,1600.0,0.7777777777777778,0.7777777777777778
+,rope_property,nearest_centroid,target_background,100,N_3pct,target_binary,60.0,2.0,1600.0,0.8333333333333334,0.8328173374613003
+,rope_property,logistic,target_background,100,N_3pct,target_binary,60.0,2.0,1600.0,0.7222222222222222,0.7213622291021672
+,kmer_property,nearest_centroid,target_background,100,N_3pct,target_binary,60.0,2.0,1536.0,0.9444444444444444,0.9442724458204335
+,kmer_property,logistic,target_background,100,N_3pct,target_binary,60.0,2.0,1536.0,0.7777777777777778,0.7777777777777778

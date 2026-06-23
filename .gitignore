@@ -1,46 +1,17 @@
-# Python/runtime
 .venv/
 __pycache__/
-*.py[cod]
-.pytest_cache/
-
-# Local editor / OS
-.DS_Store
-Thumbs.db
-.vscode/
-
-# Bulky downloaded references; regenerate from manifests.
-data/reference_genomes/
-data/real_slices/*.csv
-!data/real_slices/close_relative_genomes_manifest.csv
-!data/real_slices/close_relative_genomes_manifest_preview.csv
-*.fna
-*.fa
-*.fasta
-*.fastq
+*.pyc
+*.part
+*.sam
 *.fq
-*.gz
-*.zip
-
-# Render QA intermediates
-manuscript/rendered_final/
-manuscript/rendered_final_*/
-manuscript/latex_build/
-manuscript/rendered_stage2_pdf/
-manuscript/latex_build_stage2/
-manuscript/draft_manuscript.md
-manuscript/stage*.md
-!manuscript/stage2_manuscript_v2.md
-!manuscript/stage2_reviewer_self_audit.md
-*.tmp
-
-# Logs and scratch
-*.log
-tmp/
-scratch/
-
-# Bulky generated experiment intermediates; summary tables and figures are tracked.
-results/stage2/**/stage2_derived_reads.csv
-results/stage2/**/arg_snp_reads.csv
-results/stage2/**/attention_breakpoint_reads.csv
-results/stage2/*_smoke/
+*.fastq
+*.fq.gz
+*.fastq.gz
+results/runs/
+results/stage2/parameter_sensitivity/
+results/stage3/art_illumina/fastq/
+results/stage3/art_illumina/art_paired_reads.csv
+results/stage3/compact_baselines/stage3_compact_baseline_reads.csv
+results/stage3/cami_probe_expanded/cami_probe_reads.csv
+results/stage3/cami_fullmatrix_property_contribution/cami_probe_reads.csv
+data/stage3/cami/remote_prefix_cache/

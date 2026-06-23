@@ -1,0 +1,35 @@
+{
+  "elapsed_seconds": 1044.5953023433685,
+  "reads_csv": "data\\stage3\\cami\\cami_toy_low_subset_reads_expanded.csv",
+  "fastq": "",
+  "labels_csv": "",
+  "lengths": [
+    69,
+    75,
+    100
+  ],
+  "conditions": [
+    "clean",
+    "N_3pct",
+    "substitution_1pct"
+  ],
+  "representations": [
+    "ckmer5_count_l2",
+    "ckmer7_count_l2",
+    "cspaced_count_l2",
+    "cspaced_property_l2",
+    "hybrid_ckmer5_csp",
+    "minhash_k5_s128",
+    "eiip_l2",
+    "eiip_summary_l2"
+  ],
+  "classifiers": [
+    "nearest_centroid",
+    "logistic",
+    "mlp"
+  ],
+  "target_label": "tax_552396",
+  "n_input_reads": 24000,
+  "n_probe_rows": 216000,
+  "n_readout_rows": 432
+}

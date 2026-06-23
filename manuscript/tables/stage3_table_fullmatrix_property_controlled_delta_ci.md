@@ -1,0 +1,10 @@
+| task                  | contrast                        |   n_paired_cells | delta macro_f1 (95% CI)   | delta accuracy (95% CI)   | interpretation                                                                  |
+|:----------------------|:--------------------------------|-----------------:|:--------------------------|:--------------------------|:--------------------------------------------------------------------------------|
+| motif_jitter_position | property_channels - one_hot     |                4 | -0.019 [-0.058, 0.023]    | -0.020 [-0.058, 0.021]    | per-position biochemical property channels versus per-position base identity    |
+| motif_jitter_position | base_property - one_hot         |                4 | 0.000 [-0.021, 0.029]     | -0.001 [-0.021, 0.026]    | adding property channels to one-hot positional identity                         |
+| motif_jitter_position | rope_property - rope_onehot     |                4 | -0.014 [-0.031, 0.003]    | -0.011 [-0.027, 0.004]    | property semantics under the same RoPE-like positional transform                |
+| motif_jitter_position | kmer_property - ckmer5_count_l2 |                4 | 0.250 [0.241, 0.259]      | 0.251 [0.242, 0.260]      | position-resolved k-mer property sequence versus compact canonical k-mer counts |
+| same_spectrum_order   | property_channels - one_hot     |                4 | -0.013 [-0.022, -0.003]   | -0.013 [-0.022, -0.003]   | per-position biochemical property channels versus per-position base identity    |
+| same_spectrum_order   | base_property - one_hot         |                4 | -0.005 [-0.006, -0.002]   | -0.005 [-0.006, -0.002]   | adding property channels to one-hot positional identity                         |
+| same_spectrum_order   | rope_property - rope_onehot     |                4 | -0.002 [-0.005, 0.000]    | -0.002 [-0.005, 0.000]    | property semantics under the same RoPE-like positional transform                |
+| same_spectrum_order   | kmer_property - ckmer5_count_l2 |                4 | -0.023 [-0.041, -0.006]   | -0.023 [-0.041, -0.006]   | position-resolved k-mer property sequence versus compact canonical k-mer counts |

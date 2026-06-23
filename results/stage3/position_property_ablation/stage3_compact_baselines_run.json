@@ -1,0 +1,71 @@
+{
+  "elapsed_seconds": 940.0602509975433,
+  "input": "D:\\AI-NGS\\info\\data\\real_slices\\close_relative_reads.csv",
+  "lengths": [
+    69,
+    75,
+    100,
+    125,
+    150,
+    300
+  ],
+  "readout_lengths": [
+    69,
+    75,
+    100,
+    150
+  ],
+  "conditions": [
+    "clean",
+    "substitution_1pct",
+    "N_3pct",
+    "substitution_1pct_N_3pct",
+    "local_mismatch_6bp",
+    "short_indel",
+    "substitution_5pct",
+    "N_10pct",
+    "substitution_5pct_N_10pct",
+    "local_mismatch_12bp"
+  ],
+  "representations": [
+    "ckmer4_count_l2",
+    "ckmer4_property_l2",
+    "ckmer4_property_moment_l2",
+    "ckmer4_property_multiscale_mean_l2",
+    "ckmer4_property_multiscale_l2",
+    "ckmer4_property_anchor_l2",
+    "ckmer5_count_l2",
+    "ckmer5_property_moment_l2",
+    "ckmer5_property_multiscale_l2",
+    "ckmer5_property_anchor_l2",
+    "cspaced_property_l2",
+    "hybrid:ckmer5_count_l2+ckmer4_property_l2",
+    "hybrid:ckmer5_count_l2+ckmer4_property_moment_l2",
+    "hybrid:ckmer5_count_l2+ckmer4_property_multiscale_l2",
+    "hybrid:ckmer5_count_l2+ckmer4_property_anchor_l2"
+  ],
+  "readout_representations": [
+    "ckmer4_count_l2",
+    "ckmer4_property_l2",
+    "ckmer4_property_moment_l2",
+    "ckmer4_property_multiscale_mean_l2",
+    "ckmer4_property_multiscale_l2",
+    "ckmer4_property_anchor_l2",
+    "ckmer5_count_l2",
+    "ckmer5_property_moment_l2",
+    "ckmer5_property_multiscale_l2",
+    "ckmer5_property_anchor_l2",
+    "cspaced_property_l2",
+    "hybrid:ckmer5_count_l2+ckmer4_property_l2",
+    "hybrid:ckmer5_count_l2+ckmer4_property_moment_l2",
+    "hybrid:ckmer5_count_l2+ckmer4_property_multiscale_l2",
+    "hybrid:ckmer5_count_l2+ckmer4_property_anchor_l2"
+  ],
+  "classifiers": [
+    "nearest_centroid",
+    "logistic"
+  ],
+  "n_reads": 36000,
+  "n_stability_rows": 810,
+  "n_readout_rows": 5280
+}

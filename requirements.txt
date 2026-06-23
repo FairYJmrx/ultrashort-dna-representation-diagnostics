@@ -9,3 +9,7 @@ tqdm
 tabulate
 openpyxl
 torch
+requests
+pypdf
+python-docx
+Pillow

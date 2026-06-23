@@ -1,0 +1,7 @@
+﻿name,size,typeflag,header_offset,data_offset,next_header_offset
+30_genomes/,0,5,0,512,512
+30_genomes/S_S001__genomes_30__insert_180_abundances.tsv.gz,20004,0,512,1024,21504
+30_genomes/S_S001__genomes_30__insert_180_reads_anonymous.fq.gz,14992370531,0,21504,22016,14992392704
+30_genomes/S_S001__genomes_30__insert_180_gsa_mapping.tsv.gz,334509,0,14992392704,14992393216,14992728064
+30_genomes/S_S001__genomes_30__insert_180_gsa_anonymous.fasta.gz,28931378,0,14992728064,14992728576,15021660160
+30_genomes/S_S001__genomes_30__insert_180_gs_read_mapping.tsv.gz,389429641,0,15021660160,15021660672,15411090432

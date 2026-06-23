@@ -1,0 +1,25 @@
+{
+  "elapsed_seconds": 5.754558563232422,
+  "genome_manifest": "D:\\AI-NGS\\info\\data\\real_slices\\close_relative_genomes_manifest.csv",
+  "reads_csv": "D:\\AI-NGS\\info\\results\\stage3\\art_illumina\\art_paired_reads.csv",
+  "lengths": [
+    69,
+    100
+  ],
+  "representations": [
+    "ckmer5_count_l2",
+    "ckmer4_property_multiscale_mean_l2",
+    "one_hot",
+    "property_channels",
+    "base_property",
+    "rope_onehot",
+    "rope_property",
+    "kmer_property"
+  ],
+  "art_exe": "art_illumina",
+  "art_found": false,
+  "profile": "HS25",
+  "fold_coverage": 0.01,
+  "n_command_rows": 42,
+  "n_stability_rows": 16
+}

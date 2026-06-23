@@ -1,0 +1,36 @@
+{
+  "elapsed_seconds": 55.15138864517212,
+  "input": "D:\\AI-NGS\\信息学\\data\\real_slices\\close_relative_reads.csv",
+  "lengths": [
+    69,
+    75
+  ],
+  "conditions": [
+    "N_3pct",
+    "substitution_1pct",
+    "local_mismatch_6bp"
+  ],
+  "patterns": [
+    "0-1-2",
+    "0-2-4",
+    "0-3-6",
+    "0-1-2-3",
+    "0-1-3-6",
+    "0-2-4-6",
+    "0-1-4-7",
+    "0-2-5-7",
+    "0-2-5-8",
+    "0-3-5-8",
+    "0-3-6-9",
+    "0-1-2-3-4",
+    "0-1-3-6-9",
+    "0-2-4-6-8"
+  ],
+  "max_clean_per_length": 480,
+  "max_paired_reads": 240,
+  "max_samples_per_group": 120,
+  "seed": 20260623,
+  "n_stability_rows": 168,
+  "skip_readout": true,
+  "n_readout_rows": 0
+}

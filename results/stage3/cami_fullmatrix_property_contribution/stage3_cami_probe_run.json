@@ -1,0 +1,32 @@
+{
+  "elapsed_seconds": 6.262496471405029,
+  "reads_csv": "D:\\AI-NGS\\info\\data\\stage3\\cami\\cami_toy_low_subset_smoke.csv",
+  "fastq": "",
+  "labels_csv": "",
+  "lengths": [
+    69,
+    100
+  ],
+  "conditions": [
+    "clean",
+    "N_3pct"
+  ],
+  "representations": [
+    "ckmer5_count_l2",
+    "ckmer4_property_multiscale_mean_l2",
+    "one_hot",
+    "property_channels",
+    "base_property",
+    "rope_onehot",
+    "rope_property",
+    "kmer_property"
+  ],
+  "classifiers": [
+    "nearest_centroid",
+    "logistic"
+  ],
+  "target_label": "tax_552396",
+  "n_input_reads": 771,
+  "n_probe_rows": 3084,
+  "n_readout_rows": 96
+}

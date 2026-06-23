@@ -233,6 +233,16 @@ def build_markdown() -> str:
         f"each representation preserve under the short-read perturbations that clinical pipelines actually encounter?"
     )
     md.append(
+        f"Controlled simulated reads are used here as a methodological choice, not as a substitute claim for clinical "
+        f"diagnostic validation. Real clinical mNGS datasets often provide sample-level diagnostic or qPCR information, "
+        f"but they rarely provide read-level truth, exact sequencing-error origin, mutation status and controlled read length "
+        f"for every fragment. WGS-derived reads therefore support mechanism-level decomposition because source genome, read "
+        f"length, perturbation and clean-perturbed pairing are known. ART Illumina simulation adds a field-standard sequencing "
+        f"error model with platform-like quality profiles {c.cite('Huang2012ART')}, and CAMI low-complexity data provide an "
+        f"external metagenomic benchmark context {c.cite('Sczyrba2017', 'Meyer2022')}. This three-layer design is intended to "
+        f"close the representation-diagnostics logic while reserving end-to-end clinical mNGS pipelines for future work."
+    )
+    md.append(
         f"Deep learning has widened the representational vocabulary for DNA. Convolutional and recurrent models have "
         f"been used to learn regulatory sequence specificity {c.cite('Alipanahi2015', 'Zhou2015', 'Quang2016')}; "
         f"read-level metagenomic neural classifiers include recurrent and attention-based models "
@@ -302,6 +312,16 @@ def build_markdown() -> str:
     )
 
     md.append("## Method\n")
+    md.append("### Rationale for controlled simulated reads\n")
+    md.append(
+        "The data design follows the level of the claim. Because this manuscript tests representation-level information "
+        "preservation rather than end-to-end clinical classification, the primary experiments require read-level ground "
+        "truth and paired clean-versus-perturbed fragments. WGS-derived reads provide controlled species origin, read length "
+        "and perturbation axes. ART Illumina validation is planned to test whether the same stability patterns hold under "
+        "a field-standard sequencing-error profile rather than only under hand-specified substitutions, N masking and trimming. "
+        "CAMI low-complexity data are planned as an external benchmark probe for lightweight readout, not as a production "
+        "taxonomic-classification leaderboard."
+    )
     md.append("### Representation definitions\n")
     md.append(make_formula_block())
     md.append(
@@ -310,7 +330,7 @@ def build_markdown() -> str:
         "concatenations of canonical k-mer counts and CSP. All vocabulary-dependent features were fitted on the training "
         "or clean subset defined by each experiment to avoid using perturbed test sequences to define the vocabulary."
     )
-    md.append("### Datasets and perturbations\n")
+    md.append("### Data sources and perturbations\n")
     md.append(
         "The main stage-2 WGS panel contained 21 genomes from six close or clinically relevant genera: Acinetobacter, "
         "Burkholderia, Candida, Enterobacter, Escherichia and Klebsiella. Reads were generated at 69, 75, 100, 110, "
@@ -324,6 +344,14 @@ def build_markdown() -> str:
         "emphasized 75 bp single-end reads and approximately 69 bp post-QC reads. This experiment measured whether a "
         "perturbed read stayed close to its clean counterpart, not whether a clinical sample with multiple organisms was "
         "classified correctly."
+    )
+    md.append(
+        "Stage-3 validation extends this data hierarchy without changing the paper's scope. ART Illumina profiles will be "
+        "used to generate platform-like sequencing-error reads from the same reference genomes, preserving the stability "
+        "metrics while replacing hand-specified perturbations with a commonly used read simulator. CAMI low-complexity "
+        "reads will be processed as an external benchmark subset for target/background or genus-level lightweight readout "
+        "probes. These additions are designed to test externality and noise-model robustness, not to claim clinical sensitivity "
+        "or specificity."
     )
     md.append("### Metrics and readout probes\n")
     md.append(
@@ -436,6 +464,23 @@ def build_markdown() -> str:
     md.append(df_to_markdown(arg_readout))
     md.append("\n![Figure 8. ARG/SNP boundary readout probes.](figures/stage2_fig_arg_snp_readout.png)\n")
 
+    md.append("### Planned stage-3 external validation will test simulator and benchmark generality\n")
+    md.append(
+        "[Planned validation: ART Illumina error-profile results will be inserted here after the stage-3 run. This analysis "
+        "will compare canonical k-mer, canonical spaced seed, CSP, hybrid, MinHash sketch and EIIP baselines using paired "
+        "cosine, L2 drift and nearest-clean retrieval under ART-generated Illumina-like sequencing errors.]"
+    )
+    md.append(
+        "[Planned validation: compact classical baseline results will be inserted here after the stage-3 run. MinHash sketches "
+        "will test whether a compact alignment-free sketch explains the CSP advantage, and EIIP-only baselines will test "
+        "whether stability comes merely from using a numerical DNA signal.]"
+    )
+    md.append(
+        "[Planned validation: CAMI low-complexity readout-probe results will be inserted here after the stage-3 run. The CAMI "
+        "analysis will be treated as an external benchmark probe for signal readability and degradation, not as an end-to-end "
+        "clinical or SOTA metagenomic classifier comparison.]"
+    )
+
     md.append("## Discussion\n")
     md.append(
         "The main result is a division of labor among representations. Canonical k-mers are still the most defensible "
@@ -461,20 +506,34 @@ def build_markdown() -> str:
     )
     md.append(
         "Several conclusions remain deliberately unproven. The neural probe was intentionally small and local; it does not "
-        "establish CNN or Transformer superiority on realistic clinical mNGS data. We did not benchmark Kraken2, Centrifuge, "
-        "Kaiju or alignment pipelines on the same noisy FASTQ inputs. We did not use real CARD, ResFinder or AMRFinderPlus "
-        "marker panels for ARG calling. These are appropriate server-stage experiments. The local experiments establish the "
-        "representation-level evidence needed to justify those larger tests."
+        "establish CNN or Transformer superiority on realistic clinical mNGS data. The stage-3 ART and CAMI analyses are "
+        "planned to test measurement robustness and external benchmark readability, but they still will not constitute "
+        "clinical sensitivity, specificity or production-pipeline validation. Kraken2, Centrifuge, Kaiju, alignment pipelines "
+        "and curated CARD/ResFinder/AMRFinderPlus tasks remain the appropriate next layer once the representation-level "
+        "evidence is fixed."
+    )
+
+    md.append("## Future Work\n")
+    md.append(
+        "Future work will extend the proposed layered evidence architecture into an end-to-end metagenomic workflow. In that "
+        "larger system, canonical k-mer, alignment or database evidence should provide high-resolution taxonomic or ARG identity "
+        "support, while CSP-like auxiliary features provide compact perturbation-stability, quality-audit and confidence-side "
+        "information for degraded, N-masked, trimmed or locally mismatched reads. This next stage should use realistic FASTQ "
+        "quality profiles, host/background mixtures, abundance variation, larger genome-held-out panels and eventually real "
+        "clinical mNGS samples with sample-level orthogonal validation."
     )
 
     md.append("## Limitations\n")
     md.append(
         "The WGS panel contained 21 genomes from six genera and was not designed to represent microbial diversity, hospital "
-        "background mixtures, abundance variation, host depletion, real quality-score distributions or wet-lab contamination. "
-        "The perturbations model substitutions, N masking, trimming, short indels and local mismatches, but not full sequencer "
-        "error profiles or library preparation artifacts. The readout models were intentionally small and deterministic. The "
-        "ARG/SNP tasks were synthetic boundary probes. Therefore, CSP-alone species identification, ARG allele calling, "
-        "resistance SNP classification, mobile-element context and plasmid linkage should not be claimed from these data."
+        "background mixtures, abundance variation, host depletion, database incompleteness, sample-level uncertainty or wet-lab "
+        "contamination. The hand-specified perturbations model substitutions, N masking, trimming, short indels and local "
+        "mismatches for mechanism decomposition, but they do not reproduce a complete sequencing run or library-preparation "
+        "process. ART Illumina validation is planned to add a field-standard error-profile layer, yet even ART cannot replace "
+        "real clinical host background, abundance structure, contamination and diagnostic uncertainty. CAMI low-complexity "
+        "analysis is planned as an external benchmark probe, not a clinical endpoint. The readout models are intentionally "
+        "small and deterministic. Therefore, CSP-alone species identification, ARG allele calling, resistance SNP classification, "
+        "mobile-element context and plasmid linkage should not be claimed from these data."
     )
 
     md.append("## Code and Data Availability\n")

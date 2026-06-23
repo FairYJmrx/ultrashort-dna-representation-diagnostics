@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import re
+
 import numpy as np
 from scipy import sparse
 from sklearn.preprocessing import normalize
@@ -20,6 +22,8 @@ def parse_kmer_representation(name: str) -> tuple[int, str, str, bool] | None:
     - kmer7_tfidf_l2
     - ckmer5_count_l2, where c means canonical reverse-complement k-mers.
     """
+    if re.fullmatch(r"c?kmer\d+(_.*)?", name) is None:
+        return None
     canonical = False
     if name.startswith("ckmer"):
         canonical = True

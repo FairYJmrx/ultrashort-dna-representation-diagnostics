@@ -1,0 +1,32 @@
+{
+  "elapsed_seconds": 98.4643132686615,
+  "input": "D:\\AI-NGS\\info\\data\\toy_reads\\toy_hardened_tasks.csv",
+  "representations": [
+    "ckmer4_property_multiscale_mean_l2",
+    "one_hot",
+    "property_channels",
+    "base_property",
+    "rope_onehot",
+    "rope_property",
+    "ckmer5_count_l2",
+    "kmer_property"
+  ],
+  "lengths": [
+    69,
+    100
+  ],
+  "conditions": [
+    "clean",
+    "N_3pct"
+  ],
+  "tasks": [
+    "same_spectrum_order",
+    "motif_jitter_position"
+  ],
+  "classifiers": [
+    "nearest_centroid",
+    "logistic"
+  ],
+  "cv_folds": 5,
+  "n_rows": 256
+}

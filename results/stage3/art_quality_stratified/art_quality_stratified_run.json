@@ -1,0 +1,17 @@
+{
+  "elapsed_seconds": 195.1566355228424,
+  "input": "D:\\AI-NGS\\信息学\\results\\stage3\\art_illumina\\art_paired_reads.csv",
+  "representations": [
+    "ckmer5_count_l2",
+    "ckmer7_count_l2",
+    "cspaced_count_l2",
+    "cspaced_property_l2",
+    "hybrid_ckmer5_csp",
+    "minhash_k5_s128",
+    "eiip_l2",
+    "eiip_summary_l2"
+  ],
+  "max_pairs": 400,
+  "seed": 707,
+  "n_rows": 120
+}

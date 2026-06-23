@@ -3,6 +3,7 @@ from __future__ import annotations
 import argparse
 import json
 import random
+import re
 import sys
 import time
 import warnings
@@ -55,32 +56,56 @@ def apply_stage2_condition(row: pd.Series, condition: str, seed: int) -> dict[st
     seq = str(row["sequence"]).upper()
     rng = random.Random(f"{seed}:{row['clean_read_id']}:{condition}")
     profile: dict[str, object] = {"condition": condition}
+    substitution_match = re.fullmatch(r"substitution_(\d+)pct", condition)
+    n_match = re.fullmatch(r"N_(\d+)pct", condition)
+    n_cluster_match = re.fullmatch(r"N_cluster_(\d+)pct", condition)
+    combined_match = re.fullmatch(r"substitution_(\d+)pct_N_(\d+)pct", condition)
+    trim_match = re.fullmatch(r"trim_(\d+)bp", condition)
+    indel_match = re.fullmatch(r"short_indel_(\d+)pct", condition)
+    local_mismatch_match = re.fullmatch(r"local_mismatch_(\d+)bp", condition)
     if condition == "clean":
         out_seq = seq
-    elif condition == "substitution_1pct":
-        out_seq, positions = mutate_substitutions(seq, 0.01, rng)
-        profile["substitution_positions"] = positions
-    elif condition == "substitution_2pct":
-        out_seq, positions = mutate_substitutions(seq, 0.02, rng)
-        profile["substitution_positions"] = positions
-    elif condition == "N_3pct":
-        out_seq, positions = mask_n(seq, 0.03, rng)
-        profile["N_positions"] = positions
-    elif condition == "trim_5bp":
-        out_seq = trim_sequence(seq, max(1, len(seq) - 5), mode="right", rng=rng)
-    elif condition == "trim_10bp":
-        out_seq = trim_sequence(seq, max(1, len(seq) - 10), mode="right", rng=rng)
-    elif condition == "substitution_1pct_N_3pct":
-        mid_seq, sub_positions = mutate_substitutions(seq, 0.01, rng)
-        out_seq, n_positions = mask_n(mid_seq, 0.03, rng)
-        profile["substitution_positions"] = sub_positions
-        profile["N_positions"] = n_positions
     elif condition == "short_indel":
         out_seq, events = inject_indel(seq, 0.01, rng)
+        profile["indel_rate"] = 0.01
         profile["indel_events"] = events
-    elif condition == "local_mismatch_6bp":
+    elif substitution_match:
+        rate = int(substitution_match.group(1)) / 100.0
+        out_seq, positions = mutate_substitutions(seq, rate, rng)
+        profile["substitution_rate"] = rate
+        profile["substitution_positions"] = positions
+    elif n_match:
+        rate = int(n_match.group(1)) / 100.0
+        out_seq, positions = mask_n(seq, rate, rng)
+        profile["N_rate"] = rate
+        profile["N_positions"] = positions
+    elif n_cluster_match:
+        rate = int(n_cluster_match.group(1)) / 100.0
+        out_seq, positions = mask_n(seq, rate, rng, mode="cluster")
+        profile["N_rate"] = rate
+        profile["N_mode"] = "cluster"
+        profile["N_positions"] = positions
+    elif combined_match:
+        sub_rate = int(combined_match.group(1)) / 100.0
+        n_rate = int(combined_match.group(2)) / 100.0
+        mid_seq, sub_positions = mutate_substitutions(seq, sub_rate, rng)
+        out_seq, n_positions = mask_n(mid_seq, n_rate, rng)
+        profile["substitution_rate"] = sub_rate
+        profile["N_rate"] = n_rate
+        profile["substitution_positions"] = sub_positions
+        profile["N_positions"] = n_positions
+    elif trim_match:
+        trim_bp = int(trim_match.group(1))
+        out_seq = trim_sequence(seq, max(1, len(seq) - trim_bp), mode="right", rng=rng)
+        profile["trim_bp"] = trim_bp
+    elif indel_match:
+        rate = int(indel_match.group(1)) / 100.0
+        out_seq, events = inject_indel(seq, rate, rng)
+        profile["indel_rate"] = rate
+        profile["indel_events"] = events
+    elif local_mismatch_match:
         chars = list(seq)
-        block = min(6, len(chars))
+        block = min(int(local_mismatch_match.group(1)), len(chars))
         start = rng.randrange(0, max(1, len(chars) - block + 1))
         positions = []
         for pos in range(start, start + block):
@@ -90,6 +115,7 @@ def apply_stage2_condition(row: pd.Series, condition: str, seed: int) -> dict[st
                 chars[pos] = rng.choice(choices)
                 positions.append(pos)
         out_seq = "".join(chars)
+        profile["local_mismatch_bp"] = block
         profile["local_mismatch_positions"] = positions
     else:
         raise ValueError(f"Unsupported condition: {condition}")
