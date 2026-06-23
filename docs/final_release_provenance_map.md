@@ -1,8 +1,8 @@
-﻿# Final Release Provenance Map
+# Final Release Provenance Map
 
 Purpose: one-stop map from revised manuscript claims to scripts, result files, tables, figures and audit reports. This map reflects the post-CSP revision in which the main story is compact biochemical and position-aware representation diagnostics. It deliberately does not add a third neural baseline family.
 
-Working-tree source commit at the time of this map: 2b2bffc00dd7ca5ebe16b16e9ac95f0483fc095e. The final public archive or release commit should be inserted after cleanup.
+Working-tree source commit at the time of this map: 2b2bffc00dd7ca5ebe16b16e9ac95f0483fc095e. The clean release snapshot is maintained on the local and remote `release` branch; verify the current tip with `git rev-parse release` or `git rev-parse origin/release`.
 
 ## Quick Entry Points
 
