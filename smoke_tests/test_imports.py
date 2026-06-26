@@ -16,6 +16,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
 MODULES = [
+    "methods.ck4p_msp",
     "methods.sequence_utils",
     "methods.stage2_features",
     "methods.representation_registry",
@@ -30,8 +31,14 @@ def main() -> None:
     for module in MODULES:
         importlib.import_module(module)
         print(f"ok: {module}")
+    from methods.ck4p_msp import build_ck4p_msp, expected_dimensions
+
+    sequences = ["ACGTACGTACGTACGT", "TGCATGCATGCATGCA"]
+    matrix = build_ck4p_msp(sequences)
+    expected = expected_dimensions()["total"]
+    assert matrix.shape == (2, expected), f"Unexpected CK4P-MSP shape: {matrix.shape}"
+    print(f"ok: CK4P-MSP shape {matrix.shape}")
 
 
 if __name__ == "__main__":
     main()
-

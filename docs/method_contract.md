@@ -34,8 +34,8 @@ read-level taxonomic labels were not reconstructed for that lightweight probe.
 |---|---|---|
 | CK4 | Reverse-complement canonical contiguous 4-mer identity block. | Compact identity backbone. |
 | CK5 | Reverse-complement canonical contiguous 5-mer identity block. | Identity baseline. |
-| P | Global biochemical-property summary over each read. | Global property stability channel. |
-| MSP | Multi-scale positional property pooling using the same property family over relative-position bins. | Coarse positional property channel. |
+| P | Global biochemical-property summary over each read, including base-property means/standard deviations plus read-level N fraction, length and entropy summaries. | Global property stability channel. |
+| MSP | Multi-scale positional pooling of per-base property channels over relative-position bins. | Coarse positional property channel. |
 | CK4+P | Concatenated CK4 and P under block normalization. | Tests global property contribution. |
 | CK4+MSP | Concatenated CK4 and MSP under block normalization. | Tests positional property contribution. |
 | CK4P-MSP | Concatenated CK4, P and MSP under block normalization. | Main compact mixed representation. |
@@ -44,6 +44,10 @@ read-level taxonomic labels were not reconstructed for that lightweight probe.
 | High-k compressed controls | k=15 signals compressed by MinHash, hashing trick or sparse random projection. | Compactness-constrained high-specificity audit. |
 
 ## Default Mixed Representation
+
+The public method API is `methods/ck4p_msp.py`. Historical scripts can still
+build the same representation family through `methods/stage2_features.py`, but
+new method-facing code should use `methods.ck4p_msp`.
 
 Each block is internally L2-normalized before weighted concatenation. The
 default weights are:
@@ -62,7 +66,8 @@ a natural biophysical distance between commensurate physical units.
 The default MSP binset is `2+3+4+6`. It is a coarse-to-fine relative-position
 summary. The finest scale remains above single-position resolution in the
 69-150 bp regime and is audited separately by the MSP bin/gamma sensitivity
-analysis.
+analysis. The default manuscript API uses mean-only MSP pooling. Per-bin
+standard deviations remain available as an optional audit variant.
 
 ## Metrics
 
@@ -83,4 +88,3 @@ described as orthogonal or independent physical axes.
 
 Pipeline-facing triage, false-hit reduction and classifier-output auditing are
 future work unless explicitly evaluated.
-

@@ -167,6 +167,7 @@ This manifest describes the organized reproducible-method release under this bra
 - `methods/README.md`
 - `methods/__init__.py`
 - `methods/base_encodings.py`
+- `methods/ck4p_msp.py`
 - `methods/evaluation.py`
 - `methods/ml_eval.py`
 - `methods/position_encodings.py`

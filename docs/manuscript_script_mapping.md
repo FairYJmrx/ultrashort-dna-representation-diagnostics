@@ -5,7 +5,7 @@ primary outputs. It complements `docs/final_release_provenance_map.md`.
 
 | Manuscript block | Primary question | Entrypoint | Main outputs |
 |---|---|---|---|
-| Study design and representation families | What is CK4P-MSP and what are the comparators? | `methods/stage2_features.py`, `methods/representation_registry.py` | Method contract and representation definitions. |
+| Study design and representation families | What is CK4P-MSP and what are the comparators? | `methods/ck4p_msp.py`, `methods/stage2_features.py`, `methods/representation_registry.py` | Public method API, method contract and representation definitions. |
 | Data layers and perturbation design | Which read layers are used? | `data_pipeline/preprocess/*.py`, `data_pipeline/simulate/*.py` | `data/`, `results/stage3/*_metadata.json`, run manifests. |
 | Compact biochemical summaries | Do compact property-aware summaries reduce perturbation drift? | `experiments/main/run_stage3_compact_baselines.py` | `results/stage3/compact_baselines/`, `results/stage3/position_property_ablation/`. |
 | Same-dimension reduction controls | Is the result explained by feature count? | `experiments/audits/run_dimension_reduction_baselines.py` | `results/stage3/reviewer_response/dimension_reduction_baselines/`. |
@@ -21,4 +21,3 @@ primary outputs. It complements `docs/final_release_provenance_map.md`.
 | Boundary analyses | Where does the compact representation stop? | `experiments/main/run_stage2_arg_snp_boundary.py`, `experiments/main/run_stage2_attention_breakpoint.py`, `experiments/main/run_spaced_pattern_sanity.py` | `results/stage2/*`, `results/stage3/spaced_pattern_sanity/`. |
 | Figures and manuscript tables | Which assets support the paper? | `analysis/figures/*.py`, `analysis/tables/*.py` | `paper/figures/`, `paper/figures_docx/`, `paper/tables/`, `figures/`. |
 | Final provenance audits | Are outputs mapped back to scripts? | `analysis/audits/audit_result_inventory.py`, `analysis/audits/audit_final_provenance.py` | `results/audits/`. |
-

@@ -24,8 +24,9 @@ representations:
       normalization: l2
     msp:
       definition: multi-scale positional property pooling
-      components: [hydrogen, gc, purine, eiip, n_fraction, entropy, length]
+      components: [hydrogen, gc, purine, eiip, n_fraction]
       default_bins: [2, 3, 4, 6]
+      include_std_default: false
       normalization: l2
   mixed:
     ck4_plus_p:
@@ -34,6 +35,7 @@ representations:
       blocks: [ck4, msp]
     ck4p_msp:
       blocks: [ck4, p, msp]
+      public_api: methods.ck4p_msp.build_ck4p_msp
       default_weights:
         alpha: 1.0
         beta: 1.0

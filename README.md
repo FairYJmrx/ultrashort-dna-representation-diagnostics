@@ -27,6 +27,11 @@ scripts and outputs.
 
 See `docs/repository_structure.md` for a longer map.
 
+The manuscript-facing API for the main method is
+`methods/ck4p_msp.py`. It exposes CK4, P, MSP, CK4P-MSP assembly and paired
+drift helpers directly; older experiment scripts remain available through the
+broader `methods/stage2_features.py` feature-construction layer.
+
 ## 2. Environment Setup
 
 The release was developed on Windows with Python 3. Recommended setup:
@@ -139,4 +144,3 @@ Excluded:
   are used in this release.
 
 See `RELEASE_MANIFEST.md` for the detailed file inventory.
-
