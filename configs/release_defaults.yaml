@@ -1,0 +1,63 @@
+project: ultrashort_dna_representation_diagnostics
+claim_scope: representation_diagnostics
+
+read_lengths:
+  primary: [69, 75, 100, 125, 150]
+  boundary_reference: [300]
+  cami2_marine_probe: [69, 75, 100]
+
+random_seed_default: 2026
+random_seeds_reported: [13, 37, 101, 2026, 3407]
+
+representations:
+  identity:
+    ck4:
+      definition: reverse-complement canonical contiguous 4-mer counts
+      normalization: l2
+    ck5:
+      definition: reverse-complement canonical contiguous 5-mer counts
+      normalization: l2
+  property:
+    p:
+      definition: global biochemical-property summary
+      components: [hydrogen, gc, purine, eiip, n_fraction, entropy, length]
+      normalization: l2
+    msp:
+      definition: multi-scale positional property pooling
+      components: [hydrogen, gc, purine, eiip, n_fraction, entropy, length]
+      default_bins: [2, 3, 4, 6]
+      normalization: l2
+  mixed:
+    ck4_plus_p:
+      blocks: [ck4, p]
+    ck4_plus_msp:
+      blocks: [ck4, msp]
+    ck4p_msp:
+      blocks: [ck4, p, msp]
+      default_weights:
+        alpha: 1.0
+        beta: 1.0
+        gamma: 1.0
+      dimension_budget: 222
+  boundary_controls:
+    full_position_matrices:
+      role: diagnostic positional upper bound
+    csp:
+      role: canonical spaced-property boundary comparator
+    high_k_compressed:
+      k: 15
+      role: compactness-constrained high-specificity k-mer audit
+      compression: [minhash, hashing_trick, sparse_random_projection]
+
+metrics:
+  stability: [paired_cosine, l2_drift, nearest_clean_retrieval]
+  readout: [macro_f1, accuracy]
+  local_change: [selective_sensitivity_ratio, delta_readout]
+  audits: [paired_wilcoxon_bh, block_weight_sensitivity, empirical_mi, knn_mi, p_msp_redundancy, runtime]
+
+claim_boundaries:
+  - Not a clinical diagnostic validation.
+  - Not a production metagenomic classifier.
+  - Not a replacement for exact matching, alignment or curated database evidence.
+  - Mixed L2 is standardized diagnostic drift, not a natural biophysical distance.
+  - MI analyses are estimator-dependent empirical audits, not universal information-theoretic proofs.

@@ -1,45 +1,142 @@
-# Ultra-short DNA Read Representation Diagnostics, Clean Release
+# Ultra-short DNA Read Representation Diagnostics
 
-This branch is a clean release snapshot for the final manuscript. It contains the scripts, lightweight input data, summary results, figures, manuscript tables, final manuscript files and audit reports used by the submitted stage-3 manuscript.
+This repository is the reproducible release for the manuscript on
+representation diagnostics for ultra-short metagenomic reads. It is organized
+as a methods repository: method definitions are centralized, data preparation
+and experiments have separate entrypoints, and manuscript claims are mapped to
+scripts and outputs.
 
-## Scientific Scope
+## 1. Repository Map
 
-The project is a representation-diagnostics study, not a clinical diagnostic validation. The final claim is deliberately bounded: canonical k-mer, alignment and database evidence remain necessary for exact identity and functional calls, while compact biochemical and position-aware property summaries supply perturbation-stable auxiliary evidence. Full position matrices are retained only as lightweight upper-bound diagnostics, and CSP is retained as a spaced-seed boundary control.
+| Path | Purpose |
+|---|---|
+| `methods/` | Canonical implementation of sequence utilities, CK4/CK5, P, MSP, CK4P-MSP, CSP, full-position encodings and evaluation helpers. |
+| `src/` | Compatibility wrappers for older scripts that import `src.*`. New code should import `methods.*`. |
+| `data_pipeline/` | Organized entrypoints for public data inspection/download, preprocessing and simulator-derived probes. |
+| `experiments/` | Organized entrypoints for main experiments and method-hardening audits. |
+| `analysis/` | Organized entrypoints for figures, tables, provenance audits and manuscript assembly. |
+| `data/` | Lightweight release data and public benchmark subsets. |
+| `results/` | Generated result tables, summaries, run manifests and audit outputs. |
+| `figures/` | Central copy of final main and supplementary figure bitmaps. |
+| `paper/` | Current split paper draft, paper figures, tables and manuscript build artifacts. |
+| `manuscript/` | Historical final/stage manuscript artifacts retained for provenance. |
+| `docs/` | Method contract, repository structure, provenance maps and manuscript-script mapping. |
+| `configs/` | Experiment matrices and release-default method settings. |
+| `references/` | Working bibliography. |
+| `smoke_tests/` | Lightweight import and repository checks. |
 
-## What Is Included
+See `docs/repository_structure.md` for a longer map.
 
-- Core source code under `src/`.
-- Final experiment and manuscript scripts under `scripts/`.
-- Lightweight toy data, WGS-slice manifests/reads and the CAMI_TOY_low labelled subset under `data/`.
-- Final summary result CSV/JSON/Markdown files under `results/`.
-- Final manuscript files, selected final tables and selected final figures under `manuscript/`.
-- The one-stop provenance map under `docs/final_release_provenance_map.md` and audit reports under `results/audits/`.
+## 2. Environment Setup
 
-## What Is Excluded
-
-Historical `results/runs` outputs, smoke runs, old parameter-sensitivity result tables, render intermediates, local virtual environments, download fragments, full CAMI archives, ART FASTQ/SAM outputs and large paired-read intermediates are excluded. The final manuscript uses `results/stage3/spaced_pattern_sanity` for seed-layout claims. Older parameter grids are documented only in audit reports.
-
-## Main Reproduction Path
+The release was developed on Windows with Python 3. Recommended setup:
 
 ```powershell
-.\.venv\Scripts\python.exe scripts\run_stage2_representation_grid.py
-.\.venv\Scripts\python.exe scripts\run_stage2_csp_ablation.py
-.\.venv\Scripts\python.exe scripts\run_stage2_attention_breakpoint.py
-.\.venv\Scripts\python.exe scripts\run_stage2_arg_snp_boundary.py
-.\.venv\Scripts\python.exe scripts\run_stage3_compact_baselines.py
-.\.venv\Scripts\python.exe scripts\run_stage3_art_generate_and_evaluate.py
-.\.venv\Scripts\python.exe scripts\summarize_stage3_art_quality.py
-.\.venv\Scripts\python.exe scripts\run_stage3_cami_probe.py
-.\.venv\Scripts\python.exe scripts\run_position_property_controlled_tasks.py --output-dir results/stage3/fullmatrix_property_contribution_controlled --representations ckmer4_property_multiscale_mean_l2,one_hot,property_channels,base_property,rope_onehot,rope_property,ckmer5_count_l2,kmer_property --lengths 69,100 --conditions clean,N_3pct
-.\.venv\Scripts\python.exe scripts\run_stage3_art_validation.py --reads-csv results/stage3/art_illumina/art_paired_reads.csv --output-dir results/stage3/art_fullmatrix_property_contribution --lengths 69,100 --representations ckmer5_count_l2,ckmer4_property_multiscale_mean_l2,one_hot,property_channels,base_property,rope_onehot,rope_property,kmer_property --max-retrieval-pairs 100
-.\.venv\Scripts\python.exe scripts\run_stage3_cami_probe.py --reads-csv data/stage3/cami/cami_toy_low_subset_smoke.csv --output-dir results/stage3/cami_fullmatrix_property_contribution --lengths 69,100 --conditions clean,N_3pct --representations ckmer5_count_l2,ckmer4_property_multiscale_mean_l2,one_hot,property_channels,base_property,rope_onehot,rope_property,kmer_property --target-label tax_552396 --max-per-class 30
-.\.venv\Scripts\python.exe scripts\run_spaced_pattern_sanity.py --skip-readout --max-paired-reads 240 --max-clean-per-length 480
-.\.venv\Scripts\python.exe scripts\generate_stage3_bootstrap_ci.py
-.\.venv\Scripts\python.exe scripts\generate_fullmatrix_property_contribution_ci.py
-.\.venv\Scripts\python.exe scripts\generate_stage3_manuscript_assets_v2.py
-.\.venv\Scripts\python.exe scripts\audit_result_inventory.py
-.\.venv\Scripts\python.exe scripts\audit_final_provenance.py
-.\.venv\Scripts\python.exe scripts\finalize_stage3_manuscript_v5.py
+python -m venv .venv
+.\.venv\Scripts\python.exe -m pip install --upgrade pip
+.\.venv\Scripts\python.exe -m pip install -r requirements.txt
 ```
 
-The final files are `manuscript/final_manuscript.md` and `manuscript/final_manuscript.docx`.
+Run a quick import smoke test:
+
+```powershell
+.\.venv\Scripts\python.exe smoke_tests\test_imports.py
+```
+
+ART-based reruns require a local ART executable. The release keeps ART outputs
+and summaries, but does not include full FASTQ/SAM intermediates.
+
+## 3. Method Contract
+
+The main method is CK4P-MSP:
+
+- CK4: reverse-complement canonical 4-mer identity block.
+- P: global biochemical-property summary.
+- MSP: multi-scale positional property pooling over relative-position bins.
+- CK4P-MSP: block-normalized CK4, P and MSP with default weights
+  `alpha=beta=gamma=1`.
+
+The mixed L2 metric is standardized diagnostic drift, not a natural
+biophysical distance. MI/KSG analyses are estimator-dependent empirical audits,
+not universal information-theoretic proofs.
+
+See `docs/method_contract.md` and `configs/release_defaults.yaml` for the
+formal method contract and default settings.
+
+## 4. Reproduction Path
+
+The old `scripts/` commands remain valid. New users can start from the
+organized entrypoints below.
+
+### Data and simulation
+
+```powershell
+.\.venv\Scripts\python.exe data_pipeline\preprocess\make_close_relative_reads.py
+.\.venv\Scripts\python.exe data_pipeline\preprocess\make_hardened_reads.py
+.\.venv\Scripts\python.exe data_pipeline\simulate\run_stage3_art_generate_and_evaluate.py
+.\.venv\Scripts\python.exe data_pipeline\simulate\summarize_stage3_art_quality.py
+.\.venv\Scripts\python.exe data_pipeline\simulate\run_cami2_marine_lightweight_probe.py
+```
+
+### Main experiments
+
+```powershell
+.\.venv\Scripts\python.exe experiments\main\run_stage2_representation_grid.py
+.\.venv\Scripts\python.exe experiments\main\run_stage2_csp_ablation.py
+.\.venv\Scripts\python.exe experiments\main\run_stage2_attention_breakpoint.py
+.\.venv\Scripts\python.exe experiments\main\run_stage2_arg_snp_boundary.py
+.\.venv\Scripts\python.exe experiments\main\run_stage3_compact_baselines.py
+.\.venv\Scripts\python.exe experiments\main\run_stage3_cami_probe.py
+.\.venv\Scripts\python.exe experiments\main\run_position_property_controlled_tasks.py
+.\.venv\Scripts\python.exe experiments\main\run_local_mutation_sensitivity.py
+.\.venv\Scripts\python.exe experiments\main\run_spaced_pattern_sanity.py
+```
+
+### Method-hardening audits
+
+```powershell
+.\.venv\Scripts\python.exe experiments\audits\run_dimension_reduction_baselines.py
+.\.venv\Scripts\python.exe experiments\audits\run_high_k_compressed_baselines.py
+.\.venv\Scripts\python.exe experiments\audits\run_mi_audit.py
+.\.venv\Scripts\python.exe experiments\audits\run_knn_mi_robustness_audit.py
+.\.venv\Scripts\python.exe experiments\audits\run_mixed_metric_audit.py
+.\.venv\Scripts\python.exe experiments\audits\run_p_msp_contribution_audit.py
+.\.venv\Scripts\python.exe experiments\audits\run_property_redundancy_and_runtime_audit.py
+.\.venv\Scripts\python.exe experiments\audits\run_msp_bin_gamma_sensitivity_audit.py
+.\.venv\Scripts\python.exe experiments\audits\run_p_channel_counterfactual_audit.py
+.\.venv\Scripts\python.exe experiments\audits\run_local_mutation_fraction_sweep.py
+```
+
+### Figures, tables and audits
+
+```powershell
+.\.venv\Scripts\python.exe analysis\tables\generate_stage3_bootstrap_ci.py
+.\.venv\Scripts\python.exe analysis\tables\generate_fullmatrix_property_contribution_ci.py
+.\.venv\Scripts\python.exe analysis\figures\generate_nature_main_figures.py
+.\.venv\Scripts\python.exe analysis\figures\generate_paper_supplementary_figures.py
+.\.venv\Scripts\python.exe analysis\audits\audit_result_inventory.py
+.\.venv\Scripts\python.exe analysis\audits\audit_final_provenance.py
+```
+
+The complete manuscript-to-script mapping is in
+`docs/manuscript_script_mapping.md`.
+
+## 5. Included And Excluded Files
+
+Included:
+
+- Core method code and organized entrypoints.
+- Lightweight release data and selected public benchmark subsets.
+- Summary results, figure source summaries, final figures and manuscript tables.
+- Provenance maps and audit reports.
+
+Excluded:
+
+- Historical smoke outputs, local environments and render intermediates.
+- Full CAMI archives, ART FASTQ/SAM intermediates and large paired-read
+  fragments.
+- Restricted clinical sequencing reads. Only representative length conditions
+  are used in this release.
+
+See `RELEASE_MANIFEST.md` for the detailed file inventory.
+
