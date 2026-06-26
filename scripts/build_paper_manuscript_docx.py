@@ -37,6 +37,7 @@ FIGURES = {
     'Supplementary Figure S7': ('supp_fig_s7_method_hardening_audit.jpg', 'kNN MI robustness and dimension-matched high-k compressed baseline audit.'),
     'Supplementary Figure S8': ('supp_fig_s8_redundancy_runtime_audit.jpg', 'P/MSP contribution, redundancy and runtime audit.'),
     'Supplementary Figure S9': ('supp_fig_s9_p_msp_relation_audit.jpg', 'P/MSP relation audit.'),
+    'Supplementary Figure S10': ('supp_fig_s10_cami2_marine_probe.jpg', 'CAMI II marine anonymous-read stability probe.'),
 }
 TABLES = {
     'Table 1': ('nature_table1_representation_families.csv', 'Representation families and diagnostic roles.'),

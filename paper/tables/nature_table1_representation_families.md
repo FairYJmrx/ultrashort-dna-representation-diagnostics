@@ -1,5 +1,5 @@
 | family               | information channel                             | main role                        | main-text interpretation                                                 |
-|:---------------------|:------------------------------------------------|:---------------------------------|:-------------------------------------------------------------------------|
+| -------------------- | ----------------------------------------------- | -------------------------------- | ------------------------------------------------------------------------ |
 | CK4 / CK5            | exact local identity                            | identity backbone and comparator | necessary for taxonomic, allele and SNP-level evidence                   |
 | P                    | biochemical summaries                           | perturbation-stable side channel | adds robustness information but does not replace identity                |
 | CK4+P                | identity plus global biochemical signal         | global property baseline         | tests whether biochemical summaries add to CK4                           |

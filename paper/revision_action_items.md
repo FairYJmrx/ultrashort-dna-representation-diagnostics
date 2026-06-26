@@ -2,6 +2,8 @@
 
 This checklist tracks the remaining manuscript-hardening tasks after the reviewer-style critiques of the CK4P-MSP manuscript. It is written for the active paper-folder version only; do not apply these items to `final_manuscript.md`.
 
+Latest execution plan: see `submission_hardening_execution_plan.md`. That file supersedes older open-ended wording on CAMI II, Kraken2/triage, foundation-model benchmarks and application claims.
+
 ## Priority 1: Must Fix Before Any Submission
 
 ### 1. Mixed-space metric definition and L2 interpretation
@@ -164,4 +166,5 @@ If the manuscript keeps an application-facing triage claim, the audit should rem
 - P/MSP contribution audit: `info/scripts/run_p_msp_contribution_audit.py`; output directory `info/results/stage3/reviewer_response/p_msp_contribution`. CK4+P and CK4+MSP reduced mean paired L2 drift relative to CK4, CK4P-MSP reduced it further, and CK4+MSP nearly matched CK4P-MSP in local delta-readout.
 - P/MSP redundancy and runtime audit: `info/scripts/run_property_redundancy_and_runtime_audit.py`; output directory `info/results/stage3/reviewer_response/property_redundancy_runtime`. P and MSP share strong canonical association but remain incompletely aligned at the row level; CK4P-MSP extraction is slower than CK4 and simple high-k sketch/hash summaries.
 - Current application boundary: no pipeline-facing triage experiment is included. The manuscript should state that downstream triage, false-hit reduction and classifier calibration require separate database-centered validation.
+
 

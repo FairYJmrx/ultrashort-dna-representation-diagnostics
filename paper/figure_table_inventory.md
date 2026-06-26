@@ -20,6 +20,7 @@
 - Supplementary Figure S7: Methodological hardening audit, combining kNN MI robustness and dimension-matched high-k compressed k-mer baselines. Source scripts: `info/scripts/run_knn_mi_robustness_audit.py`, `info/scripts/run_high_k_compressed_baselines.py`, and `info/scripts/generate_supp_fig_s7_method_hardening_audit.py`. Asset: `paper/figures/supp_fig_s7_method_hardening_audit.*`.
 - Supplementary Figure S8: P/MSP contribution, redundancy and runtime audit, separating global biochemical summaries from positionalized property pooling while reporting P/MSP association and extraction cost. Source scripts: `info/scripts/run_p_msp_contribution_audit.py`, `info/scripts/run_property_redundancy_and_runtime_audit.py`, and `info/scripts/generate_supp_fig_s8_redundancy_runtime_audit.py`. Asset: `paper/figures/supp_fig_s8_redundancy_runtime_audit.*`.
 - Supplementary Figure S9: P/MSP relation audit, combining CCA and a grouped correlation heatmap to summarize shared latent structure and redundancy. Source script: `info/scripts/generate_supp_fig_s9_p_msp_relation_audit.py`. Asset: `paper/figures/supp_fig_s9_p_msp_relation_audit.*`.
+- Supplementary Figure S10: CAMI II marine subset probe, testing whether CK4P-MSP perturbation-stability trends extend beyond CAMI_TOY_low in an external anonymous-read metagenomic short-read source without reconstructed read-level taxonomic labels in this lightweight analysis. Source scripts: `info/scripts/run_cami2_marine_lightweight_probe.py` and `info/scripts/generate_supp_fig_s10_cami2_marine_probe.py`. Asset: `paper/figures/supp_fig_s10_cami2_marine_probe.*`.
 
 ## Tables
 
@@ -28,3 +29,4 @@
 - Table 3: Compact main-method metrics. Source script: `info/scripts/generate_nature_main_tables.py`. Asset: `paper/tables/nature_table3_compact_main_method.*`.
 - Table 4: Local mutation sensitivity metrics. Source script: `info/scripts/generate_nature_main_tables.py`. Asset: `paper/tables/nature_table4_local_mutation_sensitivity.*`.
 - Table 5: Boundary and mechanism summary. Source script: `info/scripts/generate_nature_main_tables.py`. Asset: `paper/tables/nature_table5_boundary_summary.*`.
+- Supplementary Table S10 source data: CAMI II marine subset stability source table for Supplementary Figure S10. Source script: `info/scripts/generate_supp_fig_s10_cami2_marine_probe.py`. Asset: `paper/tables/supp_table_s10_cami2_marine_probe_source.csv`.
