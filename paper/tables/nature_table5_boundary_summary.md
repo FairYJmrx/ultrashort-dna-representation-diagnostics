@@ -1,0 +1,5 @@
+| boundary             | main observation                                                                                           | interpretation                                                              |
+|:---------------------|:-----------------------------------------------------------------------------------------------------------|:----------------------------------------------------------------------------|
+| spaced-seed transfer | The best tested 4-position dense stability pattern was contiguous 0-1-2-3 across the 69/75 bp sanity grid. | spaced seeds remain useful matching priors, but transfer is regime-specific |
+| context visibility   | motif-pair visibility thresholds depended on placement, emerging at 130, 140, 148 or 155 bp.               | a representation cannot encode context absent from the read                 |
+| ARG/SNP readout      | stable compact features did not by themselves establish allele, resistance-SNP or functional equivalence.  | identity/database evidence remains necessary for final biological calls     |

@@ -1,0 +1,12 @@
+# 中文骨架
+
+1. 在 `controlled short-read (69-150 bp) mNGS-motivated settings` 下，问题不是先问分类器能不能分对，而是先问表征层在分类前还保留了哪些信息。
+2. 现有 `accuracy-led` 评价容易把表征层和分类层混在一起，因此看不到信息是在何处丢失的。
+3. 本文提出 `representation-diagnostics framework`，把短读段表征拆成 `identity`、`biochemical stability`、`positional readability` 和 `local mutation sensitivity` 四个维度来检查。
+4. `CK4P-MSP` 是主方法，目标是在低维下保留稳定、可解释、可读取的辅助信息。
+5. `full-position matrices` 用作诊断上界，`CSP` 用作边界对照。
+6. 结尾只给出有边界的架构结论：短读段流程应保留 `exact identity backbone`，并叠加紧凑辅助通道，而不是让单一表征承担全部任务。
+
+# English draft
+
+Short-read metagenomic next-generation sequencing (mNGS) pipelines typically process trimmed, ambiguous, or locally perturbed reads, whose useful information may degrade before classifiers or database lookups are applied. In this context, accuracy-led evaluation is incomplete because downstream performance cannot distinguish whether losses of identity, biochemical, or positional information arise in the representation layer or only later in the classifier. Here we introduce a representation-diagnostics framework for controlled short-read (69-150 bp) mNGS settings that dissects short-read representations into four quantifiable dimensions: exact identity retention, biochemical perturbation stability, positional readability, and local mutation sensitivity. Our core compact representation, CK4P-MSP, integrates reverse-complement canonical 4-mer identity with biochemical summaries and multi-scale property pooling; it is evaluated against full-position matrices as a diagnostic upper bound and a canonical spaced-property (CSP) control as a boundary comparator. Across controlled WGS-derived perturbations, ART simulations, CAMI readout probes, and local mutation sensitivity tasks, consistent evidence shows that compact property-aware representations can improve stability while preserving low-dimensional diagnostic readability. Full-position matrices further reveal that fine-grained positional information can add readout value, but at substantially higher dimensional cost, whereas spaced-seed priors transfer to dense read-level descriptors only in scenario-specific contexts, such as particular read lengths or perturbation conditions. These results support a bounded architectural implication: short-read mNGS pipelines should retain exact k-mer, alignment, or curated database evidence as the identity backbone, while compact biochemical and position-aware summaries may serve as auxiliary channels for representation-level robustness auditing rather than as standalone deployment models.
