@@ -173,7 +173,9 @@ def plot(outputs: dict[str, pd.DataFrame], out_dir: Path) -> None:
         "svg.fonttype": "none",
         "pdf.fonttype": 42,
     })
-    fig, axes = plt.subplots(1, 3, figsize=(7.2, 2.4), constrained_layout=True)
+    fig = plt.figure(figsize=(7.0, 4.7), constrained_layout=True)
+    gs = fig.add_gridspec(2, 2, height_ratios=[1.0, 1.05])
+    axes = [fig.add_subplot(gs[0, 0]), fig.add_subplot(gs[0, 1]), fig.add_subplot(gs[1, :])]
     colors = {"2": "#4C78A8", "2_3": "#59A14F", "2_3_4": "#F2A541", "2_3_4_6": "#E45756"}
     stab = outputs.get("stability_summary", pd.DataFrame())
     read = outputs.get("delta_readout_summary", pd.DataFrame())
@@ -201,15 +203,16 @@ def plot(outputs: dict[str, pd.DataFrame], out_dir: Path) -> None:
         ax.set_ylabel("Macro-F1")
         ax.set_ylim(0.65, 1.02)
         ax.grid(axis="y", color="0.9", linewidth=0.5)
-        ax.legend(frameon=False, fontsize=6, ncol=2, loc="lower right")
+        ax.legend(frameon=False, fontsize=6.2, ncol=4, loc="upper center", bbox_to_anchor=(0.5, -0.20))
     else:
         ax.axis("off")
     for ax in axes:
         if ax.has_data():
             ax.spines["top"].set_visible(False)
             ax.spines["right"].set_visible(False)
+    fig.suptitle("Supplementary Figure S6 | MSP binset and gamma-sensitivity audit", x=0.02, ha="left", fontsize=9.2, fontweight="bold")
     for ext in ("png", "pdf", "svg"):
-        fig.savefig(out_dir / f"msp_bin_gamma_sensitivity.{ext}", dpi=450 if ext == "png" else None)
+        fig.savefig(out_dir / f"msp_bin_gamma_sensitivity.{ext}", dpi=450 if ext == "png" else None, bbox_inches="tight")
     plt.close(fig)
 
 

@@ -149,15 +149,15 @@ The resulting trade-off supported the intended role. CK4P-MSP remained compact, 
 
 [Insert Table 3 here: exact compact main-method metrics.]
 
-### External ART and CAMI probes support consistency beyond the controlled grid
+### External ART and CAMI probes separate stability from task-limited readability
 
-ART and CAMI were used to test whether the representation trend survived outside the handcrafted perturbation grid. ART provided simulator-derived sequencing-error evidence, and CAMI_TOY_low provided an external metagenomic readout probe. In both settings, compact property-aware representations retained the broad separation between identity-only stability and property-aware stability. CAMI_TOY_low also showed that target/background information could remain readable even when label-probe performance was limited, reinforcing the distinction between representation readability and production-grade classification.
+ART and CAMI were used to test whether the representation trend survived outside the handcrafted perturbation grid, while keeping stability and readout as separate questions. ART provided simulator-derived sequencing-error evidence: in the paired-cosine summary, property-aware and spaced-property representations retained higher clean-versus-perturbed similarity than the identity-only k-mer comparators (Figure 4A). CAMI_TOY_low provided an external metagenomic readout probe with two different granularities. A coarse target-versus-background task remained readable across compact representations (Figure 4B), whereas the 30-label fine probe was substantially lower in absolute macro-F1 (Figure 4C). Thus, the external CAMI result supports representation-level readability at a coarse task level, but it also shows that fine-grained label readout remains task-limited and should not be interpreted as production-grade taxonomic classification.
 
 The quality-stratified ART audit complements this result by showing that simulator consistency persisted across read-quality bins. To test whether the compact-stability trend was restricted to CAMI_TOY_low, we added the CAMI II marine anonymous-read subset probe (Supplementary Figure S10). Across all nine combinations of length (69, 75 and 100 bp) and perturbation (`N_3pct`, `substitution_1pct` and `substitution_1pct_N_3pct`), CK4P-MSP had the lowest mean L2 drift among the tested compact representations and retained nearest-clean retrieval. Mean paired cosine for CK4P-MSP was approximately 0.995 under N masking, 0.998 under substitution and 0.992-0.993 under the combined perturbation, with mean L2 drift ranges of 0.095-0.102, 0.047-0.048 and 0.114-0.121, respectively. This result supports the external stability pattern in a more complex CAMI II metagenomic read source, while remaining a stability probe without read-level taxonomic labels in this lightweight analysis rather than a taxonomic validation.
 
-Together, these analyses support external consistency under controlled simulator and benchmark resources, while stopping short of any claim of clinical deployment performance.
+Together, these analyses support external consistency under controlled simulator and benchmark resources, while preserving the manuscript boundary: ART supports simulator-derived stability consistency, CAMI_TOY_low supports external readability at a task-limited level, and CAMI II marine supports anonymous-read stability rather than taxonomic validation.
 
-[Insert Figure 4 here: ART and CAMI external probes.]
+[Insert Figure 4 here: ART paired-cosine stability, CAMI coarse target/background readout and CAMI fine label-probe readout.]
 
 [Insert Supplementary Figure S10 here or cite it from the main text: CAMI II marine anonymous-read stability probe.]
 

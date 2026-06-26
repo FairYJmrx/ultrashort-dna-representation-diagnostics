@@ -91,11 +91,13 @@ def main() -> None:
     best["best_is_ck4pmsp"] = best["representation"].eq("ckmer4_property_multiscale_mean_l2")
     best_counts = best.groupby("condition")["best_is_ck4pmsp"].sum().reindex(l2.columns)
 
-    fig = plt.figure(figsize=(7.2, 6.1), constrained_layout=True)
-    gs = fig.add_gridspec(3, 1, height_ratios=[1.35, 1.15, 0.8])
+    fig = plt.figure(figsize=(7.2, 6.35), constrained_layout=True)
+    gs = fig.add_gridspec(4, 1, height_ratios=[1.35, 0.26, 1.15, 0.8])
     ax0 = fig.add_subplot(gs[0, 0])
-    ax1 = fig.add_subplot(gs[1, 0])
-    ax2 = fig.add_subplot(gs[2, 0])
+    legend_ax = fig.add_subplot(gs[1, 0])
+    ax1 = fig.add_subplot(gs[2, 0])
+    ax2 = fig.add_subplot(gs[3, 0])
+    legend_ax.axis("off")
 
     # Panel A: mean L2 drift by perturbation.
     x = np.arange(len(l2.index))
@@ -115,7 +117,17 @@ def main() -> None:
     ax0.set_xticklabels(l2.index, rotation=25, ha="right")
     ax0.set_ylabel("Mean L2 drift")
     ax0.set_title("A  External CAMI II marine stability probe", loc="left", fontweight="bold")
-    ax0.legend(title="Perturbation", ncols=3, loc="upper center", bbox_to_anchor=(0.5, 1.02), borderaxespad=0.0)
+    handles, labels = ax0.get_legend_handles_labels()
+    legend_ax.legend(
+        handles,
+        labels,
+        title="Perturbation",
+        ncols=3,
+        loc="center",
+        frameon=False,
+        handlelength=1.4,
+        columnspacing=1.1,
+    )
     ax0.grid(axis="y", color="#e5e5e5", linewidth=0.6)
 
     # Panel B: paired cosine heatmap.

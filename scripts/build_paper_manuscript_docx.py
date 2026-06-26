@@ -25,7 +25,7 @@ FIGURES = {
     'Figure 1': ('nature_fig1_framework.jpg', 'Representation-diagnostic framework and read-length regime.'),
     'Figure 2': ('nature_fig2_compact_stability.jpg', 'Compact stability under controlled perturbation.'),
     'Figure 3': ('nature_fig3_ck4p_msp_tradeoff.jpg', 'CK4P-MSP stability-readout-dimension trade-off.'),
-    'Figure 4': ('nature_fig4_external_probes.jpg', 'External ART and CAMI consistency probes.'),
+    'Figure 4': ('nature_fig4_external_probes.jpg', 'ART stability and CAMI coarse/fine readout probes.'),
     'Figure 5': ('nature_fig5_full_position_upper_bound.jpg', 'Full-position diagnostic upper bound for positional information.'),
     'Figure 6': ('nature_fig6_local_mutation_sensitivity.jpg', 'Local mutation sensitivity and delta-readout.'),
     'Supplementary Figure S1': ('supp_fig_s1_baseline_audit.jpg', 'Baseline and mixed-metric audit.'),

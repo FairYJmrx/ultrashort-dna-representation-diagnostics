@@ -128,11 +128,15 @@ if not comp.empty:
 if rows:
     stab_a = pd.concat([stab_a, pd.DataFrame(rows)], ignore_index=True)
 
-fig = plt.figure(figsize=(7.2, 7.2), constrained_layout=True)
-gs = fig.add_gridspec(2, 2, height_ratios=[1.05, 1.0])
+fig = plt.figure(figsize=(7.35, 7.95), constrained_layout=True)
+gs = fig.add_gridspec(3, 2, height_ratios=[1.05, 0.34, 1.0])
 ax1 = fig.add_subplot(gs[0,0])
 ax2 = fig.add_subplot(gs[0,1])
-ax3 = fig.add_subplot(gs[1,:])
+leg1 = fig.add_subplot(gs[1,0])
+leg2 = fig.add_subplot(gs[1,1])
+ax3 = fig.add_subplot(gs[2,:])
+for leg_ax in (leg1, leg2):
+    leg_ax.axis('off')
 family_colors = {
     'Proposed/property-aware': COLORS['proposed'],
     'Identity k-mer': COLORS['identity'],
@@ -143,19 +147,40 @@ family_colors = {
 show_reps = ['CK4P-MSP','CK4+P','CK4','CK5','CK7 SVD-147','CK7 PCA-147','CK5 SVD-147','CK5 PCA-147','MinHash k5','MinHash k7','EIIP positional','EIIP summary','CSP+P','CK5+CSP']
 stab_a['label'] = stab_a['representation_label'].map(clean_label)
 stab_plot = stab_a[stab_a['label'].isin(show_reps)].copy()
-for fam, sub in stab_plot.groupby('family'):
-    ax1.scatter(sub['median_features'], sub['paired_cosine'], s=38, color=family_colors.get(fam, '#333'), label=fam, alpha=0.9, edgecolor='white', linewidth=0.5)
+stab_plot['label'] = pd.Categorical(stab_plot['label'], show_reps, ordered=True)
+stab_plot = stab_plot.sort_values('label')
+handles_a, labels_a = [], []
 for _, r in stab_plot.iterrows():
-    lab = r['label']
-    if lab in ['CK4P-MSP','CK4+P','CK4','CK5','CK7 SVD-147','MinHash k5','EIIP summary','CSP+P']:
-        ax1.annotate(lab, (r['median_features'], r['paired_cosine']), xytext=(3, 3), textcoords='offset points', fontsize=6.5)
+    handle = ax1.scatter(
+        r['median_features'],
+        r['paired_cosine'],
+        s=38,
+        color=family_colors.get(r['family'], '#333'),
+        label=str(r['label']),
+        alpha=0.9,
+        edgecolor='white',
+        linewidth=0.5,
+    )
+    handles_a.append(handle)
+    labels_a.append(str(r['label']))
 ax1.set_xscale('log')
 ax1.set_xlabel('Feature dimension (log scale)')
 ax1.set_ylabel('Paired cosine (higher is better)')
 ax1.set_title('A  Stability audit across baseline families', loc='left')
 ax1.set_ylim(0.90, 1.002)
 ax1.grid(True, color='#E9ECEF', linewidth=0.6)
-ax1.legend(loc='lower right', ncol=1)
+leg1.legend(
+    handles_a,
+    labels_a,
+    loc='center',
+    ncol=2,
+    title='Panel A methods',
+    fontsize=5.35,
+    title_fontsize=5.9,
+    handlelength=1.0,
+    columnspacing=0.65,
+    labelspacing=0.18,
+)
 
 # Readout panel.
 readout_dim['label'] = readout_dim['representation_label'].map(clean_label)
@@ -163,17 +188,40 @@ readout_show = ['CK4P-MSP','CK4+P','CK4','CK5','CK7 SVD-147','CK7 PCA-147','CK5 
 rd = readout_dim[readout_dim['label'].isin(readout_show)].copy()
 rd['family'] = np.where(rd['label'].str.contains('PCA|SVD'), 'Same-dim reduction',
                 np.where(rd['label'].isin(['CK4P-MSP','CK4+P']), 'Proposed/property-aware', 'Identity k-mer'))
-for fam, sub in rd.groupby('family'):
-    ax2.scatter(sub['median_features'], sub['macro_f1'], s=38, color=family_colors.get(fam, '#333'), label=fam, alpha=0.9, edgecolor='white', linewidth=0.5)
+rd['label'] = pd.Categorical(rd['label'], readout_show, ordered=True)
+rd = rd.sort_values('label')
+handles_b, labels_b = [], []
 for _, r in rd.iterrows():
-    if r['label'] in ['CK4P-MSP','CK5','CK5 PCA-147','CK7 SVD-147','CK4']:
-        ax2.annotate(r['label'], (r['median_features'], r['macro_f1']), xytext=(3, 3), textcoords='offset points', fontsize=6.5)
+    handle = ax2.scatter(
+        r['median_features'],
+        r['macro_f1'],
+        s=38,
+        color=family_colors.get(r['family'], '#333'),
+        label=str(r['label']),
+        alpha=0.9,
+        edgecolor='white',
+        linewidth=0.5,
+    )
+    handles_b.append(handle)
+    labels_b.append(str(r['label']))
 ax2.set_xscale('log')
 ax2.set_xlabel('Feature dimension (log scale)')
 ax2.set_ylabel('Macro-F1')
 ax2.set_title('B  Readout audit at matched dimensions', loc='left')
 ax2.set_ylim(max(0, rd['macro_f1'].min()-0.02), rd['macro_f1'].max()+0.02)
 ax2.grid(True, color='#E9ECEF', linewidth=0.6)
+leg2.legend(
+    handles_b,
+    labels_b,
+    loc='center',
+    ncol=2,
+    title='Panel B methods',
+    fontsize=5.35,
+    title_fontsize=5.9,
+    handlelength=1.0,
+    columnspacing=0.65,
+    labelspacing=0.18,
+)
 
 # Block-weight panel: L2 drift bar + delta-readout dot.
 order = ['identity_only','ck4_plus_p','ck4p_msp','identity_dominant','property_dominant','property_only']
@@ -269,7 +317,4 @@ ax.grid(True, color='#E9ECEF', linewidth=0.6)
 ax.legend(loc='lower right', ncol=2)
 save_all(fig, 'supp_fig_s4_mutation_fraction_sweep')
 
-# Write source-data inventory.
-inv = OUT.parent / 'figure_table_inventory.md'
-inv.write_text('''# Figure and Table Inventory\n\n## Main figures\n\n- Figure 1: Representation-diagnostic framework and read-length regime. Source script: `info/scripts/generate_nature_main_figures.py`. Asset: `paper/figures/nature_fig1_framework.*`.\n- Figure 2: Compact stability of identity, spaced, and property-aware representations. Source script: `info/scripts/generate_nature_main_figures.py` plus bootstrap tables. Asset: `paper/figures/nature_fig2_compact_stability.*`.\n- Figure 3: CK4P-MSP compact trade-off between stability, readout, and feature dimension. Source script: `info/scripts/generate_nature_main_figures.py`. Asset: `paper/figures/nature_fig3_ck4p_msp_tradeoff.*`.\n- Figure 4: External ART/CAMI consistency probes. Source script: `info/scripts/generate_nature_main_figures.py`. Asset: `paper/figures/nature_fig4_external_probes.*`.\n- Figure 5: Full-position diagnostic upper-bound analysis. Source script: `info/scripts/generate_nature_main_figures.py`. Asset: `paper/figures/nature_fig5_full_position_upper_bound.*`.\n- Figure 6: Local mutation sensitivity and delta-readout analysis. Source script: `info/scripts/generate_nature_main_figures.py`. Asset: `paper/figures/nature_fig6_local_mutation_sensitivity.*`.\n\n## Supplementary figures generated for the paper folder\n\n- Supplementary Figure S1: Baseline and mixed-metric audit, including same-dimensional PCA/SVD, hash/sketch or signal baselines, and block-weight sensitivity. Source script: `info/scripts/generate_paper_supplementary_figures.py`. Asset: `paper/figures/supp_fig_s1_baseline_audit.*`.\n- Supplementary Figure S2: Empirical MI/conditional-MI proxy audit for mutation labels. Source script: `info/scripts/generate_paper_supplementary_figures.py`. Asset: `paper/figures/supp_fig_s2_mi_audit.*`.\n- Supplementary Figure S3: Error-aware, quality-stratified ART perturbation audit. Source script: `info/scripts/generate_paper_supplementary_figures.py`. Asset: `paper/figures/supp_fig_s3_error_aware_art.*`.\n- Supplementary Figure S4: Local-mutation fraction sweep. Source script: `info/scripts/generate_paper_supplementary_figures.py`. Asset: `paper/figures/supp_fig_s4_mutation_fraction_sweep.*`.\n\n## Tables\n\n- Table 1: Representation families. Source script: `info/scripts/generate_nature_main_tables.py`. Asset: `paper/tables/nature_table1_representation_families.*`.\n- Table 2: Data layers and perturbation design. Source script: `info/scripts/generate_nature_main_tables.py`; requires paper-level note for quality-stratified ART row. Asset: `paper/tables/nature_table2_data_layers.*`.\n- Table 3: Compact main-method metrics. Source script: `info/scripts/generate_nature_main_tables.py`. Asset: `paper/tables/nature_table3_compact_main_method.*`.\n- Table 4: Local mutation sensitivity metrics. Source script: `info/scripts/generate_nature_main_tables.py`. Asset: `paper/tables/nature_table4_local_mutation_sensitivity.*`.\n- Table 5: Boundary and mechanism summary. Source script: `info/scripts/generate_nature_main_tables.py`. Asset: `paper/tables/nature_table5_boundary_summary.*`.\n''', encoding='utf-8')
-print('Generated supplementary figures and inventory in', OUT.parent)
+print('Generated supplementary figures in', OUT.parent)

@@ -5,7 +5,7 @@
 - Figure 1: Representation-diagnostic framework and read-length regime. Source script: `info/scripts/generate_nature_main_figures.py`. Asset: `paper/figures/nature_fig1_framework.*`.
 - Figure 2: Compact stability of identity, spaced, and property-aware representations. Source script: `info/scripts/generate_nature_main_figures.py` plus bootstrap tables. Asset: `paper/figures/nature_fig2_compact_stability.*`.
 - Figure 3: CK4P-MSP compact trade-off between stability, readout, and feature dimension. Source script: `info/scripts/generate_nature_main_figures.py`. Asset: `paper/figures/nature_fig3_ck4p_msp_tradeoff.*`.
-- Figure 4: External ART/CAMI consistency probes. Source script: `info/scripts/generate_nature_main_figures.py`. Asset: `paper/figures/nature_fig4_external_probes.*`.
+- Figure 4: External ART and CAMI probes, separating ART paired-cosine stability, CAMI coarse target/background readout and CAMI fine label-probe limits. Source script: `info/scripts/generate_nature_main_figures.py`. Asset: `paper/figures/nature_fig4_external_probes.*`.
 - Figure 5: Full-position diagnostic upper-bound analysis. Source script: `info/scripts/generate_nature_main_figures.py`. Asset: `paper/figures/nature_fig5_full_position_upper_bound.*`.
 - Figure 6: Local mutation sensitivity and delta-readout analysis. Source script: `info/scripts/generate_nature_main_figures.py`. Asset: `paper/figures/nature_fig6_local_mutation_sensitivity.*`.
 
