@@ -20,6 +20,10 @@ TABLE = PAPER / 'tables'
 BIB = ROOT / 'references' / 'references.bib'
 
 TITLE = 'Layered representation diagnostics for ultra-short metagenomic reads'
+AUTHORS = 'Ruixiang Mei^1 and Jianhua Huang^1,*'
+AFFILIATIONS = '^1 The Chinese University of Hong Kong, Shenzhen, Shenzhen, Guangdong, China'
+CORRESPONDENCE = '*Correspondence: Jianhua Huang, jhuang@cuhk.edu.cn'
+ORCID_LINE = 'ORCID: Ruixiang Mei, https://orcid.org/0009-0003-2128-0726'
 
 FIGURES = {
     'Figure 1': ('nature_fig1_framework.jpg', 'Representation-diagnostic framework and read-length regime.'),
@@ -446,8 +450,9 @@ r.bold = True
 r.font.name = 'Times New Roman'
 r.font.size = Pt(16)
 
-doc.add_paragraph('Authors: TBD', style=None).alignment = WD_ALIGN_PARAGRAPH.CENTER
-doc.add_paragraph('Affiliations: TBD', style=None).alignment = WD_ALIGN_PARAGRAPH.CENTER
+for front_line in [AUTHORS, AFFILIATIONS, CORRESPONDENCE, ORCID_LINE]:
+    para = doc.add_paragraph(front_line, style=None)
+    para.alignment = WD_ALIGN_PARAGRAPH.CENTER
 
 doc.add_paragraph('Abstract', style='Heading 1')
 abstract = extract_english_draft(read_text('01_abstract.md'))

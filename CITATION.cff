@@ -6,11 +6,19 @@ date-released: "2026-07-16"
 url: "https://github.com/FairYJmrx/ultrashort-dna-representation-diagnostics"
 license: "MIT"
 authors:
-  - name: "CK4P-MSP manuscript authors"
+  - family-names: "Mei"
+    given-names: "Ruixiang"
+    orcid: "https://orcid.org/0009-0003-2128-0726"
+  - family-names: "Huang"
+    given-names: "Jianhua"
 preferred-citation:
   type: article
   title: "Layered representation diagnostics for ultra-short metagenomic reads"
   authors:
-    - name: "CK4P-MSP manuscript authors"
+    - family-names: "Mei"
+      given-names: "Ruixiang"
+      orcid: "https://orcid.org/0009-0003-2128-0726"
+    - family-names: "Huang"
+      given-names: "Jianhua"
   year: 2026
   notes: "Manuscript in preparation for journal submission; final bibliographic metadata to be added after publication."

@@ -34,19 +34,19 @@ No patient-level clinical sequencing reads, patient identifiers or patient-deriv
 
 ## Author Contributions
 
-TBD before submission. Suggested CRediT-style roles to confirm: conceptualization; methodology; software; formal analysis; investigation; data curation; writing - original draft; writing - review and editing; visualization; supervision; funding acquisition.
+Ruixiang Mei: Conceptualization, methodology, software, formal analysis, investigation, data curation, visualization, writing - original draft, and writing - review and editing. Jianhua Huang: Supervision and writing - review and editing. Final CRediT roles should be confirmed before submission.
 
 ## Funding
 
-TBD before submission. Insert grant numbers and funder names exactly as required by NAR/OUP.
+Funding information remains to be confirmed before submission. If no specific funding supported the work, use: `This research received no specific grant from any funding agency in the public, commercial or not-for-profit sectors.` If a grant is included, insert the funder name and grant number exactly as required by NAR/OUP.
 
 ## Acknowledgements
 
-TBD before submission. Include only contributors who meet acknowledgement criteria and do not meet authorship criteria.
+Acknowledgements, if any, will be finalized before submission. Include only contributors who meet acknowledgement criteria and do not meet authorship criteria.
 
 ## Conflict of Interest
 
-The final competing-interest statement must be confirmed before submission. If accurate, use: `The authors declare no competing interests.`
+The authors declare no competing interests.
 
 ## References
 
