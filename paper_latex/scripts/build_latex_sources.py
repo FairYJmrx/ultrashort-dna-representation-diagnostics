@@ -22,6 +22,15 @@ FIGURES = {
     "Figure 6": ("figures/main/nature_fig6_local_mutation_sensitivity.pdf", "Local mutation sensitivity and delta-readout."),
 }
 
+FIGURE_ALT_TEXT = {
+    "Figure 1": "Workflow diagram showing short reads separated into identity, biochemical and positional representation channels before diagnostic readouts and boundary checks.",
+    "Figure 2": "Bar plots comparing paired cosine, L2 drift and feature dimension across compact k-mer, biochemical and spaced-property representations.",
+    "Figure 3": "Scatter plots showing CK4P-MSP among compact representations in the stability, readout and dimension trade-off space.",
+    "Figure 4": "Three-panel comparison of ART stability and CAMI coarse and fine readout probes, highlighting stable external behavior and limited fine-label readability.",
+    "Figure 5": "Bar and scatter plots showing that full-position matrices add positional readout value at substantially higher feature dimension.",
+    "Figure 6": "Bar and scatter plots comparing local biochemical mutation sensitivity and delta-readout across representation families.",
+}
+
 SUPP_FIGURES = {
     "Supplementary Figure S1": ("figures/supplementary/supp_fig_s1_baseline_audit.pdf", "Baseline and mixed-metric audit."),
     "Supplementary Figure S2": ("figures/supplementary/supp_fig_s2_mi_audit.pdf", "Empirical MI and conditional-MI audit."),
@@ -33,6 +42,19 @@ SUPP_FIGURES = {
     "Supplementary Figure S8": ("figures/supplementary/supp_fig_s8_redundancy_runtime_audit.pdf", "P/MSP contribution, redundancy and runtime audit."),
     "Supplementary Figure S9": ("figures/supplementary/supp_fig_s9_p_msp_relation_audit.pdf", "P/MSP relation audit."),
     "Supplementary Figure S10": ("figures/supplementary/supp_fig_s10_cami2_marine_probe.pdf", "CAMI II marine anonymous-read stability probe."),
+}
+
+SUPP_FIGURE_ALT_TEXT = {
+    "Supplementary Figure S1": "Baseline audit plots comparing full-position matrices, reduced controls and block-weight sensitivity.",
+    "Supplementary Figure S2": "Bar plots summarizing empirical mutual-information and conditional-mutual-information audit values across representation blocks.",
+    "Supplementary Figure S3": "Line plots showing ART perturbation behavior across quality levels for paired cosine and L2 drift.",
+    "Supplementary Figure S4": "Line plot showing local mutation-fraction sensitivity across compact representation families.",
+    "Supplementary Figure S5": "Multi-panel audit of P-channel counterfactual behavior, drift decomposition and short-bin sampling bounds.",
+    "Supplementary Figure S6": "Line plots showing MSP binset and gamma-weight sensitivity for 69 and 75 bp reads and delta-readout.",
+    "Supplementary Figure S7": "Multi-panel audit showing kNN mutual-information robustness and dimension-matched high-k compressed baseline comparisons.",
+    "Supplementary Figure S8": "Multi-panel audit showing P and MSP contributions, redundancy and runtime costs.",
+    "Supplementary Figure S9": "Line and heatmap panels showing CCA and correlation relationships between P and MSP feature layers.",
+    "Supplementary Figure S10": "Line, heatmap and bar panels showing CAMI II marine anonymous-read stability across length and perturbation settings.",
 }
 
 TABLES = {
@@ -147,6 +169,7 @@ def slug(label: str) -> str:
 
 def figure_float(key: str) -> str:
     path, caption = FIGURES[key]
+    alt = FIGURE_ALT_TEXT[key]
     label = "fig:" + key.lower().replace(" ", "")
     return (
         "\\begin{figure*}[p]\n"
@@ -154,6 +177,7 @@ def figure_float(key: str) -> str:
         f"\\includegraphics[width=0.92\\textwidth]{{{path}}}\n"
         f"\\caption{{{convert_inline(caption)}}}\n"
         f"\\label{{{label}}}\n"
+        f"{{\\small\\noindent\\textbf{{Alt text:}} {convert_inline(alt)}\\par}}\n"
         "\\end{figure*}\n"
     )
 
@@ -274,7 +298,7 @@ def table_tex_from_csv(csv_path: Path) -> str:
     widths = {
         3: ["0.22\\textwidth", "0.36\\textwidth", "0.34\\textwidth"],
         4: ["0.18\\textwidth", "0.24\\textwidth", "0.24\\textwidth", "0.26\\textwidth"],
-        5: ["0.15\\textwidth", "0.25\\textwidth", "0.24\\textwidth", "0.16\\textwidth", "0.15\\textwidth"],
+        5: ["0.13\\textwidth", "0.22\\textwidth", "0.21\\textwidth", "0.14\\textwidth", "0.13\\textwidth"],
         6: ["0.14\\textwidth", "0.11\\textwidth", "0.11\\textwidth", "0.13\\textwidth", "0.16\\textwidth", "0.10\\textwidth"],
     }.get(ncols, [f"{0.88/ncols:.3f}\\textwidth"] * ncols)
     spec = "@{}" + "".join(f"p{{{w}}}" for w in widths) + "@{}"
@@ -409,7 +433,7 @@ def main_tex() -> str:
 \author[1]{Ruixiang Mei}
 \author[1]{Jianhua Huang}
 
-\address[1]{The Chinese University of Hong Kong, Shenzhen, Shenzhen, Guangdong, China}
+\address[1]{School of Data Science, The Chinese University of Hong Kong, Shenzhen, Shenzhen 518172, Guangdong, China}
 
 \corresp{*Correspondence: Jianhua Huang, \url{jhuang@cuhk.edu.cn}}
 
@@ -449,7 +473,7 @@ def supplementary_tex() -> str:
              r"\journaltitle{NAR Genomics and Bioinformatics}",
              r"\pubyear{2026}",
              r"\copyrightyear{2026}",
-             r"\lastpage{9}",
+             r"\lastpage{10}",
              r"\makeatletter",
              r"\def\ps@headings{\let\@oddfoot\@empty\let\@evenfoot\@empty\def\@oddhead{\vbox{\hbox to \textwidth{\fontsize{8bp}{10bp}\selectfont\itshape\@journaltitle, \@pubyear\hfill\bfseries\thepage}\vspace{5pt}\rule{\textwidth}{1pt}}}\def\@evenhead{\vbox{\hbox to \textwidth{\fontsize{8bp}{10bp}\selectfont\bfseries\thepage\hfill\itshape\@journaltitle, \@pubyear}\vspace{5pt}\rule{\textwidth}{1pt}}}}",
              r"\makeatother",
@@ -457,7 +481,7 @@ def supplementary_tex() -> str:
              r"\title[Supplementary Data]{Supplementary Data for Layered representation diagnostics for ultra-short metagenomic reads}",
              r"\author[1]{Ruixiang Mei}",
              r"\author[1]{Jianhua Huang}",
-             r"\address[1]{The Chinese University of Hong Kong, Shenzhen, Shenzhen, Guangdong, China}",
+             r"\address[1]{School of Data Science, The Chinese University of Hong Kong, Shenzhen, Shenzhen 518172, Guangdong, China}",
              r"\abstract{Supplementary figures and source-table preview supporting the representation-diagnostic analyses.}",
              r"\keywords{supplementary data, metagenomics, representation diagnostics}",
              r"\begin{document}",
@@ -468,6 +492,7 @@ def supplementary_tex() -> str:
              r"This supplementary file collects the visual audits and source-table preview that support the main representation-diagnostic manuscript. Figures S1--S3 evaluate baseline controls, empirical information proxies and sequencing-error-aware perturbations. Figures S4--S7 examine local mutation fraction, P-channel counterfactuals, MSP bin and weight sensitivity, kNN mutual-information robustness and dimension-matched high-k compressed baselines. Figures S8--S10 summarize P/MSP redundancy, runtime, relation audits and the CAMI II marine anonymous-read stability probe. Table S1 gives a compact preview of the CAMI II marine source table; the full CSV is retained in the accompanying data package.",
              r"\section{Supplementary Figures}"]
     for key, (path, caption) in SUPP_FIGURES.items():
+        alt = SUPP_FIGURE_ALT_TEXT[key]
         label = "fig:" + key.lower().replace(" ", "").replace("supplementary", "supp")
         lines.extend([
             r"\begin{figure*}[p]",
@@ -475,6 +500,7 @@ def supplementary_tex() -> str:
             f"\\includegraphics[width=0.95\\textwidth]{{{path}}}",
             f"\\caption{{{convert_inline(caption)}}}",
             f"\\label{{{label}}}",
+            f"{{\\small\\noindent\\textbf{{Alt text:}} {convert_inline(alt)}\\par}}",
             r"\end{figure*}",
             "",
         ])

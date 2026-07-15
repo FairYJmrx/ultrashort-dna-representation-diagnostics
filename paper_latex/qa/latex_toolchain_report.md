@@ -35,21 +35,35 @@ $py='C:\Users\24409\.cache\codex-runtimes\codex-primary-runtime\dependencies\pyt
 ## Current Build Status
 
 - Main manuscript compiles successfully to 16 pages.
-- Supplementary file compiles successfully to 9 pages.
+- Supplementary file compiles successfully to 10 pages.
 - Numeric citations render correctly; no `[@...]` citation tokens remain in the generated TeX.
 - The OUP society-logo placeholder has been removed locally without editing the system class file.
 - Page headers now show `NAR Genomics and Bioinformatics, 2026` and page numbers rather than an empty `Volume, Issue` template field.
-- Supplementary page range is fixed at `1-9`.
+- Supplementary page range is fixed at `1-10`.
 - Figure and table captions no longer duplicate the words `Figure`, `Table`, or `Supplementary Figure`.
+- Main and supplementary figure legends now include concise `Alt text:` statements below each caption, following the NAR G&B author-guideline requirement for main-article images and improving accessibility for supplementary figures.
 - The supplementary first page now includes a compact overview rather than an empty cover-like page.
 - The CAMI II source-table preview is compacted and no longer triggers a table-specific overfull warning.
+- Main Tables 2 and 3 were regenerated with narrower five-column layouts; their previous table-specific overfull warnings are resolved.
+- Long review-repository and CAMI II resource URLs were rewritten as prose placeholders so the Data and Code Availability sections no longer create body-text overfull warnings.
+- The back matter includes Data Availability, Code Availability, Supplementary Data, Ethics and Data Governance, Author Contributions, Funding, Acknowledgements and Conflict of Interest sections.
 
 ## Visual QA Notes
 
-- Main pages inspected: page 1, page 9 and full contact sheet.
-- Supplementary pages inspected: page 1, page 5 and full contact sheet.
+- Main pages inspected: page 1, page 9, page 10, page 13 and full contact sheet.
+- Supplementary pages inspected: page 1, page 8 and full contact sheet.
 - No obvious figure-label collisions, caption duplication, broken references, missing pages, blank figure panels or unreadable tables were observed in the inspected rendered pages.
-- Remaining `Overfull \hbox (261.76535pt too wide) while \output is active` warnings are produced by the OUP/crop output routine and do not correspond to visible page-body overflow in the rendered PNGs.
+- Remaining `Overfull \hbox (261.76535pt too wide) while \output is active` warnings are produced by the OUP/crop output routine and do not correspond to visible page-body overflow in the rendered PNGs. No remaining overfull warnings were detected from manuscript body text, generated tables, figure captions or availability statements.
+
+## NAR G&B Submission Checks Applied
+
+- OUP Modern Large LaTeX class is used through `oup-authoring-template`.
+- Main manuscript and supplementary PDF are both generated from source.
+- Figures and tables are embedded in the review PDF near the relevant manuscript text.
+- Data and code availability statements are present, with private-review repository access noted and public DOI release still pending.
+- A Supplementary Data statement is present.
+- Conflict of Interest statement is present.
+- Funding, acknowledgements and institutional ethics/IRB wording remain explicitly marked for final author confirmation before submission.
 
 ## Nonfatal Environment Warnings
 
