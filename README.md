@@ -6,6 +6,11 @@ as a methods repository: method definitions are centralized, data preparation
 and experiments have separate entrypoints, and manuscript claims are mapped to
 scripts and outputs.
 
+Repository status: private pre-submission release. Reviewer access should be
+provided through the journal submission system or by adding a journal-supplied
+reviewer account as a read-only collaborator. See
+`docs/SUBMISSION_REVIEWER_ACCESS.md`.
+
 ## 1. Repository Map
 
 | Path | Purpose |
@@ -24,6 +29,8 @@ scripts and outputs.
 | `configs/` | Experiment matrices and release-default method settings. |
 | `references/` | Working bibliography. |
 | `smoke_tests/` | Lightweight import and repository checks. |
+| `LICENSE` | MIT software licence for the released code. |
+| `CITATION.cff` | Provisional citation metadata to be finalized after publication. |
 
 See `docs/repository_structure.md` for a longer map.
 
@@ -144,3 +151,14 @@ Excluded:
   are used in this release.
 
 See `RELEASE_MANIFEST.md` for the detailed file inventory.
+
+## 6. Reviewer Access And Public Release
+
+The current GitHub repository is private:
+
+`https://github.com/FairYJmrx/ultrashort-dna-representation-diagnostics`
+
+For journal submission, provide reviewer access to the private repository
+through the confidential submission field or by adding a journal-provided
+account as a read-only collaborator. A public archival DOI should be minted
+from a frozen release when the authors choose to make the repository public.

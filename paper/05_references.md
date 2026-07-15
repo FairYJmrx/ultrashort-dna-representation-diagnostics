@@ -20,17 +20,17 @@ Most Results claims are supported by internal experiments rather than external l
 
 ## Data Availability
 
-All processed data tables, figure source summaries and analysis outputs generated for this study are available in the project result folders and will be deposited in a public repository before submission. The current local source locations are `info/results`, `info/paper/figures`, `info/paper/tables` and `info/scripts`. The final public repository name, DOI/accession and licence are to be inserted before journal submission.
+All processed data tables, figure source summaries and analysis outputs generated for this study are maintained in a private GitHub repository for journal review (`https://github.com/FairYJmrx/ultrashort-dna-representation-diagnostics`, release branch). Reviewer access will be provided through the submission system or by adding a journal-supplied account as a read-only collaborator. A public archival DOI will be minted from the frozen release when the authors make the repository public.
 
-Publicly reused resources include simulator- and benchmark-derived materials used for ART, CAMI_TOY_low and CAMI II marine analyses, which should be cited through the corresponding primary publications and public resource records in the final reference list. The CAMI II marine lightweight probe used the public short-read sample 0 archive (`https://frl.publisso.de/data/frl:6425521/marine/short_read/marmgCAMI2_sample_0_reads.tar.gz`) and setup archive (`https://frl.publisso.de/data/frl:6425521/marine/short_read/marmgCAMI2_setup.tar.gz`). Only a streamed prefix was parsed for the lightweight stability probe, and read-level taxonomic labels were not reconstructed from the separate truth resources for this analysis; the generated subset tables, stability summaries and source figure table should be released with the processed data package. The restricted clinical sequencing provenance was used only to motivate the 69 and 75 bp read-length conditions, and the underlying clinical sequencing reads were not used as experimental input, are not part of the study data package, and cannot be publicly shared because they derive from a restricted clinical sequencing context.
+Publicly reused resources include simulator- and benchmark-derived materials used for ART, CAMI_TOY_low and CAMI II marine analyses, which will be cited through the corresponding primary publications and public resource records in the final reference list. The CAMI II marine lightweight probe used the public short-read sample 0 archive (`https://frl.publisso.de/data/frl:6425521/marine/short_read/marmgCAMI2_sample_0_reads.tar.gz`) and setup archive (`https://frl.publisso.de/data/frl:6425521/marine/short_read/marmgCAMI2_setup.tar.gz`). Only a streamed prefix was parsed for the lightweight stability probe, and read-level taxonomic labels were not reconstructed from the separate truth resources for this analysis. The generated subset tables, stability summaries and source figure table are included in the review-access repository and will be included in the public release. Local restricted sequencing records were used only as read-length provenance for the 69 and 75 bp conditions. The underlying clinical sequencing reads were not used as experimental input, are not part of the study data package, and cannot be publicly shared.
 
 ## Code Availability
 
-The analysis scripts used to generate tables, figures and reviewer-response audits are maintained under `info/scripts` and will be released with the processed data package before submission. Key audit scripts include `run_knn_mi_robustness_audit.py`, `run_high_k_compressed_baselines.py`, `run_p_msp_contribution_audit.py`, `run_property_redundancy_and_runtime_audit.py`, `generate_supp_fig_s8_redundancy_runtime_audit.py`, `run_p_channel_counterfactual_audit.py`, `run_msp_bin_gamma_sensitivity_audit.py`, `run_cami2_marine_lightweight_probe.py` and `generate_supp_fig_s10_cami2_marine_probe.py`. The final repository URL, software licence and archived release identifier are to be inserted before journal submission.
+The analysis scripts used to generate tables, figures and reviewer-response audits are maintained in the private review-access repository (`https://github.com/FairYJmrx/ultrashort-dna-representation-diagnostics`, release branch) under an MIT licence. Key audit scripts include `run_knn_mi_robustness_audit.py`, `run_high_k_compressed_baselines.py`, `run_p_msp_contribution_audit.py`, `run_property_redundancy_and_runtime_audit.py`, `generate_supp_fig_s8_redundancy_runtime_audit.py`, `run_p_channel_counterfactual_audit.py`, `run_msp_bin_gamma_sensitivity_audit.py`, `run_cami2_marine_lightweight_probe.py` and `generate_supp_fig_s10_cami2_marine_probe.py`. Reviewer access will be provided during submission, and a public archived release identifier will be added after public release.
 
 ## Ethics and Data Governance
 
-No patient-level clinical sequencing reads, patient identifiers or patient-derived labels were analyzed in this study. The authors should confirm the institutional wording for this boundary statement before submission.
+No patient-level clinical sequencing reads, patient identifiers or patient-derived labels were analyzed in this study. Institutional wording for this boundary statement must be finalized before submission.
 
 ## Author Contributions
 
@@ -46,7 +46,7 @@ TBD before submission. Include only contributors who meet acknowledgement criter
 
 ## Conflict of Interest
 
-The authors should confirm the final statement before submission. If accurate, use: `The authors declare no competing interests.`
+The final competing-interest statement must be confirmed before submission. If accurate, use: `The authors declare no competing interests.`
 
 ## References
 

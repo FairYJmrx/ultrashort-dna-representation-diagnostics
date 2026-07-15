@@ -5,6 +5,8 @@ This manifest describes the organized reproducible-method release under this bra
 ## Included Files
 
 - `.gitignore`
+- `CITATION.cff`
+- `LICENSE`
 - `README.md`
 - `RELEASE_MANIFEST.md`
 - `analysis/README.md`
@@ -81,6 +83,7 @@ This manifest describes the organized reproducible-method release under this bra
 - `docs/manuscript_script_mapping.md`
 - `docs/method_contract.md`
 - `docs/repository_structure.md`
+- `docs/SUBMISSION_REVIEWER_ACCESS.md`
 - `docs/stage3_download_scope_decision.md`
 - `docs/stage3_external_validation_task_plan.md`
 - `docs/stage3_reinforcement_execution_report.md`
