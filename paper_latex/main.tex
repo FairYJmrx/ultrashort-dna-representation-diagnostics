@@ -1,0 +1,63 @@
+\documentclass[unnumsec,webpdf,modern,large,numbered]{oup-authoring-template}
+
+\usepackage{url}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{etoolbox}
+\setcitestyle{numbers,square,comma}
+
+% OUP generic templates include a society-logo placeholder on the opening page.
+% NAR G&B author-submission PDFs do not need that generic placeholder.
+\def\societylogo{}
+\makeatletter
+\patchcmd{\ps@opening}
+  {\hfill{\smash{\societylogo{}\hspace*{12pt}}\color{black!20}\rule{45pt}{55pt}}}
+  {}
+  {}
+  {}
+\patchcmd{\ps@opening}
+  {\hfill{\smash{\societylogo{}\hspace*{12pt}}\color{black!20}\rule{45pt}{55pt}}}
+  {}
+  {}
+  {}
+\makeatother
+
+\journaltitle{NAR Genomics and Bioinformatics}
+\pubyear{2026}
+\copyrightyear{2026}
+\makeatletter
+\def\ps@headings{%
+  \let\@oddfoot\@empty\let\@evenfoot\@empty
+  \def\@oddhead{\vbox{\hbox to \textwidth{\fontsize{8bp}{10bp}\selectfont\itshape\@journaltitle, \@pubyear\hfill\bfseries\thepage}\vspace{5pt}\rule{\textwidth}{1pt}}}%
+  \def\@evenhead{\vbox{\hbox to \textwidth{\fontsize{8bp}{10bp}\selectfont\bfseries\thepage\hfill\itshape\@journaltitle, \@pubyear}\vspace{5pt}\rule{\textwidth}{1pt}}}%
+}
+\makeatother
+\pagestyle{headings}
+
+\title[Layered representation diagnostics for ultra-short metagenomic reads]{Layered representation diagnostics for ultra-short metagenomic reads}
+
+\author[1]{Ruixiang Mei}
+\author[1]{Jianhua Huang}
+
+\address[1]{The Chinese University of Hong Kong, Shenzhen, Shenzhen, Guangdong, China}
+
+\corresp{*Correspondence: Jianhua Huang, \url{jhuang@cuhk.edu.cn}}
+
+\abstract{\input{sections/abstract}}
+
+\keywords{metagenomics, short reads, representation diagnostics, k-mer features, biochemical sequence encoding}
+
+\begin{document}
+
+\maketitle
+
+\input{sections/introduction}
+\input{sections/materials_results}
+\clearpage
+\input{sections/discussion}
+\input{sections/back_matter}
+
+\bibliographystyle{unsrtnat}
+\bibliography{references}
+
+\end{document}

@@ -1,0 +1,14 @@
+\begin{tabular}{@{}p{0.15\textwidth}p{0.25\textwidth}p{0.24\textwidth}p{0.16\textwidth}p{0.15\textwidth}@{}}
+\toprule
+\textbf{data layer} & \textbf{scale} & \textbf{diagnostic question} & \textbf{primary metrics} & \textbf{claim boundary} \\
+\midrule
+WGS perturbation pairs & 25,200 rows; 3,600 clean templates; 6 genera/21 species; lengths 69,75,100,125,150,300 bp & Which representations keep clean and perturbed reads close? & paired cosine, L2 drift, retrieval & controlled representation stability, not clinical validation \\
+Position-property ablation & 36,000 rows; 3,600 templates; 6 genera/21 species; lengths 69,75,100,125,150,300 bp & What do P and MSP add to the CK4 identity backbone? & paired stability, block drift, delta-readout, MI proxies & decomposable representation audit, not a natural physical metric \\
+ART Illumina-like simulation & 75,592 paired rows; 37,796 templates; 6 genera/21 species; lengths 69,75,100,125,150 bp & Do stability trends persist under simulator-derived read errors? & paired cosine, L2 drift, retrieval & platform-like consistency check \\
+CAMI\_TOY\_low probes & 104,166-row initial subset and 216,000-row expanded subset; 30 labels; lengths 69,75,100 bp & Is information readable in an external metagenomic readout? & macro-F1, accuracy & lightweight readout, not clinical classification \\
+CAMI II marine anonymous-read probe & 48,000 rows from 4,000 anonymous source reads; lengths 69,75,100 bp & Do stability trends persist in a more complex external metagenomic read source? & paired cosine, L2 drift, retrieval & paired stability without reconstructed read-level taxonomic labels \\
+controlled position tasks & controlled synthetic tasks over the short-read length grid & What does fine positional resolution add? & macro-F1, feature dimension & upper-bound diagnostic \\
+local mutation sensitivity & 250 triplets per analysis cell; 12 representations; 4 local modes; lengths 69,100,150 bp & Can local biochemical change be detected beyond equal-count noise? & sensitivity ratio, delta-readout macro-F1 & selective sensitivity, not functional effect prediction \\
+boundary probes & spaced-seed, context-visibility and ARG/SNP boundary screens & Where do spaced-seed, context and ARG/SNP claims stop? & seed stability, visibility threshold, macro-F1 & mechanism boundary and failure modes \\
+\bottomrule
+\end{tabular}

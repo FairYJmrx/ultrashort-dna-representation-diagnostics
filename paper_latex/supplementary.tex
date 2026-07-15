@@ -1,0 +1,112 @@
+\documentclass[unnumsec,webpdf,modern,large,numbered]{oup-authoring-template}
+\usepackage{url}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{etoolbox}
+\setcitestyle{numbers,square,comma}
+\def\societylogo{}
+\makeatletter
+\patchcmd{\ps@opening}{\hfill{\smash{\societylogo{}\hspace*{12pt}}\color{black!20}\rule{45pt}{55pt}}}{}{}{}
+\patchcmd{\ps@opening}{\hfill{\smash{\societylogo{}\hspace*{12pt}}\color{black!20}\rule{45pt}{55pt}}}{}{}{}
+\makeatother
+\journaltitle{NAR Genomics and Bioinformatics}
+\pubyear{2026}
+\copyrightyear{2026}
+\lastpage{9}
+\makeatletter
+\def\ps@headings{\let\@oddfoot\@empty\let\@evenfoot\@empty\def\@oddhead{\vbox{\hbox to \textwidth{\fontsize{8bp}{10bp}\selectfont\itshape\@journaltitle, \@pubyear\hfill\bfseries\thepage}\vspace{5pt}\rule{\textwidth}{1pt}}}\def\@evenhead{\vbox{\hbox to \textwidth{\fontsize{8bp}{10bp}\selectfont\bfseries\thepage\hfill\itshape\@journaltitle, \@pubyear}\vspace{5pt}\rule{\textwidth}{1pt}}}}
+\makeatother
+\pagestyle{headings}
+\title[Supplementary Data]{Supplementary Data for Layered representation diagnostics for ultra-short metagenomic reads}
+\author[1]{Ruixiang Mei}
+\author[1]{Jianhua Huang}
+\address[1]{The Chinese University of Hong Kong, Shenzhen, Shenzhen, Guangdong, China}
+\abstract{Supplementary figures and source-table preview supporting the representation-diagnostic analyses.}
+\keywords{supplementary data, metagenomics, representation diagnostics}
+\begin{document}
+\renewcommand{\thefigure}{S\arabic{figure}}
+\renewcommand{\thetable}{S\arabic{table}}
+\maketitle
+\section{Supplementary data overview}
+This supplementary file collects the visual audits and source-table preview that support the main representation-diagnostic manuscript. Figures S1--S3 evaluate baseline controls, empirical information proxies and sequencing-error-aware perturbations. Figures S4--S7 examine local mutation fraction, P-channel counterfactuals, MSP bin and weight sensitivity, kNN mutual-information robustness and dimension-matched high-k compressed baselines. Figures S8--S10 summarize P/MSP redundancy, runtime, relation audits and the CAMI II marine anonymous-read stability probe. Table S1 gives a compact preview of the CAMI II marine source table; the full CSV is retained in the accompanying data package.
+\section{Supplementary Figures}
+\begin{figure*}[p]
+\centering
+\includegraphics[width=0.95\textwidth]{figures/supplementary/supp_fig_s1_baseline_audit.pdf}
+\caption{Baseline and mixed-metric audit.}
+\label{fig:suppfigures1}
+\end{figure*}
+
+\begin{figure*}[p]
+\centering
+\includegraphics[width=0.95\textwidth]{figures/supplementary/supp_fig_s2_mi_audit.pdf}
+\caption{Empirical MI and conditional-MI audit.}
+\label{fig:suppfigures2}
+\end{figure*}
+
+\begin{figure*}[p]
+\centering
+\includegraphics[width=0.95\textwidth]{figures/supplementary/supp_fig_s3_error_aware_art.pdf}
+\caption{Quality-stratified ART perturbation audit.}
+\label{fig:suppfigures3}
+\end{figure*}
+
+\begin{figure*}[p]
+\centering
+\includegraphics[width=0.95\textwidth]{figures/supplementary/supp_fig_s4_mutation_fraction_sweep.pdf}
+\caption{Local mutation-fraction sweep.}
+\label{fig:suppfigures4}
+\end{figure*}
+
+\begin{figure*}[p]
+\centering
+\includegraphics[width=0.95\textwidth]{figures/supplementary/supp_fig_s5_p_channel_counterfactual_audit.pdf}
+\caption{P-channel counterfactual and short-bin reliability audit.}
+\label{fig:suppfigures5}
+\end{figure*}
+
+\begin{figure*}[p]
+\centering
+\includegraphics[width=0.95\textwidth]{figures/supplementary/supp_fig_s6_msp_bin_gamma_sensitivity.pdf}
+\caption{MSP binset and gamma-sensitivity audit.}
+\label{fig:suppfigures6}
+\end{figure*}
+
+\begin{figure*}[p]
+\centering
+\includegraphics[width=0.95\textwidth]{figures/supplementary/supp_fig_s7_method_hardening_audit.pdf}
+\caption{kNN MI robustness and dimension-matched high-k compressed baseline audit.}
+\label{fig:suppfigures7}
+\end{figure*}
+
+\begin{figure*}[p]
+\centering
+\includegraphics[width=0.95\textwidth]{figures/supplementary/supp_fig_s8_redundancy_runtime_audit.pdf}
+\caption{P/MSP contribution, redundancy and runtime audit.}
+\label{fig:suppfigures8}
+\end{figure*}
+
+\begin{figure*}[p]
+\centering
+\includegraphics[width=0.95\textwidth]{figures/supplementary/supp_fig_s9_p_msp_relation_audit.pdf}
+\caption{P/MSP relation audit.}
+\label{fig:suppfigures9}
+\end{figure*}
+
+\begin{figure*}[p]
+\centering
+\includegraphics[width=0.95\textwidth]{figures/supplementary/supp_fig_s10_cami2_marine_probe.pdf}
+\caption{CAMI II marine anonymous-read stability probe.}
+\label{fig:suppfigures10}
+\end{figure*}
+
+\section{Supplementary Table}
+\begin{table*}[p]
+\centering
+\scriptsize
+\caption{Preview of the CAMI II marine subset source table. The full CSV is retained in the data package.}
+\label{tab:supps10}
+\input{tables/supplementary/table_s10_preview.tex}
+\end{table*}
+\clearpage
+\end{document}

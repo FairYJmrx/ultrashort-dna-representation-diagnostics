@@ -1,0 +1,403 @@
+Initial Win CP for (console input, console output, system): (CP936, CP65001, CP936)
+I changed them all to CP936
+Rc files read (in order):
+  NONE
+Latexmk: This is Latexmk, John Collins, 9 March 2026. Version 4.88.
+Latexmk: applying rule 'pdflatex'...
+Rule 'pdflatex':  Reasons for rerun
+Changed files or newly in use/created:
+  tables/supplementary/table_s10_preview.tex
+Category 'changed_user':
+  tables/supplementary/table_s10_preview.tex
+
+------------
+Run number 1 of rule 'pdflatex'
+------------
+------------
+Running 'pdflatex  -interaction=nonstopmode -halt-on-error -recorder -output-directory="build_supp"  "supplementary.tex"'
+------------
+This is pdfTeX, Version 3.141592653-2.6-1.40.28 (MiKTeX 25.12) (preloaded format=pdflatex.fmt)
+ restricted \write18 enabled.
+entering extended mode
+(supplementary.tex
+LaTeX2e <2025-11-01>
+L3 programming layer <2025-12-24>
+
+(C:\Users\24409\AppData\Local\Programs\MiKTeX\tex/latex/oup-authoring-template\
+oup-authoring-template.cls
+Document Class: oup-authoring-template 2026/05/28 1.3
+(C:\Users\24409\AppData\Local\Programs\MiKTeX\tex/latex/crop\crop.sty
+(C:\Users\24409\AppData\Local\Programs\MiKTeX\tex/generic/iftex\ifluatex.sty
+(C:\Users\24409\AppData\Local\Programs\MiKTeX\tex/generic/iftex\iftex.sty))
+(C:\Users\24409\AppData\Local\Programs\MiKTeX\tex/latex/graphics\color.sty
+(C:\Users\24409\AppData\Local\Programs\MiKTeX\tex/latex/graphics-cfg\color.cfg)
+
+(C:\Users\24409\AppData\Local\Programs\MiKTeX\tex/latex/graphics-def\pdftex.def
+)
+(C:\Users\24409\AppData\Local\Programs\MiKTeX\tex/latex/graphics\mathcolor.ltx)
+) (C:\Users\24409\AppData\Local\Programs\MiKTeX\tex/latex/graphics\graphics.sty
+(C:\Users\24409\AppData\Local\Programs\MiKTeX\tex/latex/graphics\trig.sty)
+(C:\Users\24409\AppData\Local\Programs\MiKTeX\tex/latex/graphics-cfg\graphics.c
+fg))
+(C:\Users\24409\AppData\Local\Programs\MiKTeX\tex/xelatex/xetexconfig\crop.cfg)
+)
+==> First Aid for crop.sty applied!
+(C:\Users\24409\AppData\Local\Programs\MiKTeX\tex/latex/graphics\graphicx.sty
+(C:\Users\24409\AppData\Local\Programs\MiKTeX\tex/latex/graphics\keyval.sty))
+(C:\Users\24409\AppData\Local\Programs\MiKTeX\tex/latex/caption\caption.sty
+(C:\Users\24409\AppData\Local\Programs\MiKTeX\tex/latex/caption\caption3.sty))
+(C:\Users\24409\AppData\Local\Programs\MiKTeX\tex/latex/amsmath\amsmath.sty
+For additional information on amsmath, use the `?' option.
+(C:\Users\24409\AppData\Local\Programs\MiKTeX\tex/latex/amsmath\amstext.sty
+(C:\Users\24409\AppData\Local\Programs\MiKTeX\tex/latex/amsmath\amsgen.sty))
+(C:\Users\24409\AppData\Local\Programs\MiKTeX\tex/latex/amsmath\amsbsy.sty)
+(C:\Users\24409\AppData\Local\Programs\MiKTeX\tex/latex/amsmath\amsopn.sty))
+(C:\Users\24409\AppData\Local\Programs\MiKTeX\tex/latex/tools\array.sty)
+(C:\Users\24409\AppData\Local\Programs\MiKTeX\tex/latex/xcolor\xcolor.sty
+(C:\Users\24409\AppData\Local\Programs\MiKTeX\tex/latex/graphics-cfg\color.cfg)
+(C:\Users\24409\AppData\Local\Programs\MiKTeX\tex/latex/graphics\mathcolor.ltx)
+) (C:\Users\24409\AppData\Local\Programs\MiKTeX\tex/latex/amsfonts\amssymb.sty
+(C:\Users\24409\AppData\Local\Programs\MiKTeX\tex/latex/amsfonts\amsfonts.sty))
+ (C:\Users\24409\AppData\Local\Programs\MiKTeX\tex/latex/sttools\flushend.sty)
+(C:\Users\24409\AppData\Local\Programs\MiKTeX\tex/latex/sttools\stfloats.sty)
+(C:\Users\24409\AppData\Local\Programs\MiKTeX\tex/latex/graphics\rotating.sty
+(C:\Users\24409\AppData\Local\Programs\MiKTeX\tex/latex/base\ifthen.sty))
+(C:\Users\24409\AppData\Local\Programs\MiKTeX\tex/latex/changepage\chngpage.sty
+) (C:\Users\24409\AppData\Local\Programs\MiKTeX\tex/latex/totcount\totcount.sty
+) (C:\Users\24409\AppData\Local\Programs\MiKTeX\tex/latex/base\fix-cm.sty
+(C:\Users\24409\AppData\Local\Programs\MiKTeX\tex/latex/base\ts1enc.def))
+(C:\Users\24409\AppData\Local\Programs\MiKTeX\tex/latex/footmisc\footmisc.sty)
+(C:\Users\24409\AppData\Local\Programs\MiKTeX\tex/latex/natbib\natbib.sty)
+(C:\Users\24409\AppData\Local\Programs\MiKTeX\tex/latex/wrapfig\wrapfig.sty)
+(C:\Users\24409\AppData\Local\Programs\MiKTeX\tex/latex/amscls\amsthm.sty)
+(C:\Users\24409\AppData\Local\Programs\MiKTeX\tex/latex/subfloat\subfloat.sty
+Package `subfloat', Version 2.14 of 2003/08/21.)
+(C:\Users\24409\AppData\Local\Programs\MiKTeX\tex/latex/multirow\multirow.sty)
+(C:\Users\24409\AppData\Local\Programs\MiKTeX\tex/latex/mdwtools\footnote.sty)
+(C:\Users\24409\AppData\Local\Programs\MiKTeX\tex/latex/url\url.sty)
+(C:\Users\24409\AppData\Local\Programs\MiKTeX\tex/latex/jknappen\mathrsfs.sty)
+(C:\Users\24409\AppData\Local\Programs\MiKTeX\tex/latex/algorithms\algorithm.st
+y (C:\Users\24409\AppData\Local\Programs\MiKTeX\tex/latex/float\float.sty))
+(C:\Users\24409\AppData\Local\Programs\MiKTeX\tex/latex/algorithmicx\algorithmi
+cx.sty
+Document Style algorithmicx 1.2 - a greatly improved `algorithmic' style
+)
+(C:\Users\24409\AppData\Local\Programs\MiKTeX\tex/latex/algorithmicx\algpseudoc
+ode.sty
+Document Style - pseudocode environments for use with the `algorithmicx' style
+) (C:\Users\24409\AppData\Local\Programs\MiKTeX\tex/latex/listings\listings.sty
+(C:\Users\24409\AppData\Local\Programs\MiKTeX\tex/latex/listings\lstpatch.sty)
+(C:\Users\24409\AppData\Local\Programs\MiKTeX\tex/latex/listings\lstmisc.sty)
+(C:\Users\24409\AppData\Local\Programs\MiKTeX\tex/latex/listings\listings.cfg))
+==> First Aid for listings.sty no longer applied!
+    Expected:
+        2024/09/23 1.10c (Carsten Heinz)
+    but found:
+        2025/11/14 1.11b (Carsten Heinz)
+    so I'm assuming it got fixed.
+(C:\Users\24409\AppData\Local\Programs\MiKTeX\tex/latex/hyperref\hyperref.sty
+(C:\Users\24409\AppData\Local\Programs\MiKTeX\tex/latex/kvsetkeys\kvsetkeys.sty
+)
+(C:\Users\24409\AppData\Local\Programs\MiKTeX\tex/generic/kvdefinekeys\kvdefine
+keys.sty)
+(C:\Users\24409\AppData\Local\Programs\MiKTeX\tex/generic/pdfescape\pdfescape.s
+ty
+(C:\Users\24409\AppData\Local\Programs\MiKTeX\tex/generic/ltxcmds\ltxcmds.sty)
+(C:\Users\24409\AppData\Local\Programs\MiKTeX\tex/generic/pdftexcmds\pdftexcmds
+.sty
+(C:\Users\24409\AppData\Local\Programs\MiKTeX\tex/generic/infwarerr\infwarerr.s
+ty)))
+(C:\Users\24409\AppData\Local\Programs\MiKTeX\tex/latex/hycolor\hycolor.sty)
+(C:\Users\24409\AppData\Local\Programs\MiKTeX\tex/latex/hyperref\nameref.sty
+(C:\Users\24409\AppData\Local\Programs\MiKTeX\tex/latex/refcount\refcount.sty)
+(C:\Users\24409\AppData\Local\Programs\MiKTeX\tex/generic/gettitlestring\gettit
+lestring.sty
+(C:\Users\24409\AppData\Local\Programs\MiKTeX\tex/latex/kvoptions\kvoptions.sty
+)))
+(C:\Users\24409\AppData\Local\Programs\MiKTeX\tex/latex/etoolbox\etoolbox.sty)
+(C:\Users\24409\AppData\Local\Programs\MiKTeX\tex/generic/stringenc\stringenc.s
+ty) (C:\Users\24409\AppData\Local\Programs\MiKTeX\tex/latex/hyperref\pd1enc.def
+) (C:\Users\24409\AppData\Local\Programs\MiKTeX\tex/generic/intcalc\intcalc.sty
+) (C:\Users\24409\AppData\Local\Programs\MiKTeX\tex/latex/hyperref\puenc.def)
+(C:\Users\24409\AppData\Local\Programs\MiKTeX\tex/generic/bitset\bitset.sty
+(C:\Users\24409\AppData\Local\Programs\MiKTeX\tex/generic/bigintcalc\bigintcalc
+.sty)))
+(C:\Users\24409\AppData\Local\Programs\MiKTeX\tex/latex/hyperref\hpdftex.def
+(C:\Users\24409\AppData\Local\Programs\MiKTeX\tex/latex/rerunfilecheck\rerunfil
+echeck.sty
+(C:\Users\24409\AppData\Local\Programs\MiKTeX\tex/generic/uniquecounter\uniquec
+ounter.sty)))
+(C:\Users\24409\AppData\Local\Programs\MiKTeX\tex/latex/pgf/frontendlayer\tikz.
+sty
+(C:\Users\24409\AppData\Local\Programs\MiKTeX\tex/latex/pgf/basiclayer\pgf.sty
+(C:\Users\24409\AppData\Local\Programs\MiKTeX\tex/latex/pgf/utilities\pgfrcs.st
+y
+(C:\Users\24409\AppData\Local\Programs\MiKTeX\tex/generic/pgf/utilities\pgfutil
+-common.tex)
+(C:\Users\24409\AppData\Local\Programs\MiKTeX\tex/generic/pgf/utilities\pgfutil
+-latex.def)
+(C:\Users\24409\AppData\Local\Programs\MiKTeX\tex/generic/pgf/utilities\pgfrcs.
+code.tex
+(C:\Users\24409\AppData\Local\Programs\MiKTeX\tex/generic/pgf\pgf.revision.tex)
+))
+(C:\Users\24409\AppData\Local\Programs\MiKTeX\tex/latex/pgf/basiclayer\pgfcore.
+sty
+(C:\Users\24409\AppData\Local\Programs\MiKTeX\tex/latex/pgf/systemlayer\pgfsys.
+sty
+(C:\Users\24409\AppData\Local\Programs\MiKTeX\tex/generic/pgf/systemlayer\pgfsy
+s.code.tex
+(C:\Users\24409\AppData\Local\Programs\MiKTeX\tex/generic/pgf/utilities\pgfkeys
+.code.tex
+(C:\Users\24409\AppData\Local\Programs\MiKTeX\tex/generic/pgf/utilities\pgfkeys
+libraryfiltered.code.tex))
+(C:\Users\24409\AppData\Local\Programs\MiKTeX\tex/generic/pgf/systemlayer\pgf.c
+fg)
+(C:\Users\24409\AppData\Local\Programs\MiKTeX\tex/generic/pgf/systemlayer\pgfsy
+s-pdftex.def
+(C:\Users\24409\AppData\Local\Programs\MiKTeX\tex/generic/pgf/systemlayer\pgfsy
+s-common-pdf.def)))
+(C:\Users\24409\AppData\Local\Programs\MiKTeX\tex/generic/pgf/systemlayer\pgfsy
+ssoftpath.code.tex)
+(C:\Users\24409\AppData\Local\Programs\MiKTeX\tex/generic/pgf/systemlayer\pgfsy
+sprotocol.code.tex))
+(C:\Users\24409\AppData\Local\Programs\MiKTeX\tex/generic/pgf/basiclayer\pgfcor
+e.code.tex
+(C:\Users\24409\AppData\Local\Programs\MiKTeX\tex/generic/pgf/math\pgfmath.code
+.tex
+(C:\Users\24409\AppData\Local\Programs\MiKTeX\tex/generic/pgf/math\pgfmathutil.
+code.tex)
+(C:\Users\24409\AppData\Local\Programs\MiKTeX\tex/generic/pgf/math\pgfmathparse
+r.code.tex)
+(C:\Users\24409\AppData\Local\Programs\MiKTeX\tex/generic/pgf/math\pgfmathfunct
+ions.code.tex)
+(C:\Users\24409\AppData\Local\Programs\MiKTeX\tex/generic/pgf/math\pgfmathfunct
+ions.basic.code.tex)
+(C:\Users\24409\AppData\Local\Programs\MiKTeX\tex/generic/pgf/math\pgfmathfunct
+ions.trigonometric.code.tex)
+(C:\Users\24409\AppData\Local\Programs\MiKTeX\tex/generic/pgf/math\pgfmathfunct
+ions.random.code.tex)
+(C:\Users\24409\AppData\Local\Programs\MiKTeX\tex/generic/pgf/math\pgfmathfunct
+ions.comparison.code.tex)
+(C:\Users\24409\AppData\Local\Programs\MiKTeX\tex/generic/pgf/math\pgfmathfunct
+ions.base.code.tex)
+(C:\Users\24409\AppData\Local\Programs\MiKTeX\tex/generic/pgf/math\pgfmathfunct
+ions.round.code.tex)
+(C:\Users\24409\AppData\Local\Programs\MiKTeX\tex/generic/pgf/math\pgfmathfunct
+ions.misc.code.tex)
+(C:\Users\24409\AppData\Local\Programs\MiKTeX\tex/generic/pgf/math\pgfmathfunct
+ions.integerarithmetics.code.tex)
+(C:\Users\24409\AppData\Local\Programs\MiKTeX\tex/generic/pgf/math\pgfmathcalc.
+code.tex)
+(C:\Users\24409\AppData\Local\Programs\MiKTeX\tex/generic/pgf/math\pgfmathfloat
+.code.tex))
+(C:\Users\24409\AppData\Local\Programs\MiKTeX\tex/generic/pgf/math\pgfint.code.
+tex)
+(C:\Users\24409\AppData\Local\Programs\MiKTeX\tex/generic/pgf/basiclayer\pgfcor
+epoints.code.tex)
+(C:\Users\24409\AppData\Local\Programs\MiKTeX\tex/generic/pgf/basiclayer\pgfcor
+epathconstruct.code.tex)
+(C:\Users\24409\AppData\Local\Programs\MiKTeX\tex/generic/pgf/basiclayer\pgfcor
+epathusage.code.tex)
+(C:\Users\24409\AppData\Local\Programs\MiKTeX\tex/generic/pgf/basiclayer\pgfcor
+escopes.code.tex)
+(C:\Users\24409\AppData\Local\Programs\MiKTeX\tex/generic/pgf/basiclayer\pgfcor
+egraphicstate.code.tex)
+(C:\Users\24409\AppData\Local\Programs\MiKTeX\tex/generic/pgf/basiclayer\pgfcor
+etransformations.code.tex)
+(C:\Users\24409\AppData\Local\Programs\MiKTeX\tex/generic/pgf/basiclayer\pgfcor
+equick.code.tex)
+(C:\Users\24409\AppData\Local\Programs\MiKTeX\tex/generic/pgf/basiclayer\pgfcor
+eobjects.code.tex)
+(C:\Users\24409\AppData\Local\Programs\MiKTeX\tex/generic/pgf/basiclayer\pgfcor
+epathprocessing.code.tex)
+(C:\Users\24409\AppData\Local\Programs\MiKTeX\tex/generic/pgf/basiclayer\pgfcor
+earrows.code.tex)
+(C:\Users\24409\AppData\Local\Programs\MiKTeX\tex/generic/pgf/basiclayer\pgfcor
+eshade.code.tex)
+(C:\Users\24409\AppData\Local\Programs\MiKTeX\tex/generic/pgf/basiclayer\pgfcor
+eimage.code.tex)
+(C:\Users\24409\AppData\Local\Programs\MiKTeX\tex/generic/pgf/basiclayer\pgfcor
+eexternal.code.tex)
+(C:\Users\24409\AppData\Local\Programs\MiKTeX\tex/generic/pgf/basiclayer\pgfcor
+elayers.code.tex)
+(C:\Users\24409\AppData\Local\Programs\MiKTeX\tex/generic/pgf/basiclayer\pgfcor
+etransparency.code.tex)
+(C:\Users\24409\AppData\Local\Programs\MiKTeX\tex/generic/pgf/basiclayer\pgfcor
+epatterns.code.tex)
+(C:\Users\24409\AppData\Local\Programs\MiKTeX\tex/generic/pgf/basiclayer\pgfcor
+erdf.code.tex)))
+(C:\Users\24409\AppData\Local\Programs\MiKTeX\tex/generic/pgf/modules\pgfmodule
+shapes.code.tex)
+(C:\Users\24409\AppData\Local\Programs\MiKTeX\tex/generic/pgf/modules\pgfmodule
+plot.code.tex)
+(C:\Users\24409\AppData\Local\Programs\MiKTeX\tex/latex/pgf/compatibility\pgfco
+mp-version-0-65.sty)
+(C:\Users\24409\AppData\Local\Programs\MiKTeX\tex/latex/pgf/compatibility\pgfco
+mp-version-1-18.sty))
+(C:\Users\24409\AppData\Local\Programs\MiKTeX\tex/latex/pgf/utilities\pgffor.st
+y
+(C:\Users\24409\AppData\Local\Programs\MiKTeX\tex/latex/pgf/utilities\pgfkeys.s
+ty
+(C:\Users\24409\AppData\Local\Programs\MiKTeX\tex/generic/pgf/utilities\pgfkeys
+.code.tex))
+(C:\Users\24409\AppData\Local\Programs\MiKTeX\tex/latex/pgf/math\pgfmath.sty
+(C:\Users\24409\AppData\Local\Programs\MiKTeX\tex/generic/pgf/math\pgfmath.code
+.tex))
+(C:\Users\24409\AppData\Local\Programs\MiKTeX\tex/generic/pgf/utilities\pgffor.
+code.tex))
+(C:\Users\24409\AppData\Local\Programs\MiKTeX\tex/generic/pgf/frontendlayer/tik
+z\tikz.code.tex
+(C:\Users\24409\AppData\Local\Programs\MiKTeX\tex/generic/pgf/libraries\pgflibr
+aryplothandlers.code.tex)
+(C:\Users\24409\AppData\Local\Programs\MiKTeX\tex/generic/pgf/modules\pgfmodule
+matrix.code.tex)
+(C:\Users\24409\AppData\Local\Programs\MiKTeX\tex/generic/pgf/frontendlayer/tik
+z/libraries\tikzlibrarytopaths.code.tex)))
+(C:\Users\24409\AppData\Local\Programs\MiKTeX\tex/generic/pgf/frontendlayer/tik
+z/libraries\tikzlibrarysvg.path.code.tex
+(C:\Users\24409\AppData\Local\Programs\MiKTeX\tex/generic/pgf/libraries\pgflibr
+arysvg.path.code.tex
+(C:\Users\24409\AppData\Local\Programs\MiKTeX\tex/generic/pgf/modules\pgfmodule
+parser.code.tex)))
+(C:\Users\24409\AppData\Local\Programs\MiKTeX\tex/generic/pgf/frontendlayer/tik
+z/libraries\tikzlibrarydecorations.markings.code.tex
+(C:\Users\24409\AppData\Local\Programs\MiKTeX\tex/generic/pgf/frontendlayer/tik
+z/libraries\tikzlibrarydecorations.code.tex
+(C:\Users\24409\AppData\Local\Programs\MiKTeX\tex/generic/pgf/modules\pgfmodule
+decorations.code.tex))
+(C:\Users\24409\AppData\Local\Programs\MiKTeX\tex/generic/pgf/libraries/decorat
+ions\pgflibrarydecorations.markings.code.tex)))
+(C:\Users\24409\AppData\Local\Programs\MiKTeX\tex/latex/booktabs\booktabs.sty)
+(C:\Users\24409\AppData\Local\Programs\MiKTeX\tex/latex/l3backend\l3backend-pdf
+tex.def)
+
+LaTeX Warning: Unused global option(s):
+    [unnumsec,webpdf,modern,large,numbered].
+
+(D:\AI-NGS\info\paper_latex\build_supp\supplementary.aux)
+(C:\Users\24409\AppData\Local\Programs\MiKTeX\tex/context/base/mkii\supp-pdf.mk
+ii
+[Loading MPS to PDF converter (version 2006.09.02).]
+)
+(C:\Users\24409\AppData\Local\Programs\MiKTeX\tex/latex/epstopdf-pkg\epstopdf-b
+ase.sty
+(C:\Users\24409\AppData\Local\Programs\MiKTeX\tex/latex/00miktex\epstopdf-sys.c
+fg))
+(C:\Users\24409\AppData\Local\Programs\MiKTeX\tex/latex/anyfontsize\anyfontsize
+.sty) (D:\AI-NGS\info\paper_latex\build_supp\supplementary.out)
+(D:\AI-NGS\info\paper_latex\build_supp\supplementary.out)
+
+LaTeX Font Warning: Font shape `OT1/cmss/b/n' undefined
+(Font)              using `OT1/cmss/bx/n' instead on input line 30.
+
+(C:\Users\24409\AppData\Local\Programs\MiKTeX\tex/latex/amsfonts\umsa.fd)
+(C:\Users\24409\AppData\Local\Programs\MiKTeX\tex/latex/amsfonts\umsb.fd)
+(C:\Users\24409\AppData\Local\Programs\MiKTeX\tex/latex/jknappen\ursfs.fd)
+
+LaTeX Font Warning: Font shape `OT1/cmss/b/n' undefined
+(Font)              using `OT1/cmss/bx/n' instead on input line 30.
+
+(tables/supplementary/table_s10_preview.tex)
+
+LaTeX Font Warning: Font shape `OT1/cmss/m/it' in size <6.52437> not available
+(Font)              Font shape `OT1/cmss/m/sl' tried instead on input line 111.
+
+
+
+Underfull \hbox (badness 10000) has occurred while \output is active
+$[]$
+
+Underfull \hbox (badness 10000) has occurred while \output is active
+[]
+[1
+Non-PDF special ignored!
+<special> ps: [{ThisPage} << /CropBox [0 0 595.82918 782.7922] >> /PUT pdfm...
+{C:/Users/24409/AppData/Local/MiKTeX/fonts/map/pdftex/pdftex.map}]
+Underfull \vbox (badness 10000) has occurred while \output is active
+
+LaTeX Font Warning: Font shape `OT1/cmss/bx/it' undefined
+(Font)              using `OT1/cmss/bx/n' instead on input line 111.
+
+
+Overfull \hbox (261.76535pt too wide) has occurred while \output is active
+[][] 
+[2
+Non-PDF special ignored!
+<special> ps: [{ThisPage} << /CropBox [0 0 595.82918 782.7922] >> /PUT pdfm...
+ <./figures/supplementary/supp_fig_s1_baseline_audit.pdf>]
+
+LaTeX Font Warning: Font shape `OT1/cmss/m/it' in size <8.03> not available
+(Font)              Font shape `OT1/cmss/m/sl' tried instead on input line 111.
+
+
+
+Overfull \hbox (261.76535pt too wide) has occurred while \output is active
+[][] 
+[3
+Non-PDF special ignored!
+<special> ps: [{ThisPage} << /CropBox [0 0 595.82918 782.7922] >> /PUT pdfm...
+ <./figures/supplementary/supp_fig_s2_mi_audit.pdf> <./figures/supplementary/su
+pp_fig_s3_error_aware_art.pdf>]
+Overfull \hbox (261.76535pt too wide) has occurred while \output is active
+[][] 
+[4
+Non-PDF special ignored!
+<special> ps: [{ThisPage} << /CropBox [0 0 595.82918 782.7922] >> /PUT pdfm...
+ <./figures/supplementary/supp_fig_s4_mutation_fraction_sweep.pdf> <./figures/s
+upplementary/supp_fig_s5_p_channel_counterfactual_audit.pdf>]
+Overfull \hbox (261.76535pt too wide) has occurred while \output is active
+[][] 
+[5
+Non-PDF special ignored!
+<special> ps: [{ThisPage} << /CropBox [0 0 595.82918 782.7922] >> /PUT pdfm...
+ <./figures/supplementary/supp_fig_s6_msp_bin_gamma_sensitivity.pdf>]
+Underfull \vbox (badness 10000) has occurred while \output is active
+Overfull \hbox (261.76535pt too wide) has occurred while \output is active
+[][] 
+[6
+Non-PDF special ignored!
+<special> ps: [{ThisPage} << /CropBox [0 0 595.82918 782.7922] >> /PUT pdfm...
+ <./figures/supplementary/supp_fig_s7_method_hardening_audit.pdf>]
+Underfull \vbox (badness 10000) has occurred while \output is active
+Overfull \hbox (261.76535pt too wide) has occurred while \output is active
+[][] 
+[7
+Non-PDF special ignored!
+<special> ps: [{ThisPage} << /CropBox [0 0 595.82918 782.7922] >> /PUT pdfm...
+ <./figures/supplementary/supp_fig_s8_redundancy_runtime_audit.pdf>]
+Underfull \vbox (badness 10000) has occurred while \output is active
+Overfull \hbox (261.76535pt too wide) has occurred while \output is active
+[][] 
+[8
+Non-PDF special ignored!
+<special> ps: [{ThisPage} << /CropBox [0 0 595.82918 782.7922] >> /PUT pdfm...
+ <./figures/supplementary/supp_fig_s9_p_msp_relation_audit.pdf>]
+Underfull \vbox (badness 10000) has occurred while \output is active
+Overfull \hbox (261.76535pt too wide) has occurred while \output is active
+[][] 
+[9
+Non-PDF special ignored!
+<special> ps: [{ThisPage} << /CropBox [0 0 595.82918 782.7922] >> /PUT pdfm...
+ <./figures/supplementary/supp_fig_s10_cami2_marine_probe.pdf>]
+(D:\AI-NGS\info\paper_latex\build_supp\supplementary.aux)
+
+LaTeX Font Warning: Some font shapes were not available, defaults substituted.
+
+ )
+(see the transcript file for additional information) <C:\Users\24409\AppData\Lo
+cal\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi471\tcss0800.pk><C:/Users/24409/AppDa
+ta/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmss8.pfb><C:/Users/244
+09/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmss9.pfb><C:/U
+sers/24409/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmssbx1
+0.pfb><C:/Users/24409/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts
+/cm/cmssi8.pfb>
+Output written on D:\AI-NGS\info\paper_latex\build_supp\supplementary.pdf (9 pa
+ges, 622876 bytes).
+Transcript written on D:\AI-NGS\info\paper_latex\build_supp\supplementary.log.
+Latexmk: Getting log file 'build_supp/supplementary.log'
+Latexmk: Examining 'build_supp/supplementary.fls'
+Latexmk: Examining 'build_supp/supplementary.log'
+Latexmk: Log file says output to 'build_supp/supplementary.pdf'
+Latexmk: All targets (build_supp/supplementary.pdf) are up-to-date
+
+
