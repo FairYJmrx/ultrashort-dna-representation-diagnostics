@@ -42,13 +42,18 @@ $$
 which should be interpreted as a standardized diagnostic drift in the assembled feature space, not as a natural physical distance between commensurate biological units. This definition also gives the block-normalized distance identity
 
 $$
+\begin{aligned}
 d_{\mathrm{mix}}^2(i,j)
-=
-\frac{
-\alpha^2\left\|\hat{\mathbf{K}}_i-\hat{\mathbf{K}}_j\right\|_2^2
-+\beta^2\left\|\hat{\mathbf{P}}_i-\hat{\mathbf{P}}_j\right\|_2^2
-+\gamma^2\left\|\hat{\mathbf{M}}_i-\hat{\mathbf{M}}_j\right\|_2^2
-}{\alpha^2+\beta^2+\gamma^2}.
+&=
+\frac{1}{\alpha^2+\beta^2+\gamma^2}
+\Bigl[
+\alpha^2\left\|\hat{\mathbf{K}}_i-\hat{\mathbf{K}}_j\right\|_2^2 \\
+&\quad+
+\beta^2\left\|\hat{\mathbf{P}}_i-\hat{\mathbf{P}}_j\right\|_2^2 \\
+&\quad+
+\gamma^2\left\|\hat{\mathbf{M}}_i-\hat{\mathbf{M}}_j\right\|_2^2
+\Bigr].
+\end{aligned}
 $$
 
 For comparison with the identity-only drift $d_K(i,j)=\|\hat{\mathbf{K}}_i-\hat{\mathbf{K}}_j\|_2$, the mixed squared drift is lower than $d_K^2$ when
@@ -153,11 +158,11 @@ The resulting trade-off supported the intended role. CK4P-MSP remained compact, 
 
 ART and CAMI were used to test whether the representation trend survived outside the handcrafted perturbation grid, while keeping stability and readout as separate questions. ART provided simulator-derived sequencing-error evidence: in the paired-cosine summary, property-aware and spaced-property representations retained higher clean-versus-perturbed similarity than the identity-only k-mer comparators (Figure 4A). CAMI_TOY_low provided a lightweight external metagenomic readout probe with two different granularities. A coarse target-versus-background task remained readable across compact representations (Figure 4B), whereas the 30-label fine probe was substantially lower in absolute macro-F1 (Figure 4C). Thus, the external CAMI result supports representation-level readability at a coarse task level, but it also shows that fine-grained label readout remains task-limited and should not be interpreted as production-grade taxonomic classification.
 
+[Insert Figure 4 here: ART paired-cosine stability, CAMI coarse target/background readout and CAMI fine label-probe readout.]
+
 The quality-stratified ART audit complements this result by showing that simulator consistency persisted across read-quality bins. To test whether the compact-stability trend was restricted to CAMI_TOY_low, we added the CAMI II marine anonymous-read subset probe (Supplementary Figure S10). Across all nine combinations of length (69, 75 and 100 bp) and perturbation (`N_3pct`, `substitution_1pct` and `substitution_1pct_N_3pct`), CK4P-MSP had the lowest mean L2 drift among the tested compact representations and retained nearest-clean retrieval. Mean paired cosine for CK4P-MSP was approximately 0.995 under N masking, 0.998 under substitution and 0.992-0.993 under the combined perturbation, with mean L2 drift ranges of 0.095-0.102, 0.047-0.048 and 0.114-0.121, respectively. Marine metagenomes may differ from clinical or pathogen-rich contexts in sequence composition, so this result should be interpreted as an external sequence-source stability probe. It supports the external stability pattern in a more complex CAMI II metagenomic read source, while remaining a stability probe without read-level taxonomic labels in this lightweight analysis rather than a taxonomic validation.
 
 Together, these analyses support external consistency under controlled simulator and benchmark resources, while preserving the manuscript boundary: ART supports simulator-derived stability consistency, CAMI_TOY_low supports external readability at a task-limited level, and CAMI II marine supports anonymous-read stability rather than taxonomic validation.
-
-[Insert Figure 4 here: ART paired-cosine stability, CAMI coarse target/background readout and CAMI fine label-probe readout.]
 
 [Insert Supplementary Figure S10 here or cite it from the main text: CAMI II marine anonymous-read stability probe.]
 
@@ -165,17 +170,19 @@ Together, these analyses support external consistency under controlled simulator
 
 Full-position encodings were used to estimate what is gained when fine-grained layout information is retained. In controlled position and order tasks, full-position identity or property matrices improved positional readability compared with compact summaries. This was expected, because these matrices preserve per-position structure that compact summaries intentionally compress.
 
-The result is best interpreted as an upper-bound diagnostic. Full-position matrices clarify the value of positional information, but their high dimensionality and task specificity make them unsuitable as the default representation for compact short-read auditing. CK4P-MSP therefore occupies a different role: it does not match the full positional upper bound, but it retains a coarse positional property summary at a much smaller feature cost.
-
 [Insert Figure 5 here: full-position diagnostic upper bound.]
+
+The result is best interpreted as an upper-bound diagnostic. Full-position matrices clarify the value of positional information, but their high dimensionality and task specificity make them unsuitable as the default representation for compact short-read auditing. CK4P-MSP therefore occupies a different role: it does not match the full positional upper bound, but it retains a coarse positional property summary at a much smaller feature cost.
 
 ### Local mutation analysis separates robustness from selective sensitivity
 
 A stable audit representation should remain responsive to structured changes. We therefore tested whether local biochemical change remained distinguishable from matched nuisance perturbation. Property-aware and full-position channels showed larger response to structured local mutation than to matched noise in the relevant comparisons, while CK4P-MSP preserved delta-readout at compact dimensionality. The P/MSP counterfactual audit sharpened this result by showing that the real biochemical mapping, not only extra columns, was needed to obtain the strongest local-change readout.
 
-This result supports a division of labor. Paired cosine and L2 drift quantify nuisance stability, whereas selective-sensitivity ratios and delta-readout quantify whether structured local changes remain readable. CK4P-MSP is therefore not merely a smoothed representation. It can remain stable under nuisance perturbation while preserving decomposable information for local-change readout.
-
 [Insert Figure 6 here: local mutation sensitivity and delta-readout.]
+
+[Insert FloatBarrier here.]
+
+This result supports a division of labor. Paired cosine and L2 drift quantify nuisance stability, whereas selective-sensitivity ratios and delta-readout quantify whether structured local changes remain readable. CK4P-MSP is therefore not merely a smoothed representation. It can remain stable under nuisance perturbation while preserving decomposable information for local-change readout.
 
 [Insert Table 4 here: exact local mutation metrics.]
 

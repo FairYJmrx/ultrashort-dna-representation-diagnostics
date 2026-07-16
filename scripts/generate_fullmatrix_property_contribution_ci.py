@@ -12,7 +12,7 @@ PROJECT_ROOT = Path(__file__).resolve().parents[1]
 
 REP_LABELS = {
     "ckmer5_count_l2": "canonical 5-mer",
-    "ckmer4_property_multiscale_mean_l2": "CK4+P multi-scale mean",
+    "ckmer4_property_multiscale_mean_l2": "CK4P-MSP",
     "one_hot": "position one-hot",
     "property_channels": "position property channels",
     "base_property": "one-hot + property matrix",

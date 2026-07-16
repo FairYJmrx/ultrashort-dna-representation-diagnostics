@@ -201,6 +201,8 @@ def placeholder_to_latex(line: str) -> str | None:
     if not (line.startswith("[Insert ") and line.endswith("]")):
         return None
     content = line.strip("[]")
+    if content.startswith("Insert FloatBarrier"):
+        return "\\FloatBarrier"
     if content.startswith("Insert Supplementary Figure"):
         m = re.search(r"Supplementary Figure S\d+", content)
         if m:

@@ -12,13 +12,13 @@ Confidence intervals are analysis-cell bootstrap intervals. They quantify stabil
 | motif_jitter_position | position one-hot           |         4 | 0.528 [0.488, 0.568] | 0.533 [0.494, 0.573] |           422.5 |
 | motif_jitter_position | RoPE property              |         4 | 0.527 [0.483, 0.567] | 0.532 [0.494, 0.571] |          1352   |
 | motif_jitter_position | position property channels |         4 | 0.509 [0.483, 0.535] | 0.514 [0.489, 0.537] |           422.5 |
-| motif_jitter_position | CK4+P multi-scale mean     |         4 | 0.399 [0.367, 0.436] | 0.403 [0.367, 0.439] |           222   |
+| motif_jitter_position | CK4P-MSP                   |         4 | 0.399 [0.367, 0.436] | 0.403 [0.367, 0.439] |           222   |
 | motif_jitter_position | canonical 5-mer            |         4 | 0.342 [0.321, 0.368] | 0.345 [0.325, 0.370] |           512   |
 | same_spectrum_order   | canonical 5-mer            |         4 | 0.992 [0.984, 1.000] | 0.992 [0.984, 1.000] |           201   |
 | same_spectrum_order   | RoPE one-hot               |         4 | 0.992 [0.989, 0.994] | 0.992 [0.989, 0.994] |          1352   |
 | same_spectrum_order   | RoPE property              |         4 | 0.991 [0.987, 0.994] | 0.991 [0.988, 0.994] |          1352   |
 | same_spectrum_order   | position one-hot           |         4 | 0.989 [0.983, 0.994] | 0.989 [0.984, 0.994] |           422.5 |
-| same_spectrum_order   | CK4+P multi-scale mean     |         4 | 0.989 [0.977, 1.000] | 0.989 [0.977, 1.000] |           193   |
+| same_spectrum_order   | CK4P-MSP                   |         4 | 0.989 [0.977, 1.000] | 0.989 [0.977, 1.000] |           193   |
 | same_spectrum_order   | one-hot + property matrix  |         4 | 0.984 [0.978, 0.987] | 0.984 [0.978, 0.988] |           845   |
 | same_spectrum_order   | position property channels |         4 | 0.977 [0.962, 0.986] | 0.977 [0.962, 0.986] |           422.5 |
 | same_spectrum_order   | position k-mer property    |         4 | 0.969 [0.950, 0.987] | 0.969 [0.950, 0.988] |          1288   |
@@ -41,7 +41,7 @@ Confidence intervals are analysis-cell bootstrap intervals. They quantify stabil
 | representation_label       |   n_cells | paired cosine (95% CI)   | L2 drift (95% CI)    | top-1 retrieval (95% CI)   |   mean_features |
 |:---------------------------|----------:|:-------------------------|:---------------------|:---------------------------|----------------:|
 | position property channels |         2 | 0.993 [0.991, 0.995]     | 0.109 [0.087, 0.130] | 1.000 [1.000, 1.000]       |           422.5 |
-| CK4+P multi-scale mean     |         2 | 0.991 [0.989, 0.993]     | 0.126 [0.109, 0.143] | 1.000 [1.000, 1.000]       |           222   |
+| CK4P-MSP                   |         2 | 0.991 [0.989, 0.993]     | 0.126 [0.109, 0.143] | 1.000 [1.000, 1.000]       |           222   |
 | position k-mer property    |         2 | 0.974 [0.966, 0.981]     | 0.214 [0.173, 0.254] | 1.000 [1.000, 1.000]       |          1288   |
 | one-hot + property matrix  |         2 | 0.968 [0.958, 0.978]     | 0.238 [0.192, 0.284] | 1.000 [1.000, 1.000]       |           845   |
 | RoPE property              |         2 | 0.961 [0.949, 0.973]     | 0.261 [0.211, 0.312] | 1.000 [1.000, 1.000]       |          1352   |
@@ -63,7 +63,7 @@ Confidence intervals are analysis-cell bootstrap intervals. They quantify stabil
 | representation_label       |   n_cells | macro-F1 (95% CI)    | accuracy (95% CI)    |   mean_features |
 |:---------------------------|----------:|:---------------------|:---------------------|----------------:|
 | canonical 5-mer            |         8 | 0.747 [0.625, 0.865] | 0.757 [0.639, 0.875] |          509.75 |
-| CK4+P multi-scale mean     |         8 | 0.731 [0.589, 0.871] | 0.743 [0.611, 0.875] |          222    |
+| CK4P-MSP                   |         8 | 0.731 [0.589, 0.871] | 0.743 [0.611, 0.875] |          222    |
 | position k-mer property    |         8 | 0.663 [0.522, 0.804] | 0.667 [0.528, 0.806] |         1288    |
 | position property channels |         8 | 0.616 [0.517, 0.714] | 0.618 [0.521, 0.709] |          422.5  |
 | RoPE one-hot               |         8 | 0.595 [0.473, 0.715] | 0.597 [0.472, 0.722] |         1352    |
