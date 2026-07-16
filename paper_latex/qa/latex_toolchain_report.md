@@ -34,7 +34,7 @@ $py='C:\Users\24409\.cache\codex-runtimes\codex-primary-runtime\dependencies\pyt
 
 ## Current Build Status
 
-- Main manuscript compiles successfully to 18 pages.
+- Main manuscript compiles successfully to 16 pages in the review-layout build.
 - Supplementary file compiles successfully to 10 pages.
 - Numeric citations render correctly; no `[@...]` citation tokens remain in the generated TeX.
 - The OUP society-logo placeholder has been removed locally without editing the system class file.
@@ -46,16 +46,17 @@ $py='C:\Users\24409\.cache\codex-runtimes\codex-primary-runtime\dependencies\pyt
 - The CAMI II source-table preview is compacted and no longer triggers a table-specific overfull warning.
 - Main Tables 2 and 3 were regenerated with narrower five-column layouts; their previous table-specific overfull warnings are resolved.
 - Long review-repository and CAMI II resource URLs were rewritten as prose placeholders so the Data and Code Availability sections no longer create body-text overfull warnings.
-- Main figures and tables now use top-of-page float placement with section-level float barriers rather than figure-page-only placement. This keeps each main figure/table closer to its corresponding manuscript section in the review PDF.
+- Main figures and tables now use flexible top/bottom/page float placement with major-section barriers rather than figure-page-only placement. This allows figures to lag their discussion by about one page when needed, while avoiding full figure-only pages and reducing sparse single-column text pages.
 - The back matter includes Data Availability, Code Availability, Supplementary Data, Ethics and Data Governance, Author Contributions, Funding, Acknowledgements and Conflict of Interest sections.
 
 ## Visual QA Notes
 
-- Main pages inspected: page 1, page 4, page 11, page 13 and full contact sheet.
+- Main pages inspected: page 1 and full review-layout contact sheet.
 - Supplementary pages inspected: page 1, page 8 and full contact sheet.
 - No obvious figure-label collisions, caption duplication, broken references, missing pages, blank figure panels or unreadable tables were observed in the inspected rendered pages.
 - Remaining `Overfull \hbox (261.76535pt too wide) while \output is active` warnings are produced by the OUP/crop output routine and do not correspond to visible page-body overflow in the rendered PNGs. No remaining overfull warnings were detected from manuscript body text, generated tables, figure captions or availability statements.
-- Figure/table placement now favors reviewer readability over page-count compactness. Figure 1 is adjacent to the study-design and representation-family transition, Figure 2/3 are adjacent to compact-stability and trade-off results, Figure 4 is adjacent to external ART/CAMI results, and Figures 5/6 are adjacent to the positional-upper-bound and local-mutation results.
+- Figure/table placement now favors reviewer readability and page density. Main figures are embedded in the text stream rather than isolated on figure-only pages; Figure 2/3 share a mixed figure/text page, Figure 4/5 share a mixed figure/text page, and Figure 6 remains adjacent to the local-mutation results.
+- The local `build/main.pdf` may be locked by a PDF viewer on Windows. In that case, the current review-layout PDF is available as `build/main_review_layout.pdf`; the release package uses this review-layout PDF as `paper_latex/build/main.pdf`.
 
 ## NAR G&B Submission Checks Applied
 

@@ -172,7 +172,7 @@ def figure_float(key: str) -> str:
     alt = FIGURE_ALT_TEXT[key]
     label = "fig:" + key.lower().replace(" ", "")
     return (
-        "\\begin{figure*}[!t]\n"
+        "\\begin{figure*}[!tbp]\n"
         "\\centering\n"
         f"\\includegraphics[width=0.92\\textwidth]{{{path}}}\n"
         f"\\caption{{{convert_inline(caption)}}}\n"
@@ -187,7 +187,7 @@ def table_float(key: str) -> str:
     fname = "table" + key.split()[1] + ".tex"
     label = "tab:" + key.lower().replace(" ", "")
     return (
-        "\\begin{table*}[!t]\n"
+        "\\begin{table*}[!tbp]\n"
         "\\centering\n"
         "\\scriptsize\n"
         f"\\caption{{{convert_inline(caption)}}}\n"
@@ -281,8 +281,6 @@ def markdown_to_latex(text: str, *, skip_placement_summary: bool = True) -> str:
             continue
         if line.startswith("### "):
             flush_para()
-            if out and out[-1] != "\\FloatBarrier":
-                out.append("\\FloatBarrier")
             out.append(f"\\subsection{{{convert_inline(line[4:].strip())}}}")
             out.append("")
             continue
@@ -406,6 +404,17 @@ def main_tex() -> str:
 \usepackage{etoolbox}
 \usepackage{placeins}
 \setcitestyle{numbers,square,comma}
+\makeatletter
+\setlength{\@fptop}{0pt}
+\setlength{\@fpsep}{12pt}
+\setlength{\@fpbot}{0pt plus 1fil}
+\makeatother
+\renewcommand{\topfraction}{0.95}
+\renewcommand{\bottomfraction}{0.95}
+\renewcommand{\textfraction}{0.05}
+\renewcommand{\floatpagefraction}{0.75}
+\setlength{\textfloatsep}{12pt plus 2pt minus 2pt}
+\setlength{\floatsep}{10pt plus 2pt minus 2pt}
 
 % OUP generic templates include a society-logo placeholder on the opening page.
 % NAR G&B author-submission PDFs do not need that generic placeholder.

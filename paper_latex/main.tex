@@ -6,6 +6,17 @@
 \usepackage{etoolbox}
 \usepackage{placeins}
 \setcitestyle{numbers,square,comma}
+\makeatletter
+\setlength{\@fptop}{0pt}
+\setlength{\@fpsep}{12pt}
+\setlength{\@fpbot}{0pt plus 1fil}
+\makeatother
+\renewcommand{\topfraction}{0.95}
+\renewcommand{\bottomfraction}{0.95}
+\renewcommand{\textfraction}{0.05}
+\renewcommand{\floatpagefraction}{0.75}
+\setlength{\textfloatsep}{12pt plus 2pt minus 2pt}
+\setlength{\floatsep}{10pt plus 2pt minus 2pt}
 
 % OUP generic templates include a society-logo placeholder on the opening page.
 % NAR G&B author-submission PDFs do not need that generic placeholder.
