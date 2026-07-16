@@ -172,7 +172,7 @@ def figure_float(key: str) -> str:
     alt = FIGURE_ALT_TEXT[key]
     label = "fig:" + key.lower().replace(" ", "")
     return (
-        "\\begin{figure*}[p]\n"
+        "\\begin{figure*}[!t]\n"
         "\\centering\n"
         f"\\includegraphics[width=0.92\\textwidth]{{{path}}}\n"
         f"\\caption{{{convert_inline(caption)}}}\n"
@@ -187,7 +187,7 @@ def table_float(key: str) -> str:
     fname = "table" + key.split()[1] + ".tex"
     label = "tab:" + key.lower().replace(" ", "")
     return (
-        "\\begin{table*}[p]\n"
+        "\\begin{table*}[!t]\n"
         "\\centering\n"
         "\\scriptsize\n"
         f"\\caption{{{convert_inline(caption)}}}\n"
@@ -267,16 +267,22 @@ def markdown_to_latex(text: str, *, skip_placement_summary: bool = True) -> str:
             flush_para()
             title = line[2:].strip()
             if title.lower() not in {"materials and methods and results", "discussion, limitations, future work and conclusion", "back matter and reference support"}:
+                if out and out[-1] != "\\FloatBarrier":
+                    out.append("\\FloatBarrier")
                 out.append(f"\\section{{{convert_inline(title)}}}")
                 out.append("")
             continue
         if line.startswith("## "):
             flush_para()
+            if out and out[-1] != "\\FloatBarrier":
+                out.append("\\FloatBarrier")
             out.append(f"\\section{{{convert_inline(line[3:].strip())}}}")
             out.append("")
             continue
         if line.startswith("### "):
             flush_para()
+            if out and out[-1] != "\\FloatBarrier":
+                out.append("\\FloatBarrier")
             out.append(f"\\subsection{{{convert_inline(line[4:].strip())}}}")
             out.append("")
             continue
@@ -398,6 +404,7 @@ def main_tex() -> str:
 \usepackage{booktabs}
 \usepackage{array}
 \usepackage{etoolbox}
+\usepackage{placeins}
 \setcitestyle{numbers,square,comma}
 
 % OUP generic templates include a society-logo placeholder on the opening page.

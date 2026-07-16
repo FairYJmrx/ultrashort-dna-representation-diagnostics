@@ -12,6 +12,7 @@ The perturbation analyses also clarify the scope of the evidence. Uniform substi
 
 A useful outcome of the boundary analyses is that they prevent overgeneralization. CSP and spaced-seed controls help interpret which matching-oriented priors transfer into dense read-level representations, but they do not become general substitutes for compact identity-property features. Context and ARG/SNP probes show that compact stability is not the same as allele-level or functional interpretation. Those tasks require database identity, annotation, sufficient context and downstream biological evidence.
 
+\FloatBarrier
 \section{Limitations}
 
 The first limitation is task scope. The study evaluates representation diagnostics, whereas Kraken 2, Centrifuge, CLARK, Kaiju and related systems remain the appropriate reference frame for database-linked taxonomic assignment. The present work asks what information remains visible before or alongside such assignment systems. Direct integration with production classifiers, including downstream false-hit reduction or classifier-output auditing, remains future work and is not evaluated here.
@@ -28,6 +29,7 @@ The sixth limitation is computational scope. CK4P-MSP remained lightweight in ab
 
 The seventh limitation is model scope. Large DNA language models and learned metagenomic classifiers provide powerful sequence representations. They may outperform CK4P-MSP in predictive probes, especially when sufficient training data, pretraining and compute are available. This does not contradict the present claim because the study's goal is different. CK4P-MSP is intended as a low-dimensional, training-free and block-decomposable coordinate system for auditing identity, biochemical and coarse positional information under controlled short-read perturbation. Direct comparison with learned embeddings would require a separate benchmark design that reports both predictive accuracy and auditability.
 
+\FloatBarrier
 \section{Future work}
 
 Future work should test whether CK4P-MSP or related compact summaries improve failure-mode detection when placed alongside database-centered pipelines. Pipeline-facing false-hit reduction or classifier-output auditing would require downstream classifier outputs and explicit operating-point analysis. The most useful next step is to add representation-level diagnostics that report when identity evidence is fragile, when biochemical stability remains high and when local-change sensitivity is preserved.
@@ -38,6 +40,7 @@ A third direction is to make the positional channel more adaptive without changi
 
 A fourth direction is to connect compact diagnostics with learned models. Full-position matrices and DNA foundation-model embeddings are natural candidates for follow-up studies because they may recover richer context and stronger predictive signal than compact summaries. The present work suggests where such models should be audited: not only by final classification accuracy, but also by identity retention, perturbation stability, positional readability and local-change sensitivity.
 
+\FloatBarrier
 \section{Conclusion}
 
 This study shows that compact short-read representations can be evaluated as interpretable audit objects. In controlled short-read settings, CK4P-MSP retained an exact identity backbone while adding global biochemical and positionalized biochemical channels that reduced perturbation drift and preserved local-change readability. The evidence supports a bounded implication: compact biochemical and coarse position-aware summaries can provide block-decomposable coordinates for representation-level perturbation auditing alongside exact matching and curated database methods.
