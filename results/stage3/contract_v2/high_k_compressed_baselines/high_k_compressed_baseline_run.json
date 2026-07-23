@@ -1,0 +1,40 @@
+{
+  "elapsed_seconds": 124.68320178985596,
+  "input": "results\\stage3\\contract_v2\\compact_baselines\\stage3_compact_baseline_reads.csv",
+  "lengths": [
+    69,
+    75,
+    100,
+    150
+  ],
+  "stability_conditions": [
+    "substitution_1pct",
+    "N_3pct",
+    "trim_5bp",
+    "substitution_1pct_N_3pct",
+    "local_mismatch_6bp",
+    "short_indel"
+  ],
+  "readout_conditions": [
+    "clean",
+    "substitution_1pct",
+    "N_3pct"
+  ],
+  "representations": [
+    "ckmer4_count_l2",
+    "ckmer5_count_l2",
+    "ckmer4_property_l2",
+    "ck4p_msp",
+    "hash_k15_d222",
+    "rp_ck15_d222"
+  ],
+  "high_k": 15,
+  "target_dim": 222,
+  "minhash_sketch_size": 222,
+  "max_pairs": 250,
+  "max_per_class": 40,
+  "skip_readout": false,
+  "n_stability_rows": 144,
+  "n_readout_rows": 1584,
+  "n_minhash_jaccard_rows": 24
+}

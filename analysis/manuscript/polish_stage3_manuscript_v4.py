@@ -1,26 +1,57 @@
-﻿"""Organized entrypoint for `scripts.polish_stage3_manuscript_v4`.
+﻿from __future__ import annotations
 
-The implementation remains in `scripts/polish_stage3_manuscript_v4.py` for import compatibility.
-Run this file from the repository root or any working directory.
-"""
-
-from __future__ import annotations
-
-import runpy
-from pathlib import Path
 import sys
+from pathlib import Path
 
 
-def _find_repo_root(start: Path) -> Path:
-    for candidate in [start, *start.parents]:
-        if (candidate / 'scripts').is_dir() and (candidate / 'methods').is_dir():
+def _find_project_root(start: Path) -> Path:
+    for candidate in [start.parent, *start.parents]:
+        if (candidate / "methods").is_dir() and (candidate / "configs").is_dir():
             return candidate
-    raise RuntimeError('Could not locate repository root containing scripts/ and methods/.')
+    raise RuntimeError("Could not locate the release repository root.")
 
 
-ROOT = _find_repo_root(Path(__file__).resolve())
-sys.path.insert(0, str(ROOT))
+PROJECT_ROOT = _find_project_root(Path(__file__).resolve())
+sys.path.insert(0, str(PROJECT_ROOT))
+
+import scripts.build_stage2_manuscript as base  # noqa: E402
+import scripts.build_stage3_manuscript_v4 as v4  # noqa: E402
+
+
+def polish_text(md: str) -> str:
+    md = md.replace(
+        "They support a narrower design principle: short-read DNA pipelines should separate exact identity evidence from compact perturbation-stable auxiliary evidence, rather than ranking representations by a single accuracy number.",
+        "They support a narrower design principle: short-read DNA pipelines should separate exact identity evidence from compact perturbation-stable auxiliary evidence, rather than ranking representations by a single accuracy number. CSP provides compact perturbation-stable auxiliary evidence, whereas canonical k-mer/alignment/database evidence remains necessary for exact identity and functional calls.",
+        1,
+    )
+    md = md.replace(
+        "Instead, canonical k-mers provide high-resolution identity evidence, whereas CSP provides compact, strand-friendly and perturbation-stable auxiliary evidence. CSP provides compact perturbation-stable auxiliary evidence, whereas canonical k-mer/alignment/database evidence remains necessary for exact identity and functional calls.",
+        "Instead, canonical k-mers provide high-resolution identity evidence. CSP provides compact perturbation-stable auxiliary evidence, whereas canonical k-mer/alignment/database evidence remains necessary for exact identity and functional calls.",
+    )
+    figure_replacements = [
+        ("Figure 8. ARG/SNP boundary readout probes.", "Figure 9. ARG/SNP boundary readout probes."),
+        ("Figure 7. Best readout transitions around motif visibility.", "Figure 8. Best readout transitions around motif visibility."),
+        ("Figure 6. Attention-style context visibility breakpoints.", "Figure 7. Attention-style context visibility breakpoints."),
+        ("Figure 5. Deterministic neural compatibility probes.", "Figure 6. Deterministic neural compatibility probes."),
+        ("Figure 4. Lightweight readout probes remained task-dependent.", "Figure 5. Lightweight readout probes remained task-dependent."),
+        ("Figure 3. Singleton property ablation.", "Figure 4. Singleton property ablation."),
+        ("Figure 2. Hospital-like 69/75 bp perturbation drift.", "Figure 3. Hospital-like 69/75 bp perturbation drift."),
+        ("Figure 1. Clean-perturbed feature stability across read length.", "Figure 2. Clean-perturbed feature stability across read length."),
+    ]
+    for old, new in figure_replacements:
+        md = md.replace(old, new)
+    return md
+
+
+def main() -> None:
+    md = polish_text(v4.build_stage3_v4_markdown())
+    v4.MD_PATH.write_text(md, encoding="utf-8")
+    base.DOCX_PATH = v4.DOCX_PATH
+    base.build_docx(md)
+    print(f"Polished {v4.MD_PATH}")
+    print(f"Polished {v4.DOCX_PATH}")
 
 
 if __name__ == "__main__":
-    runpy.run_module("scripts.polish_stage3_manuscript_v4", run_name="__main__")
+    main()
+

@@ -1,0 +1,2 @@
+﻿representation,representation_label,n_cells,estimated_jaccard,exact_jaccard,mean_absolute_error
+minhash_k15_s222,"MinHash k=15, s=222",24,0.7108423423423423,0.7112953623346331,0.020455395170375205

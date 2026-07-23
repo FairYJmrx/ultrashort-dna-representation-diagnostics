@@ -14,8 +14,8 @@ This release is organized around four reproducibility questions:
 | `methods/` | Canonical method implementation package. |
 | `src/` | Backward-compatible import wrappers for historical scripts. |
 | `data_pipeline/` | Organized entrypoints for data download, preprocessing and simulation. |
-| `experiments/` | Organized entrypoints for main experiments and reviewer-response audits. |
-| `analysis/` | Organized entrypoints for figures, tables, audits and manuscript generation. |
+| `experiments/` | Maintained implementations for main experiments and reviewer-response audits. |
+| `analysis/` | Maintained implementations for figures, tables, audits and manuscript generation. |
 | `data/` | Lightweight release data and public benchmark subsets. |
 | `results/` | Generated result tables, summaries and audit outputs. |
 | `figures/` | Central copy of final main and supplementary figure bitmaps. |
@@ -24,14 +24,19 @@ This release is organized around four reproducibility questions:
 | `docs/` | Method contract, provenance maps and release notes. |
 | `configs/` | Experiment matrices and current release defaults. |
 | `references/` | Working bibliography. |
-| `smoke_tests/` | Lightweight import and structure checks. |
+| `scripts/` | Backwards-compatible wrappers for historical commands. |
+| `legacy/` | Superseded release-packaging utilities, isolated from the active path. |
+| `smoke_tests/` | Lightweight import, method-contract and structure checks. |
 
 ## Script Compatibility
 
-The root `scripts/` package is retained for import compatibility. Organized
-entrypoint wrappers under `data_pipeline/`, `experiments/` and `analysis/` call
-the corresponding `scripts.*` modules.
+The root `scripts/` package is retained only for import compatibility. The
+maintained implementations live directly under `data_pipeline/`,
+`experiments/` and `analysis/`; legacy wrappers import those modules rather
+than carrying a second implementation. The manuscript-facing method itself is
+defined only in `methods/ck4p_msp.py` and selected with the explicit
+representation name `ck4p_msp`; historical feature-name strings are not method
+aliases. See `docs/code_layout.md` for detailed rules.
 
 This means historical commands continue to work, while new users can start from
 the organized entrypoints.
-

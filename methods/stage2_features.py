@@ -425,6 +425,26 @@ def build_feature_matrix(
     train_indices: list[int] | None = None,
 ) -> tuple[np.ndarray, FeatureInfo]:
     """Build a dense feature matrix and lightweight metadata."""
+    # The manuscript-facing mixed method has a dedicated implementation.
+    # Keep the historical ``ckmer*_property_*`` names below for archived
+    # experiments, but do not use them as aliases for CK4P-MSP.
+    if name == "ck4p_msp":
+        from .ck4p_msp import build_ck4p_msp_features
+
+        x = build_ck4p_msp_features(
+            sequences,
+            train_indices=train_indices,
+        ).matrix
+        nnz = np.count_nonzero(np.abs(x) > 1e-12)
+        total = x.shape[0] * x.shape[1]
+        return x, FeatureInfo(
+            name=name,
+            n_features=int(x.shape[1]),
+            density=float(nnz / total) if total else 0.0,
+            avg_nnz_per_read=float(nnz / max(1, x.shape[0])),
+            observed_vocab_size=None,
+        )
+
     parts = parse_hybrid_name(name)
     minhash_match = re.fullmatch(r"minhash_k(\d+)_s(\d+)", name)
     ckmer_property_match = re.fullmatch(r"ckmer(\d+)_(property|property_multiscale|property_multiscale_mean|property_moment|property_anchor)_l2", name)

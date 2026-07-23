@@ -1,0 +1,23 @@
+{
+  "elapsed_seconds": 44.006,
+  "reads": "results\\stage3\\contract_v2\\compact_baselines\\stage3_compact_baseline_reads.csv",
+  "triplets": "results\\stage3\\contract_v2\\local_mutation_sensitivity\\local_mutation_triplets.csv",
+  "lengths": [
+    69,
+    75,
+    100,
+    150
+  ],
+  "conditions": [
+    "substitution_1pct",
+    "N_3pct",
+    "trim_5bp",
+    "substitution_1pct_N_3pct",
+    "local_mismatch_6bp",
+    "short_indel"
+  ],
+  "max_pairs": 500,
+  "max_triplets": 400,
+  "cv_folds": 5,
+  "seed": 20260625
+}

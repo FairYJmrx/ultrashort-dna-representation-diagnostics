@@ -6,20 +6,17 @@ as a methods repository: method definitions are centralized, data preparation
 and experiments have separate entrypoints, and manuscript claims are mapped to
 scripts and outputs.
 
-Repository status: private pre-submission release. Reviewer access should be
-provided through the journal submission system or by adding a journal-supplied
-reviewer account as a read-only collaborator. See
-`docs/SUBMISSION_REVIEWER_ACCESS.md`.
-
 ## 1. Repository Map
 
 | Path | Purpose |
 |---|---|
 | `methods/` | Canonical implementation of sequence utilities, CK4/CK5, P, MSP, CK4P-MSP, CSP, full-position encodings and evaluation helpers. |
 | `src/` | Compatibility wrappers for older scripts that import `src.*`. New code should import `methods.*`. |
-| `data_pipeline/` | Organized entrypoints for public data inspection/download, preprocessing and simulator-derived probes. |
-| `experiments/` | Organized entrypoints for main experiments and method-hardening audits. |
-| `analysis/` | Organized entrypoints for figures, tables, provenance audits and manuscript assembly. |
+| `data_pipeline/` | Maintained public download, preprocessing and simulation implementations. |
+| `experiments/` | Maintained main experiments and method-hardening audits. |
+| `analysis/` | Maintained figures, tables, provenance audits and manuscript assembly. |
+| `scripts/` | Backwards-compatible command wrappers; not a second implementation tree. |
+| `legacy/` | Isolated historical packaging utilities; excluded from the scientific reproduction path. |
 | `data/` | Lightweight release data and public benchmark subsets. |
 | `results/` | Generated result tables, summaries, run manifests and audit outputs. |
 | `figures/` | Central copy of final main and supplementary figure bitmaps. |
@@ -29,10 +26,9 @@ reviewer account as a read-only collaborator. See
 | `configs/` | Experiment matrices and release-default method settings. |
 | `references/` | Working bibliography. |
 | `smoke_tests/` | Lightweight import and repository checks. |
-| `LICENSE` | MIT software licence for the released code. |
-| `CITATION.cff` | Provisional citation metadata to be finalized after publication. |
 
-See `docs/repository_structure.md` for a longer map.
+See `docs/repository_structure.md` and `docs/code_layout.md` for the longer
+map and source-of-truth rules.
 
 The manuscript-facing API for the main method is
 `methods/ck4p_msp.py`. It exposes CK4, P, MSP, CK4P-MSP assembly and paired
@@ -53,7 +49,14 @@ Run a quick import smoke test:
 
 ```powershell
 .\.venv\Scripts\python.exe smoke_tests\test_imports.py
+.\.venv\Scripts\python.exe smoke_tests\test_method_contract.py
+.\.venv\Scripts\python.exe smoke_tests\test_repository_layout.py
 ```
+
+The second check verifies that the public method API and explicit `ck4p_msp`
+experiment entrypoint produce the same 222-dimensional default representation.
+When a manually distributed `ck4p_msp_standalone.py` is placed at the repository
+root, it is checked against the same contract as an optional extra.
 
 ART-based reruns require a local ART executable. The release keeps ART outputs
 and summaries, but does not include full FASTQ/SAM intermediates.
@@ -77,8 +80,10 @@ formal method contract and default settings.
 
 ## 4. Reproduction Path
 
-The old `scripts/` commands remain valid. New users can start from the
-organized entrypoints below.
+The old `scripts/` commands remain valid for historical reproduction. New
+manuscript-facing experiments use the explicit `ck4p_msp` representation name;
+historical `ckmer*_property_*` strings are retained for compatibility and are
+not aliases for the block-normalized main method.
 
 ### Data and simulation
 
@@ -151,14 +156,3 @@ Excluded:
   are used in this release.
 
 See `RELEASE_MANIFEST.md` for the detailed file inventory.
-
-## 6. Reviewer Access And Public Release
-
-The current GitHub repository is private:
-
-`https://github.com/FairYJmrx/ultrashort-dna-representation-diagnostics`
-
-For journal submission, provide reviewer access to the private repository
-through the confidential submission field or by adding a journal-provided
-account as a read-only collaborator. A public archival DOI should be minted
-from a frozen release when the authors choose to make the repository public.

@@ -2,11 +2,20 @@
 
 This manifest describes the organized reproducible-method release under this branch.
 
+## Current Contract Version
+
+`contract_v2` identifies results generated after consolidating the public
+`ck4p_msp` implementation, enforcing grouped template-level validation for
+local delta readout, and separating vector-space high-k controls from the
+native MinHash Jaccard audit. These outputs are the only results eligible for
+the corresponding revised manuscript claims.
+
+The independently distributed `ck4p_msp_standalone.py` is intentionally not
+part of this repository; it is a separate single-file handoff artifact.
+
 ## Included Files
 
 - `.gitignore`
-- `CITATION.cff`
-- `LICENSE`
 - `README.md`
 - `RELEASE_MANIFEST.md`
 - `analysis/README.md`
@@ -83,7 +92,6 @@ This manifest describes the organized reproducible-method release under this bra
 - `docs/manuscript_script_mapping.md`
 - `docs/method_contract.md`
 - `docs/repository_structure.md`
-- `docs/SUBMISSION_REVIEWER_ACCESS.md`
 - `docs/stage3_download_scope_decision.md`
 - `docs/stage3_external_validation_task_plan.md`
 - `docs/stage3_reinforcement_execution_report.md`

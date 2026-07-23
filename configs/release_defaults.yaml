@@ -46,10 +46,11 @@ representations:
       role: diagnostic positional upper bound
     csp:
       role: canonical spaced-property boundary comparator
-    high_k_compressed:
+  high_k_compressed:
       k: 15
       role: compactness-constrained high-specificity k-mer audit
-      compression: [minhash, hashing_trick, sparse_random_projection]
+      vector_compression: [hashing_trick, sparse_random_projection]
+      set_sketch_audit: minhash_jaccard_collision
 
 metrics:
   stability: [paired_cosine, l2_drift, nearest_clean_retrieval]

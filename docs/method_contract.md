@@ -45,9 +45,10 @@ read-level taxonomic labels were not reconstructed for that lightweight probe.
 
 ## Default Mixed Representation
 
-The public method API is `methods/ck4p_msp.py`. Historical scripts can still
-build the same representation family through `methods/stage2_features.py`, but
-new method-facing code should use `methods.ck4p_msp`.
+The public method API is `methods/ck4p_msp.py`; its explicit experiment name is
+`ck4p_msp`. Historical `ckmer*_property_*` strings are retained only for
+archived compatibility analyses. They are not aliases for CK4P-MSP and must
+not be relabelled as the manuscript main method.
 
 Each block is internally L2-normalized before weighted concatenation. The
 default weights are:

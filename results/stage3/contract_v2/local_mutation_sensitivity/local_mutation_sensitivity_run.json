@@ -1,0 +1,31 @@
+{
+  "elapsed_seconds": 174.95334482192993,
+  "representations": [
+    "ckmer4_count_l2",
+    "ckmer4_property_l2",
+    "ck4p_msp",
+    "cspaced_property_l2",
+    "property_channels",
+    "one_hot",
+    "base_property",
+    "kmer_property"
+  ],
+  "lengths": [
+    69,
+    100,
+    150
+  ],
+  "local_modes": [
+    "center",
+    "left",
+    "right",
+    "jittered"
+  ],
+  "n_reads": 250,
+  "mutation_fraction": 0.03,
+  "cv_folds": 5,
+  "seed": 20260624,
+  "n_triplet_rows": 9000,
+  "n_metric_rows": 24000,
+  "n_readout_rows": 384
+}
