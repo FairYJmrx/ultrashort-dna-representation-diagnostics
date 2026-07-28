@@ -1,0 +1,14 @@
+{
+  "elapsed_seconds": 207.13541460037231,
+  "triplets_csv": "D:\\AI-NGS\\info\\release_code\\results\\stage3\\contract_v2\\local_mutation_sensitivity\\local_mutation_triplets.csv",
+  "lengths": [
+    69,
+    100,
+    150
+  ],
+  "max_triplets": 250,
+  "k_neighbors": 5,
+  "n_perm": 100,
+  "n_subsamples": 100,
+  "n_detail_rows": 96
+}

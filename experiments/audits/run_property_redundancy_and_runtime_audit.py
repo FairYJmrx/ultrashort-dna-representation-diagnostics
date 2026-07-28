@@ -23,28 +23,28 @@ def _find_project_root(start: Path) -> Path:
 PROJECT_ROOT = _find_project_root(Path(__file__).resolve())
 sys.path.insert(0, str(PROJECT_ROOT))
 
-from scripts.run_high_k_compressed_baselines import (  # noqa: E402
-    fast_minhash_matrix,
+from experiments.audits.run_high_k_compressed_baselines import (  # noqa: E402
     hashed_kmer_matrix,
+    minhash_signatures,
     random_projection_kmer_matrix,
 )
 from experiments.main.run_stage2_representation_grid import parse_int_list, set_global_seed  # noqa: E402
-from src.stage2_features import build_feature_matrix  # noqa: E402
+from methods.ck4p_msp import build_ck4p_msp_features  # noqa: E402
 
 
 REPRESENTATIONS = [
-    "ckmer4_count_l2",
-    "ckmer4_property_l2",
-    "ckmer4_property_multiscale_mean_l2",
+    "ck4",
+    "ck4_p",
+    "ck4p_msp",
     "hash_k15_d222",
     "minhash_k15_s222",
     "rp_ck15_d222",
 ]
 
 REP_LABELS = {
-    "ckmer4_count_l2": "CK4",
-    "ckmer4_property_l2": "CK4+P",
-    "ckmer4_property_multiscale_mean_l2": "CK4P-MSP",
+    "ck4": "CK4",
+    "ck4_p": "CK4+P",
+    "ck4p_msp": "CK4P-MSP",
     "hash_k15_d222": "Hashed k=15, d=222",
     "minhash_k15_s222": "MinHash k=15, s=222",
     "rp_ck15_d222": "CK15 random projection, d=222",
@@ -70,8 +70,8 @@ def redundancy_audit(sample: pd.DataFrame, seed: int, max_cca_components: int) -
     for length, group in sample.groupby("source_length", sort=True):
         seqs = group["sequence"].astype(str).tolist()
         train = list(range(len(seqs)))
-        p, _ = build_feature_matrix(seqs, "property_l2", length=int(length), train_indices=train)
-        m, _ = build_feature_matrix(seqs, "property_multiscale_mean_l2", length=int(length), train_indices=train)
+        features = build_ck4p_msp_features(seqs, train_indices=train)
+        p, m = features.p, features.msp
         p = safe_norm(p)
         m = safe_norm(m)
 
@@ -135,14 +135,22 @@ def build_representation_timed(seqs: list[str], length: int, representation: str
             x = hashed_kmer_matrix(seqs, k=15, n_features=222, canonical=True, signed=True)
             n_features = 222
         elif representation == "minhash_k15_s222":
-            x = fast_minhash_matrix(seqs, k=15, sketch_size=222, canonical=True, seed=seed + rep_idx)
+            x = minhash_signatures(seqs, k=15, sketch_size=222, canonical=True, seed=seed + rep_idx)
             n_features = 222
         elif representation == "rp_ck15_d222":
             x, n_features = random_projection_kmer_matrix(seqs, train_indices=train_indices, k=15, n_features=222, seed=seed + rep_idx)
         else:
-            x, info = build_feature_matrix(seqs, representation, length=length, train_indices=train_indices)
+            if representation == "ck4p_msp":
+                x = build_ck4p_msp_features(seqs, train_indices=train_indices).matrix
+            elif representation == "ck4":
+                x = build_ck4p_msp_features(seqs, train_indices=train_indices).ck4
+            elif representation == "ck4_p":
+                features = build_ck4p_msp_features(seqs, train_indices=train_indices)
+                x = safe_norm(np.hstack([features.ck4, features.p]))
+            else:
+                raise ValueError(f"Unsupported runtime representation: {representation}")
             x = safe_norm(x)
-            n_features = int(info.n_features)
+            n_features = int(x.shape[1])
         durations.append(time.perf_counter() - started)
     assert x is not None
     return np.asarray(x), int(n_features), durations
@@ -226,8 +234,8 @@ def summarize(redundancy: pd.DataFrame, cca_detail: pd.DataFrame, runtime: pd.Da
 
 def main() -> None:
     parser = argparse.ArgumentParser(description="Run P/MSP redundancy and feature runtime audit.")
-    parser.add_argument("--input", default=str(PROJECT_ROOT / "results" / "stage3" / "position_property_ablation" / "stage3_compact_baseline_reads.csv"))
-    parser.add_argument("--output-dir", default=str(PROJECT_ROOT / "results" / "stage3" / "reviewer_response" / "property_redundancy_runtime"))
+    parser.add_argument("--input", default=str(PROJECT_ROOT / "results" / "stage3" / "contract_v2" / "compact_baselines" / "stage3_compact_baseline_reads.csv"))
+    parser.add_argument("--output-dir", default=str(PROJECT_ROOT / "results" / "stage3" / "contract_v2" / "property_redundancy_runtime"))
     parser.add_argument("--lengths", default="69,75,100,150")
     parser.add_argument("--max-per-length", type=int, default=400)
     parser.add_argument("--runtime-repeats", type=int, default=5)

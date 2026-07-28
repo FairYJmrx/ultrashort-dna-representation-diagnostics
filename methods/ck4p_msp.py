@@ -29,36 +29,34 @@ from .stage2_features import property_multiscale_matrix
 # ---------------------------------------------------------------------------
 # Top-level configuration guide / 顶部配置说明
 #
-# CK4P-MSP is controlled by CK4PMSPConfig below. The default configuration is
-# the manuscript main method:
+# CK4P-MSP is controlled by CK4PMSPConfig below. The defaults implement the
+# manuscript main method:
 #
 #   k=4
-#       EN: identity backbone uses reverse-complement canonical 4-mers.
-#       CN: 身份主干使用反向互补规范化 4-mer。
-#
+#       EN: reverse-complement canonical 4-mers form the local composition
+#           backbone.
+#       CN: 反向互补规范化 4-mer 构成局部组成主干。
 #   bins=(2, 3, 4, 6)
 #       EN: MSP pools per-base property signals over coarse-to-fine relative
-#           position bins. The default 2+3+4+6 design gives 15 bins total.
-#       CN: MSP 将逐碱基属性信号按相对位置做由粗到细的分箱池化。
-#           默认 2+3+4+6 共 15 个分箱。
-#
+#           position bins. The default has 15 bins in total.
+#       CN: MSP 按相对位置由粗到细池化逐碱基属性信号，默认共 15 个分箱。
 #   include_msp_std=False
-#       EN: False keeps mean-only MSP, which is the paper's compact main
-#           representation. True additionally appends per-bin standard
-#           deviations and is intended for sensitivity/audit variants.
-#       CN: False 表示 MSP 只保留每个分箱的均值，这是论文主方法。
-#           True 会额外加入分箱标准差，主要用于敏感性分析或审计变体。
-#
+#       EN: False keeps mean-only MSP for the compact manuscript method. True
+#           additionally appends per-bin standard deviations for audit variants.
+#       CN: False 表示仅保留均值 MSP；True 额外加入每个分箱的标准差，用于审计变体。
 #   alpha, beta, gamma = 1.0, 1.0, 1.0
-#       EN: block weights for CK4, P and MSP before weighted concatenation.
-#           They define a standardized diagnostic representation, not a
-#           natural biophysical unit conversion.
-#       CN: 分别是 CK4、P、MSP 三个 block 的拼接权重。它们定义的是
-#           标准化诊断表征，不是不同生物物理量之间的自然单位换算。
-#
+#       EN: weights for CK4, P and MSP before concatenation. They define a
+#           standardized diagnostic representation, not physical unit conversion.
+#       CN: 分别为 CK4、P 和 MSP 的拼接权重；定义标准化诊断表征，不是物理单位换算。
 #   vocabulary_mode="full"
-#       EN: uses the full reverse-complement canonical k-mer vocabulary. For
-#           k=4 this gives a stable 136-dimensional CK4 block and a default
+#       EN: uses the complete canonical vocabulary. For k=4, CK4 is 136D and
+#           the default CK4P-MSP representation is 222D.
+#       CN: 使用完整规范化词表；k=4 时 CK4 为 136 维，CK4P-MSP 为 222 维。
+#   vocabulary_mode="observed"
+#       EN: fits vocabulary on training reads only; suitable for historical
+#           grids, but its dimensionality is data-dependent.
+#       CN: 仅根据训练 reads 拟合词表；适用于历史网格，但维度会随数据变化。
+# ---------------------------------------------------------------------------
 #           222-dimensional CK4P-MSP vector.
 #       CN: 使用完整反向互补规范化 k-mer 词表。k=4 时 CK4 固定为
 #           136 维，默认 CK4P-MSP 为 222 维。

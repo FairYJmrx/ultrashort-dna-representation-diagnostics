@@ -85,6 +85,28 @@ manuscript-facing experiments use the explicit `ck4p_msp` representation name;
 historical `ckmer*_property_*` strings are retained for compatibility and are
 not aliases for the block-normalized main method.
 
+### Contract-v2 manuscript evidence
+
+The current manuscript evidence is the `results/stage3/contract_v2/` namespace.
+Run the commands below after preparing the lightweight WGS slices. They use the
+public `methods.ck4p_msp` implementation and grouped template-level validation
+where local perturbation variants share a source template.
+
+```powershell
+.\.venv\Scripts\python.exe experiments\main\run_stage3_compact_baselines.py --output-dir results\stage3\contract_v2\compact_baselines
+.\.venv\Scripts\python.exe experiments\main\run_local_mutation_sensitivity.py --output-dir results\stage3\contract_v2\local_mutation_sensitivity
+.\.venv\Scripts\python.exe experiments\audits\run_p_msp_contribution_audit.py --output-dir results\stage3\contract_v2\p_msp_contribution
+.\.venv\Scripts\python.exe experiments\audits\run_high_k_compressed_baselines.py --output-dir results\stage3\contract_v2\high_k_compressed_baselines
+.\.venv\Scripts\python.exe experiments\audits\run_knn_mi_robustness_audit.py --output-dir results\stage3\contract_v2\knn_mi_robustness
+.\.venv\Scripts\python.exe experiments\audits\run_msp_bin_gamma_sensitivity_audit.py --output-dir results\stage3\contract_v2\msp_bin_gamma_sensitivity
+.\.venv\Scripts\python.exe experiments\audits\run_property_redundancy_and_runtime_audit.py --output-dir results\stage3\contract_v2\property_redundancy_runtime
+```
+
+See `docs/contract_v2_evidence_map.md` for the claim, result-table and script
+mapping. Historical ART, CAMI and full-position probes remain available for
+their bounded external and upper-bound roles, but their legacy feature labels
+must not be used to make claims about the public CK4P-MSP contract.
+
 ### Data and simulation
 
 ```powershell

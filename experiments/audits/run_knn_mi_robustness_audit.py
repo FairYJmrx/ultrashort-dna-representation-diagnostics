@@ -9,7 +9,7 @@ from pathlib import Path
 
 import numpy as np
 import pandas as pd
-from sklearn.preprocessing import StandardScaler, normalize
+from sklearn.preprocessing import StandardScaler
 
 def _find_project_root(start: Path) -> Path:
     for candidate in [start.parent, *start.parents]:
@@ -22,7 +22,7 @@ PROJECT_ROOT = _find_project_root(Path(__file__).resolve())
 sys.path.insert(0, str(PROJECT_ROOT))
 
 from experiments.main.run_stage2_representation_grid import parse_int_list, set_global_seed  # noqa: E402
-from src.stage2_features import build_feature_matrix  # noqa: E402
+from methods.ck4p_msp import build_ck4p_msp_features  # noqa: E402
 
 
 def digamma_approx(x: np.ndarray | float) -> np.ndarray | float:
@@ -41,10 +41,6 @@ def digamma_approx(x: np.ndarray | float) -> np.ndarray | float:
     if np.isscalar(x):
         return float(out)
     return out
-
-
-def _safe_norm(x: np.ndarray) -> np.ndarray:
-    return normalize(np.nan_to_num(np.asarray(x, dtype=np.float64), nan=0.0, posinf=0.0, neginf=0.0), norm="l2", axis=1)
 
 
 def _standardize(x: np.ndarray, seed: int) -> np.ndarray:
@@ -99,10 +95,9 @@ def mixed_knn_mi_bits(x: np.ndarray, y: np.ndarray, k: int = 5, seed: int = 0) -
 
 
 def build_blocks(sequences: list[str], length: int, train_indices: list[int]) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
-    k, _ = build_feature_matrix(sequences, "ckmer4_count_l2", length=length, train_indices=train_indices)
-    p, _ = build_feature_matrix(sequences, "property_l2", length=length, train_indices=train_indices)
-    msp, _ = build_feature_matrix(sequences, "property_multiscale_mean_l2", length=length, train_indices=train_indices)
-    return _safe_norm(k), _safe_norm(p), _safe_norm(msp)
+    del length  # The public API derives relative-position summaries from each sequence.
+    features = build_ck4p_msp_features(sequences, train_indices=train_indices)
+    return features.ck4, features.p, features.msp
 
 
 def distances_for_cell(subset: pd.DataFrame, max_triplets: int, seed: int) -> tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
@@ -226,8 +221,8 @@ def run_audit(triplets: pd.DataFrame, lengths: list[int], max_triplets: int, k_n
 
 def main() -> None:
     parser = argparse.ArgumentParser(description="Run kNN/KSG-style MI robustness audit on local perturbation distance summaries.")
-    parser.add_argument("--triplets-csv", default=str(PROJECT_ROOT / "results" / "stage3" / "local_mutation_sensitivity" / "local_mutation_triplets.csv"))
-    parser.add_argument("--output-dir", default=str(PROJECT_ROOT / "results" / "stage3" / "reviewer_response" / "knn_mi_robustness"))
+    parser.add_argument("--triplets-csv", default=str(PROJECT_ROOT / "results" / "stage3" / "contract_v2" / "local_mutation_sensitivity" / "local_mutation_triplets.csv"))
+    parser.add_argument("--output-dir", default=str(PROJECT_ROOT / "results" / "stage3" / "contract_v2" / "knn_mi_robustness"))
     parser.add_argument("--lengths", default="69,100,150")
     parser.add_argument("--max-triplets", type=int, default=250)
     parser.add_argument("--k-neighbors", type=int, default=5)

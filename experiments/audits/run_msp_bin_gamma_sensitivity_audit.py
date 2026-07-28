@@ -12,7 +12,6 @@ import numpy as np
 import pandas as pd
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import accuracy_score, f1_score
-from sklearn.model_selection import StratifiedKFold, train_test_split
 from sklearn.pipeline import make_pipeline
 from sklearn.preprocessing import StandardScaler, normalize
 
@@ -27,7 +26,9 @@ PROJECT_ROOT = _find_project_root(Path(__file__).resolve())
 sys.path.insert(0, str(PROJECT_ROOT))
 
 from experiments.main.run_stage2_representation_grid import paired_subsets, parse_int_list, parse_csv_list, set_global_seed  # noqa: E402
-from src.stage2_features import build_feature_matrix, paired_retrieval_metrics, property_multiscale_matrix  # noqa: E402
+from experiments.audits.run_p_msp_contribution_audit import evaluate_delta_readout  # noqa: E402
+from methods.ck4p_msp import CK4PMSPConfig, build_ck4p_msp_features  # noqa: E402
+from src.stage2_features import paired_retrieval_metrics  # noqa: E402
 
 BINSETS = {
     "2": (2,),
@@ -42,11 +43,15 @@ def safe_norm(x: np.ndarray) -> np.ndarray:
 
 
 def build_rep(seqs: list[str], length: int, train_indices: list[int], bins: tuple[int, ...], gamma: float) -> tuple[np.ndarray, dict[str, int]]:
-    k, _ = build_feature_matrix(seqs, "ckmer4_count_l2", length=length, train_indices=train_indices)
-    p, _ = build_feature_matrix(seqs, "property_l2", length=length, train_indices=train_indices)
-    m = property_multiscale_matrix(seqs, bins=bins, include_std=False)
-    x = safe_norm(np.hstack([safe_norm(k), safe_norm(p), float(gamma) * safe_norm(m)]))
-    return x, {"k_dim": int(k.shape[1]), "p_dim": int(p.shape[1]), "m_dim": int(m.shape[1]), "total_dim": int(x.shape[1])}
+    del length
+    config = CK4PMSPConfig(bins=bins, gamma=float(gamma))
+    features = build_ck4p_msp_features(seqs, config=config, train_indices=train_indices)
+    return features.matrix, {
+        "k_dim": int(features.ck4.shape[1]),
+        "p_dim": int(features.p.shape[1]),
+        "m_dim": int(features.msp.shape[1]),
+        "total_dim": int(features.matrix.shape[1]),
+    }
 
 
 def stability_audit(reads: pd.DataFrame, lengths: list[int], conditions: list[str], gammas: list[float], max_pairs: int, seed: int) -> pd.DataFrame:
@@ -78,33 +83,6 @@ def stability_audit(reads: pd.DataFrame, lengths: list[int], conditions: list[st
                     })
                     rows.append(metrics)
     return pd.DataFrame(rows)
-
-
-def classifier_registry(seed: int) -> dict[str, object]:
-    return {"logistic": make_pipeline(StandardScaler(), LogisticRegression(max_iter=5000, random_state=seed))}
-
-
-def evaluate_delta_readout(clean: np.ndarray, noise: np.ndarray, local: np.ndarray, seed: int, cv_folds: int = 5) -> list[dict[str, object]]:
-    x_delta = np.vstack([np.abs(noise - clean), np.abs(local - clean)])
-    y = np.asarray([0] * clean.shape[0] + [1] * clean.shape[0])
-    rows = []
-    train_idx, test_idx = train_test_split(np.arange(len(y)), test_size=0.3, random_state=seed, stratify=y)
-    for clf_name, clf in classifier_registry(seed).items():
-        clf.fit(x_delta[train_idx], y[train_idx])
-        pred = clf.predict(x_delta[test_idx])
-        rows.append({"split": "holdout", "classifier": clf_name, "accuracy": float(accuracy_score(y[test_idx], pred)), "macro_f1": float(f1_score(y[test_idx], pred, average="macro", zero_division=0))})
-    if cv_folds > 1:
-        skf = StratifiedKFold(n_splits=cv_folds, shuffle=True, random_state=seed)
-        for clf_name in classifier_registry(seed):
-            acc, f1 = [], []
-            for tr, te in skf.split(x_delta, y):
-                clf = classifier_registry(seed)[clf_name]
-                clf.fit(x_delta[tr], y[tr])
-                pred = clf.predict(x_delta[te])
-                acc.append(float(accuracy_score(y[te], pred)))
-                f1.append(float(f1_score(y[te], pred, average="macro", zero_division=0)))
-            rows.append({"split": f"{cv_folds}fold_cv", "classifier": clf_name, "accuracy": float(np.mean(acc)), "accuracy_std": float(np.std(acc)), "macro_f1": float(np.mean(f1)), "macro_f1_std": float(np.std(f1))})
-    return rows
 
 
 def local_audit(triplets: pd.DataFrame, lengths: list[int], gammas: list[float], max_triplets: int, seed: int, cv_folds: int) -> pd.DataFrame:
@@ -142,7 +120,14 @@ def local_audit(triplets: pd.DataFrame, lengths: list[int], gammas: list[float],
                     "selective_sensitivity_ratio_mean": float(np.mean(local_l2 / np.maximum(noise_l2, 1e-12))),
                     **dims,
                 }
-                for row in evaluate_delta_readout(clean, noise, local, seed=seed + int(length), cv_folds=cv_folds):
+                for row in evaluate_delta_readout(
+                    clean,
+                    noise,
+                    local,
+                    sample_ids=sample_ids,
+                    seed=seed + int(length),
+                    cv_folds=cv_folds,
+                ):
                     rows.append({**base, **row})
     return pd.DataFrame(rows)
 
@@ -158,7 +143,7 @@ def summarize(stability: pd.DataFrame, local: pd.DataFrame, out_dir: Path) -> di
             m_dim=("m_dim", "mean"),
         )
     if not local.empty:
-        cv = local[local["split"].astype(str).str.contains("fold_cv")].copy()
+        cv = local[local["split"].astype(str).str.contains("grouped_cv")].copy()
         outputs["delta_readout_summary"] = cv.groupby(["length", "binset", "gamma"], as_index=False).agg(
             n_cells=("macro_f1", "count"),
             macro_f1_mean=("macro_f1", "mean"),
@@ -242,9 +227,9 @@ def write_md(outputs: dict[str, pd.DataFrame], out_dir: Path, meta: dict[str, ob
 
 def main() -> None:
     parser = argparse.ArgumentParser(description="Lightweight MSP bin/gamma sensitivity audit.")
-    parser.add_argument("--reads-csv", default=str(PROJECT_ROOT / "results" / "stage3" / "position_property_ablation" / "stage3_compact_baseline_reads.csv"))
-    parser.add_argument("--triplets-csv", default=str(PROJECT_ROOT / "results" / "stage3" / "local_mutation_sensitivity" / "local_mutation_triplets.csv"))
-    parser.add_argument("--output-dir", default=str(PROJECT_ROOT / "results" / "stage3" / "reviewer_response" / "msp_bin_gamma_sensitivity"))
+    parser.add_argument("--reads-csv", default=str(PROJECT_ROOT / "results" / "stage3" / "contract_v2" / "compact_baselines" / "stage3_compact_baseline_reads.csv"))
+    parser.add_argument("--triplets-csv", default=str(PROJECT_ROOT / "results" / "stage3" / "contract_v2" / "local_mutation_sensitivity" / "local_mutation_triplets.csv"))
+    parser.add_argument("--output-dir", default=str(PROJECT_ROOT / "results" / "stage3" / "contract_v2" / "msp_bin_gamma_sensitivity"))
     parser.add_argument("--stability-lengths", default="69,75")
     parser.add_argument("--local-lengths", default="69,100,150")
     parser.add_argument("--conditions", default="substitution_1pct,N_3pct,substitution_1pct_N_3pct,local_mismatch_6bp,short_indel")
