@@ -1,0 +1,321 @@
+"""Generate manuscript figures exclusively from the public contract-v2 results.
+
+The script deliberately keeps each figure to one claim.  It does not relabel
+historic feature aliases as CK4P-MSP and it never plots MinHash as an L2-vector
+baseline: MinHash is shown only through native estimated-versus-exact Jaccard
+agreement.
+
+Outputs are publication-ready PNG, PDF and SVG assets.  The default directory
+is ``figures/contract_v2`` in the release repository.
+"""
+
+from __future__ import annotations
+
+import argparse
+from pathlib import Path
+
+import matplotlib.pyplot as plt
+import numpy as np
+import pandas as pd
+
+
+ROOT = Path(__file__).resolve().parents[2]
+RESULTS = ROOT / "results" / "stage3" / "contract_v2"
+DEFAULT_OUT = ROOT / "figures" / "contract_v2"
+
+COLORS = {
+    "CK4": "#5B677A",
+    "CK4+P": "#2F6BDE",
+    "CK4+MSP": "#009E73",
+    "CK4P-MSP": "#B83A62",
+    "CK5": "#9A7D4F",
+    "Hashed k=15": "#D17A22",
+    "Sparse RP k=15": "#7768AE",
+}
+ORDER = ["CK4", "CK4+P", "CK4+MSP", "CK4P-MSP"]
+
+
+def style() -> None:
+    plt.rcParams.update(
+        {
+            "font.family": "Arial",
+            "font.size": 8.2,
+            "axes.labelsize": 8.2,
+            "axes.titlesize": 9.2,
+            "axes.titleweight": "bold",
+            "xtick.labelsize": 7.5,
+            "ytick.labelsize": 7.5,
+            "legend.fontsize": 7.2,
+            "pdf.fonttype": 42,
+            "ps.fonttype": 42,
+            "svg.fonttype": "none",
+        }
+    )
+
+
+def save(fig: plt.Figure, out: Path, stem: str) -> None:
+    out.mkdir(parents=True, exist_ok=True)
+    for suffix in ("png", "pdf", "svg"):
+        fig.savefig(out / f"{stem}.{suffix}", dpi=400, bbox_inches="tight", pad_inches=0.04)
+    plt.close(fig)
+
+
+def clean_axes(ax: plt.Axes) -> None:
+    ax.spines[["top", "right"]].set_visible(False)
+    ax.grid(axis="y", color="#D9DDE3", linewidth=0.6, alpha=0.8)
+    ax.set_axisbelow(True)
+
+
+def panel_label(ax: plt.Axes, label: str, title: str) -> None:
+    ax.set_title(f"{label}. {title}", loc="left", pad=7)
+
+
+def contribution_data() -> tuple[pd.DataFrame, pd.DataFrame]:
+    base = RESULTS / "p_msp_contribution"
+    stability = pd.read_csv(base / "p_msp_contribution_stability_summary.csv")
+    readout = pd.read_csv(base / "p_msp_contribution_delta_readout_summary.csv")
+    return stability, readout
+
+
+def figure_2(out: Path) -> None:
+    """Show complementary P and MSP roles without asserting independence."""
+    stability, readout = contribution_data()
+    stability = stability.set_index("representation_label").loc[ORDER].reset_index()
+    readout = readout.set_index("representation_label").loc[ORDER].reset_index()
+    fig, axes = plt.subplots(1, 3, figsize=(7.15, 2.35), gridspec_kw={"width_ratios": [1, 1, 1.08]})
+
+    for ax, column, ylabel, title in [
+        (axes[0], "l2_delta_mean", "mean paired L2 drift", "Nuisance stability"),
+        (axes[1], "macro_f1_mean", "grouped delta-readout macro-F1", "Local-change readout"),
+    ]:
+        source = stability if column in stability else readout
+        values = source[column].to_numpy()
+        ax.bar(np.arange(len(ORDER)), values, color=[COLORS[x] for x in ORDER], width=0.68)
+        ax.set_xticks(np.arange(len(ORDER)), ORDER, rotation=27, ha="right")
+        ax.set_ylabel(ylabel)
+        clean_axes(ax)
+        panel_label(ax, "A" if ax is axes[0] else "B", title)
+        if column == "l2_delta_mean":
+            ax.set_ylim(0, max(values) * 1.18)
+        else:
+            ax.set_ylim(0.84, 1.0)
+        for i, value in enumerate(values):
+            ax.text(i, value + (0.008 if column != "l2_delta_mean" else 0.005), f"{value:.3f}", ha="center", va="bottom", fontsize=7)
+
+    x = stability["n_features"].to_numpy()
+    y = stability["l2_delta_mean"].to_numpy()
+    for label, xx, yy in zip(ORDER, x, y):
+        axes[2].scatter(xx, yy, s=58, color=COLORS[label], edgecolor="white", linewidth=0.7, zorder=3)
+        axes[2].annotate(label, (xx, yy), xytext=(4, 3), textcoords="offset points", fontsize=7)
+    axes[2].set_xlabel("feature dimension")
+    axes[2].set_ylabel("mean paired L2 drift")
+    clean_axes(axes[2])
+    panel_label(axes[2], "C", "Compact trade-off")
+    axes[2].set_xlim(120, 235)
+    axes[2].set_ylim(0.10, 0.24)
+    fig.suptitle("P and MSP provide related layers with complementary empirical roles", y=1.03, fontsize=10.4, fontweight="bold")
+    fig.tight_layout()
+    save(fig, out, "figure_2_p_msp_contribution")
+
+
+def figure_3(out: Path) -> None:
+    """Compare compact stability with contiguous and compressed high-k vectors."""
+    df = pd.read_csv(RESULTS / "high_k_compressed_baselines" / "high_k_stability_summary.csv")
+    labels = {"CK4+P": "CK4+P", "CK4P-MSP": "CK4P-MSP", "CK4": "CK4", "CK5": "CK5"}
+    df["short"] = df["representation_label"].map(labels).fillna(df["representation_label"])
+    vector = df[df["short"].isin(["CK4+P", "CK4P-MSP", "CK4", "CK5", "Hashed k=15, d=222", "CK15 random projection, d=222"])].copy()
+    vector["display"] = vector["short"].replace({"Hashed k=15, d=222": "Hashed k=15", "CK15 random projection, d=222": "Sparse RP k=15"})
+    order = ["CK4", "CK4+P", "CK4P-MSP", "CK5", "Hashed k=15", "Sparse RP k=15"]
+    vector = vector.set_index("display").loc[order].reset_index()
+    short_ticks = ["CK4", "CK4+P", "CK4P", "CK5", "Hash\nk=15", "RP\nk=15"]
+
+    fig, axes = plt.subplots(1, 3, figsize=(7.15, 2.35), gridspec_kw={"width_ratios": [1.1, 1.05, 1.15]})
+    for ax, col, ylabel, tag, title in [
+        (axes[0], "paired_cosine", "mean paired cosine", "A", "Similarity under perturbation"),
+        (axes[1], "l2_drift", "mean paired L2 drift", "B", "Standardized diagnostic drift"),
+    ]:
+        values = vector[col].to_numpy()
+        ax.bar(np.arange(len(order)), values, color=[COLORS[x] for x in order], width=0.7)
+        ax.set_xticks(np.arange(len(order)), short_ticks, fontsize=6.7)
+        ax.set_ylabel(ylabel)
+        clean_axes(ax)
+        panel_label(ax, tag, title)
+        ax.set_ylim((0.75, 1.01) if col == "paired_cosine" else (0, 0.60))
+    label_offsets = {
+        "CK4": (5, 5), "CK4+P": (5, 5), "CK4P-MSP": (5, 5), "CK5": (5, 5),
+        "Hashed k=15": (5, 4), "Sparse RP k=15": (5, -20),
+    }
+    label_text = {"CK4P-MSP": "CK4P-MSP", "Hashed k=15": "Hash k=15", "Sparse RP k=15": "RP k=15"}
+    for _, row in vector.iterrows():
+        label = row["display"]
+        axes[2].scatter(row["median_features"], row["l2_drift"], s=58, color=COLORS[label], edgecolor="white", linewidth=0.7, zorder=3)
+        axes[2].annotate(label_text.get(label, label), (row["median_features"], row["l2_drift"]), xytext=label_offsets[label], textcoords="offset points", fontsize=6.7)
+    axes[2].set_xlabel("feature dimension")
+    axes[2].set_ylabel("mean paired L2 drift")
+    axes[2].set_xscale("log")
+    axes[2].set_xlim(110, 620)
+    axes[2].set_ylim(0.02, 0.58)
+    clean_axes(axes[2])
+    panel_label(axes[2], "C", "Dimension-constrained comparison")
+    fig.suptitle("Compact CK4P-MSP retains stability relative to CK4/CK5 and compressed high-k vectors", y=1.03, fontsize=10.1, fontweight="bold")
+    fig.tight_layout()
+    save(fig, out, "figure_3_contract_v2_stability")
+
+
+def figure_6(out: Path) -> None:
+    """Make local readability the result and the L2 ratio a transparent boundary."""
+    # Use the matched contribution audit for all four nested representations.
+    _, contribution = contribution_data()
+    readout = contribution.rename(columns={"representation_label": "display", "macro_f1_mean": "macro_f1", "macro_f1_std_mean": "std"})
+    readout = readout.set_index("display").loc[ORDER].reset_index()
+
+    ratio = pd.read_csv(RESULTS / "local_mutation_sensitivity" / "local_mutation_sensitivity_summary.csv")
+    labels = {"ckmer4_count_l2": "CK4", "ckmer4_property_l2": "CK4+P", "ck4p_msp": "CK4P-MSP"}
+    ratio = ratio[ratio["representation"].isin(labels)].copy()
+    ratio["display"] = ratio["representation"].map(labels)
+    ratio = ratio.groupby("display", as_index=False)["selective_sensitivity_ratio_mean"].mean()
+    ratio = ratio.set_index("display").loc[["CK4", "CK4+P", "CK4P-MSP"]].reset_index()
+
+    fig, axes = plt.subplots(1, 2, figsize=(7.15, 2.35), gridspec_kw={"width_ratios": [1.18, 0.82]})
+    x = np.arange(len(ORDER))
+    axes[0].bar(x, readout["macro_f1"], yerr=readout["std"], capsize=2.5, color=[COLORS[v] for v in ORDER], width=0.7)
+    axes[0].set_xticks(x, ORDER, rotation=20, ha="right")
+    axes[0].set_ylim(0.84, 1.025)
+    axes[0].set_ylabel("grouped delta-readout macro-F1")
+    clean_axes(axes[0])
+    panel_label(axes[0], "A", "Structured local-change readout")
+    for i, row in readout.iterrows():
+        axes[0].text(i, row["macro_f1"] + row["std"] + 0.006, f"{row['macro_f1']:.3f}", ha="center", va="bottom", fontsize=7)
+
+    x = np.arange(len(ratio))
+    axes[1].bar(x, ratio["selective_sensitivity_ratio_mean"], color=[COLORS[v] for v in ratio["display"]], width=0.68)
+    axes[1].axhline(1, color="#343A40", linestyle="--", linewidth=0.8)
+    axes[1].set_xticks(x, ratio["display"], rotation=20, ha="right")
+    axes[1].set_ylim(0, 1.12)
+    axes[1].set_ylabel("local / nuisance L2 ratio")
+    clean_axes(axes[1])
+    panel_label(axes[1], "B", "Distance-ratio boundary")
+    axes[1].text(1.0, 1.03, "1 = equal response", ha="center", va="bottom", fontsize=6.8, color="#343A40")
+    fig.suptitle("CK4P-MSP preserves grouped local-change readout; raw L2 ratios remain a boundary", y=1.03, fontsize=10.0, fontweight="bold")
+    fig.tight_layout()
+    save(fig, out, "figure_6_local_readout_boundary")
+
+
+def supplementary_s2(out: Path) -> None:
+    df = pd.read_csv(RESULTS / "knn_mi_robustness" / "knn_mi_summary.csv")
+    labels = {"dK": "$d_K$", "dK_dP": "$d_K+d_P$", "dK_dM": "$d_K+d_M$", "dK_dP_dM": "$d_K+d_P+d_M$"}
+    order = ["dK", "dK_dP", "dK_dM", "dK_dP_dM"]
+    df = df.set_index("feature_set").loc[order].reset_index()
+    labels_out = [labels[v] for v in df["feature_set"]]
+    err_low = df["mean_knn_mi_bits"] - df["mean_subsample_ci_low"]
+    err_hi = df["mean_subsample_ci_high"] - df["mean_knn_mi_bits"]
+    fig, ax = plt.subplots(figsize=(4.5, 2.65))
+    colors = ["#5B677A", "#2F6BDE", "#009E73", "#B83A62"]
+    ax.bar(np.arange(4), df["mean_knn_mi_bits"], yerr=np.vstack([err_low, err_hi]), capsize=3, color=colors, width=0.68)
+    ax.set_xticks(np.arange(4), labels_out)
+    ax.set_ylabel("KSG-style MI estimate (bits)")
+    ax.set_ylim(0.65, 0.96)
+    clean_axes(ax)
+    panel_label(ax, "S2", "Estimator-dependent local-versus-noise separability audit")
+    ax.text(0.02, -0.28, "Error bars: 2.5th-97.5th percentiles across stratified subsamples; all mean permutation P = 0.0099.", transform=ax.transAxes, fontsize=6.7, va="top")
+    fig.tight_layout()
+    save(fig, out, "supplementary_figure_s2_knn_mi")
+
+
+def supplementary_s6(out: Path) -> None:
+    stability = pd.read_csv(RESULTS / "msp_bin_gamma_sensitivity" / "stability_summary.csv")
+    readout = pd.read_csv(RESULTS / "msp_bin_gamma_sensitivity" / "delta_readout_summary.csv")
+    bin_order = ["2", "2_3", "2_3_4", "2_3_4_6"]
+    bin_labels = ["2", "2+3", "2+3+4", "2+3+4+6"]
+    fig, axes = plt.subplots(1, 2, figsize=(7.15, 2.4))
+    for length, color in [(69, "#B83A62"), (75, "#2F6BDE")]:
+        part = stability[(stability["length"] == length) & (stability["binset"] == "2_3_4_6")]
+        axes[0].plot(part["gamma"], part["l2_delta_mean"], marker="o", color=color, label=f"{length} bp")
+    axes[0].axvline(1.0, color="#343A40", linestyle="--", linewidth=0.8, label="default $\\gamma=1$")
+    axes[0].set_xlabel("MSP block weight $\\gamma$")
+    axes[0].set_ylabel("mean paired L2 drift")
+    clean_axes(axes[0]); panel_label(axes[0], "A", "Weight sensitivity at the full binset")
+    axes[0].legend(frameon=False, loc="upper right")
+    part = readout[(readout["gamma"] == 1.0) & (readout["binset"].isin(bin_order))]
+    for length, color in [(69, "#B83A62"), (100, "#009E73"), (150, "#2F6BDE")]:
+        d = part[part["length"] == length].set_index("binset").loc[bin_order].reset_index()
+        axes[1].plot(np.arange(len(bin_order)), d["macro_f1_mean"], marker="o", color=color, label=f"{length} bp")
+    axes[1].set_xticks(np.arange(len(bin_order)), bin_labels)
+    axes[1].set_xlabel("cumulative MSP binset")
+    axes[1].set_ylabel("grouped delta-readout macro-F1")
+    axes[1].set_ylim(0.75, 1.01)
+    clean_axes(axes[1]); panel_label(axes[1], "B", "Binset sensitivity at $\\gamma=1$")
+    axes[1].legend(frameon=False, loc="lower right")
+    fig.suptitle("Static MSP remains usable over the tested short-read grid", y=1.03, fontsize=10.2, fontweight="bold")
+    fig.tight_layout()
+    save(fig, out, "supplementary_figure_s6_msp_sensitivity")
+
+
+def supplementary_s7(out: Path) -> None:
+    stability = pd.read_csv(RESULTS / "high_k_compressed_baselines" / "high_k_stability_summary.csv")
+    stability["display"] = stability["representation_label"].replace({"Hashed k=15, d=222": "Hashed k=15", "CK15 random projection, d=222": "Sparse RP k=15"})
+    order = ["CK4", "CK4P-MSP", "CK5", "Hashed k=15", "Sparse RP k=15"]
+    stability = stability.set_index("display").loc[order].reset_index()
+    minhash = pd.read_csv(RESULTS / "high_k_compressed_baselines" / "high_k_minhash_jaccard.csv")
+    fig, axes = plt.subplots(1, 2, figsize=(7.15, 2.35), gridspec_kw={"width_ratios": [1.1, 1]})
+    axes[0].bar(np.arange(len(order)), stability["l2_drift"], color=[COLORS[x] for x in order], width=0.68)
+    axes[0].set_xticks(np.arange(len(order)), [x.replace(" ", "\n") for x in order], fontsize=6.8)
+    axes[0].set_ylabel("mean paired L2 drift")
+    axes[0].set_ylim(0, 0.58)
+    clean_axes(axes[0]); panel_label(axes[0], "A", "Vector-space comparison")
+    axes[1].scatter(minhash["exact_jaccard_mean"], minhash["minhash_jaccard_mean"], s=25, alpha=0.7, color="#7768AE", edgecolors="none")
+    lims = [min(minhash["exact_jaccard_mean"].min(), minhash["minhash_jaccard_mean"].min()), max(minhash["exact_jaccard_mean"].max(), minhash["minhash_jaccard_mean"].max())]
+    axes[1].plot(lims, lims, color="#343A40", linestyle="--", linewidth=0.8)
+    axes[1].set_xlim(lims); axes[1].set_ylim(lims)
+    axes[1].set_xlabel("exact Jaccard")
+    axes[1].set_ylabel("estimated MinHash Jaccard")
+    axes[1].text(0.03, 0.94, f"mean MAE = {minhash['mean_absolute_error'].mean():.3f}", transform=axes[1].transAxes, va="top", fontsize=7.3)
+    clean_axes(axes[1]); panel_label(axes[1], "B", "Native MinHash audit")
+    fig.suptitle("Compressed high-k vector controls and native MinHash use separate geometries", y=1.03, fontsize=10.0, fontweight="bold")
+    fig.tight_layout()
+    save(fig, out, "supplementary_figure_s7_high_k_audit")
+
+
+def supplementary_s8(out: Path) -> None:
+    cca = pd.read_csv(RESULTS / "property_redundancy_runtime" / "property_msp_cca_detail.csv")
+    runtime = pd.read_csv(RESULTS / "property_redundancy_runtime" / "feature_runtime_summary.csv")
+    runtime = runtime.groupby("representation_label", as_index=False).agg(ms_per_10k_reads=("ms_per_10k_reads", "mean"))
+    keep = ["CK4", "CK4+P", "CK4P-MSP", "Hashed k=15, d=222", "CK15 random projection, d=222"]
+    runtime = runtime[runtime["representation_label"].isin(keep)].copy()
+    runtime["display"] = runtime["representation_label"].replace({"Hashed k=15, d=222": "Hashed k=15", "CK15 random projection, d=222": "Sparse RP k=15"})
+    runtime = runtime.sort_values("ms_per_10k_reads")
+    fig, axes = plt.subplots(1, 2, figsize=(7.15, 2.35), gridspec_kw={"width_ratios": [1.05, 1]})
+    for length, part in cca.groupby("length"):
+        axes[0].plot(part["component"], part["canonical_correlation"], marker="o", linewidth=1.2, label=f"{length} bp")
+    axes[0].set_xlabel("canonical component")
+    axes[0].set_ylabel("canonical correlation (P vs MSP)")
+    axes[0].set_ylim(0, 1.05)
+    clean_axes(axes[0]); panel_label(axes[0], "A", "Related, not independent, property layers")
+    axes[0].legend(frameon=False, ncol=2, loc="lower left")
+    axes[1].barh(np.arange(len(runtime)), runtime["ms_per_10k_reads"], color=[COLORS.get(x, "#7768AE") for x in runtime["display"]])
+    axes[1].set_yticks(np.arange(len(runtime)), runtime["display"])
+    axes[1].set_xlabel("mean feature extraction time (ms / 10k reads)")
+    clean_axes(axes[1]); axes[1].grid(axis="x", color="#D9DDE3", linewidth=0.6); axes[1].grid(axis="y", visible=False)
+    panel_label(axes[1], "B", "Runtime boundary")
+    fig.suptitle("P and MSP share a global property component; compactness is not a speed claim", y=1.03, fontsize=10.0, fontweight="bold")
+    fig.tight_layout()
+    save(fig, out, "supplementary_figure_s8_redundancy_runtime")
+
+
+def main() -> None:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--outdir", type=Path, default=DEFAULT_OUT)
+    args = parser.parse_args()
+    style()
+    figure_2(args.outdir)
+    figure_3(args.outdir)
+    figure_6(args.outdir)
+    supplementary_s2(args.outdir)
+    supplementary_s6(args.outdir)
+    supplementary_s7(args.outdir)
+    supplementary_s8(args.outdir)
+    print(f"Wrote contract-v2 assets to {args.outdir}")
+
+
+if __name__ == "__main__":
+    main()
