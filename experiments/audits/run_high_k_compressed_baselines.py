@@ -35,9 +35,9 @@ from src.stage2_features import build_feature_matrix, paired_retrieval_metrics  
 
 
 REP_LABELS = {
-    "ckmer4_count_l2": "CK4",
+    "ck4": "CK4",
     "ckmer5_count_l2": "CK5",
-    "ckmer4_property_l2": "CK4+P",
+    "ck4_p": "CK4+P",
     "ck4p_msp": "CK4P-MSP",
     "hash_k15_d222": "Hashed k=15, d=222",
     "rp_ck15_d222": "CK15 random projection, d=222",
@@ -332,12 +332,12 @@ def summarize(stability: pd.DataFrame, readout: pd.DataFrame, minhash: pd.DataFr
 
 def main() -> None:
     parser = argparse.ArgumentParser(description="Run dimension-matched high-k compressed k-mer baseline audit.")
-    parser.add_argument("--input", default=str(PROJECT_ROOT / "results" / "stage3" / "position_property_ablation" / "stage3_compact_baseline_reads.csv"))
-    parser.add_argument("--output-dir", default=str(PROJECT_ROOT / "results" / "stage3" / "reviewer_response" / "high_k_compressed_baselines"))
+    parser.add_argument("--input", default=str(PROJECT_ROOT / "results" / "stage3" / "contract_v2" / "compact_baselines" / "stage3_compact_baseline_reads.csv"))
+    parser.add_argument("--output-dir", default=str(PROJECT_ROOT / "results" / "stage3" / "contract_v2" / "high_k_compressed_baselines"))
     parser.add_argument("--lengths", default="69,75,100,150")
     parser.add_argument("--stability-conditions", default="substitution_1pct,N_3pct,trim_5bp,substitution_1pct_N_3pct,local_mismatch_6bp,short_indel")
     parser.add_argument("--readout-conditions", default="clean,substitution_1pct,N_3pct")
-    parser.add_argument("--representations", default="ckmer4_count_l2,ckmer5_count_l2,ckmer4_property_l2,ck4p_msp,hash_k15_d222,rp_ck15_d222")
+    parser.add_argument("--representations", default="ck4,ckmer5_count_l2,ck4_p,ck4p_msp,hash_k15_d222,rp_ck15_d222")
     parser.add_argument("--classifiers", default="nearest_centroid,logistic")
     parser.add_argument("--high-k", type=int, default=15)
     parser.add_argument("--target-dim", type=int, default=222)

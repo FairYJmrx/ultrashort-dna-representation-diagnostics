@@ -64,5 +64,5 @@ claim_boundaries:
   - Not a clinical diagnostic validation.
   - Not a production metagenomic classifier.
   - Not a replacement for exact matching, alignment or curated database evidence.
-  - Mixed L2 is standardized diagnostic drift, not a natural biophysical distance.
+  - Mixed L2 is standardized representation drift, not a natural biophysical distance.
   - MI analyses are estimator-dependent empirical audits, not universal information-theoretic proofs.

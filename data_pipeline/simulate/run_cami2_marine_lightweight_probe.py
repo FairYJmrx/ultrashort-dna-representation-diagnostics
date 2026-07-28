@@ -42,14 +42,12 @@ DEFAULT_SETUP_URL = (
 )
 DEFAULT_REPRESENTATIONS = ",".join(
     [
-        "ckmer4_count_l2",
-        "ckmer4_property_l2",
+        "ck4",
+        "ck4_p",
         "ck4p_msp",
-        "ckmer4_property_multiscale_l2",
         "ckmer5_count_l2",
         "minhash_k5_s128",
         "cspaced_property_l2",
-        "hybrid:ckmer5_count_l2+ckmer4_property_multiscale_mean_l2",
     ]
 )
 

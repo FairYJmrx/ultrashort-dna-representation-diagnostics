@@ -1,5 +1,5 @@
 {
-  "elapsed_seconds": 21.778,
+  "elapsed_seconds": 38.571,
   "input": "D:\\AI-NGS\\info\\release_code\\results\\stage3\\contract_v2\\compact_baselines\\stage3_compact_baseline_reads.csv",
   "lengths": [
     69,
@@ -10,5 +10,6 @@
   "n_sampled_reads": 1600,
   "max_per_length": 400,
   "runtime_repeats": 5,
+  "peak_allocation_method": "Python tracemalloc; excludes native-only allocator retention",
   "max_cca_components": 5
 }

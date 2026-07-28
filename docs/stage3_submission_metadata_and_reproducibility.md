@@ -2,12 +2,11 @@
 
 Generated: 2026-06-23
 
-## Manuscript files
+## Historical manuscript files
 
-- Main Markdown draft: `D:\AI-NGS\信息学\manuscript\stage3_manuscript_v4.md`
-- Main Word draft: `D:\AI-NGS\信息学\manuscript\stage3_manuscript_v4.docx`
-- Rendered QA PDF: `D:\AI-NGS\信息学\manuscript\rendered_stage3_v4_aspose\stage3_manuscript_v4.pdf`
-- Reviewer-style audit: `D:\AI-NGS\信息学\manuscript\stage3_v4_reviewer_audit.md`
+Former stage-3 Markdown and Word files are retained under `manuscript/` for
+provenance only. The submission source of truth is now
+`paper_latex/main.tex`; see `docs/manuscript_source_of_truth.md`.
 
 ## Current repository state
 
@@ -17,7 +16,7 @@ Generated: 2026-06-23
 
 ## One-command-style reproduction order
 
-Run from `D:\AI-NGS\信息学` after installing `requirements.txt`.
+Run from the repository root after installing `requirements.txt`.
 
 ```powershell
 & .\.venv\Scripts\python.exe scripts\run_stage3_compact_baselines.py

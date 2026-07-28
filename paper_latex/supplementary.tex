@@ -3,6 +3,8 @@
 \usepackage{booktabs}
 \usepackage{array}
 \usepackage{etoolbox}
+\usepackage{placeins}
+\usepackage{float}
 \setcitestyle{numbers,square,comma}
 \def\societylogo{}
 \makeatletter
@@ -12,13 +14,12 @@
 \journaltitle{NAR Genomics and Bioinformatics}
 \pubyear{2026}
 \copyrightyear{2026}
-\lastpage{10}
 \makeatletter
 \def\ps@headings{\let\@oddfoot\@empty\let\@evenfoot\@empty\def\@oddhead{\vbox{\hbox to \textwidth{\fontsize{8bp}{10bp}\selectfont\itshape\@journaltitle, \@pubyear\hfill\bfseries\thepage}\vspace{5pt}\rule{\textwidth}{1pt}}}\def\@evenhead{\vbox{\hbox to \textwidth{\fontsize{8bp}{10bp}\selectfont\bfseries\thepage\hfill\itshape\@journaltitle, \@pubyear}\vspace{5pt}\rule{\textwidth}{1pt}}}}
 \makeatother
 \pagestyle{headings}
 \title[Supplementary Data]{Supplementary Data for Layered representation diagnostics for ultra-short metagenomic reads}
-\author[1]{Ruixiang Mei}
+\author[1]{Ruixiang Mei\,\ORCID{0009-0003-2128-0726}}
 \author[1]{Jianhua Huang}
 \address[1]{School of Data Science, The Chinese University of Hong Kong, Shenzhen, Shenzhen 518172, Guangdong, China}
 \abstract{Supplementary figures and source tables supporting the representation-diagnostic analyses, including baseline, estimator, perturbation, parameter, redundancy and runtime audits.}
@@ -28,20 +29,21 @@
 \renewcommand{\thetable}{S\arabic{table}}
 \maketitle
 \section{Supplementary data overview}
-This supplementary file collects the visual audits and source-table preview that support the main representation-diagnostic manuscript. Figures S1--S3 evaluate baseline controls, empirical information proxies and sequencing-error-aware perturbations. Figures S4--S7 examine local mutation fraction, P-channel counterfactuals, MSP bin and weight sensitivity, kNN mutual-information robustness and dimension-matched high-k compressed baselines. Figures S8--S10 summarize P/MSP redundancy, runtime, relation audits and the CAMI II marine anonymous-read stability probe. Table S1 gives a compact preview of the CAMI II marine source table; Table S2 reports all prespecified conditional-contribution contrasts from the seven-group K/P/MSP ablation.
-\section{Supplementary Figures}
+This supplementary file collects the visual audits and source-table preview that support the main representation-diagnostic manuscript. Figures S1--S3 evaluate baseline controls, empirical information proxies and sequencing-error-aware perturbations. Figures S4--S7 examine local mutation fraction, P-channel counterfactuals, MSP bin and weight sensitivity, and dimension-matched high-k compressed baselines. Figures S8--S10 summarize P/MSP redundancy, runtime, relation audits and the CAMI II marine anonymous-read stability probe. Figure S11 reports the mechanism-aligned $2\times2$ local-change audit and property-scaling sensitivity. Tables S1--S7 provide the CAMI II preview, seven-group contrasts, MI inference, factorial contrasts, scaling sensitivity, complete feature definitions and public WGS assembly accessions.
 \begin{figure*}[p]
 \centering
+{\Large\bfseries Supplementary Figures\par}
+\vspace{0.8em}
 \includegraphics[width=0.95\textwidth]{figures/supplementary/supp_fig_s1_baseline_audit.pdf}
-\caption{Baseline and mixed-metric audit. Panels compare same-dimension PCA/SVD controls, mixed-representation stability and block-weight settings on matched perturbation cells. These controls test whether the main drift pattern can be attributed to feature count, dimensional reduction or one selected K/P/MSP weighting.}
+\caption{Fitted-reduction and block-weight boundary audit. (A) Mean standardized representation drift across 24 controlled WGS length-by-perturbation cells for CK4/CK5, CK4+P, CK4P-MSP and clean-partition-fitted CK7 PCA/SVD projections at 147 or 222 target dimensions; lower is preferable. The fitted CK7 projections achieve lower drift than CK4P-MSP and therefore define a data-dependent stability boundary. (B) Logistic macro-F1 across 132 WGS readout cells; projection rank in these smaller per-cell training partitions was sample-limited (median 49.5 components), so this panel is a shallow-readout boundary rather than a strict 147/222-dimensional comparison. (C) Mean drift across 24 WGS cells and grouped local-change macro-F1 across 12 cells under K-only, K+P, K+P+MSP and prespecified K/property-dominant weights. The identical grouped readout across the three non-zero K/P/MSP weightings shows that the default is not a fragile readout optimum.}
 \label{fig:suppfigures1}
-{\small\noindent\textbf{Alt text:} Baseline audit plots comparing full-position matrices, reduced controls and block-weight sensitivity.\par}
+{\small\noindent\textbf{Alt text:} Three panels show that fitted CK7 PCA/SVD projections have lower drift than CK4P-MSP, all shallow readouts remain low, and the grouped local-change result is stable across non-zero K/P/MSP weightings.\par}
 \end{figure*}
 
 \begin{figure*}[p]
 \centering
 \includegraphics[width=0.95\textwidth]{figures/supplementary/supp_fig_s2_mi_audit.pdf}
-\caption{Estimator-dependent mutual-information (MI) and conditional-MI audit for local change versus matched nuisance perturbation. Values summarize low-dimensional representation-derived distance features; they are descriptive empirical estimates rather than universal information bounds.}
+\caption{Estimator-dependent mutual-information (MI) audit for local change versus matched nuisance perturbation across 12 length-by-local-mode cells. Bars show KSG-style estimates for $d_K$, $d_K+d_P$, $d_K+d_M$ and $d_K+d_P+d_M$; error bars are the 2.5th--97.5th percentiles across 100 stratified subsamples per cell. The signed joint-minus-K increment was evaluated with a 10,000-resample paired-cell bootstrap and 100 shared label permutations per cell. Values are empirical separability estimates rather than universal information bounds; higher values indicate greater local-versus-nuisance separability under this estimator.}
 \label{fig:suppfigures2}
 {\small\noindent\textbf{Alt text:} Bar plots summarizing empirical mutual-information and conditional-mutual-information audit values across representation blocks.\par}
 \end{figure*}
@@ -49,7 +51,7 @@ This supplementary file collects the visual audits and source-table preview that
 \begin{figure*}[p]
 \centering
 \includegraphics[width=0.95\textwidth]{figures/supplementary/supp_fig_s3_error_aware_art.pdf}
-\caption{Quality-stratified ART perturbation audit. Paired cosine similarity and standardized L2 drift are summarized across low-, middle- and high-quality simulator-derived read strata to test whether the compact stability pattern depends on pooling all ART errors.}
+\caption{Quality-stratified ART contextual audit using 75,592 clean-versus-simulated rows from 37,796 source templates at 69, 75, 100, 125 and 150 bp. Panels summarize paired cosine and standardized L2 drift across low-, middle- and high-quality strata for the CSP+P and CK5+CSP comparators. Higher cosine and lower drift indicate greater stability. This historical mechanism probe does not contain a contract-v2 CK4P-MSP result and is used only to show that the simulator context was not evaluated as one pooled error source.}
 \label{fig:suppfigures3}
 {\small\noindent\textbf{Alt text:} Line plots showing ART perturbation behavior across quality levels for paired cosine and L2 drift.\par}
 \end{figure*}
@@ -57,7 +59,7 @@ This supplementary file collects the visual audits and source-table preview that
 \begin{figure*}[p]
 \centering
 \includegraphics[width=0.95\textwidth]{figures/supplementary/supp_fig_s4_mutation_fraction_sweep.pdf}
-\caption{Local mutation-fraction sweep across compact and full-position representations. Curves report the response to increasing structured local-change fractions relative to matched nuisance perturbation; the sweep tests sensitivity across effect sizes rather than a functional-variant classification task.}
+\caption{Contract-v2 local-change fraction sweep at 1\%, 3\% and 5\% changed positions. Curves show logistic grouped delta-readout macro-F1 averaged across 12 length-by-local-mode cells, with 180 template triplets per cell and all derivatives of one template retained in one fold. Higher values indicate greater accessibility of local-versus-nuisance structure. CK4+MSP and CK4P-MSP retain the strongest readout across effect sizes; this synthetic mechanism probe is not a functional-variant classification task.}
 \label{fig:suppfigures4}
 {\small\noindent\textbf{Alt text:} Line plot showing local mutation-fraction sensitivity across compact representation families.\par}
 \end{figure*}
@@ -65,7 +67,7 @@ This supplementary file collects the visual audits and source-table preview that
 \begin{figure*}[p]
 \centering
 \includegraphics[width=0.95\textwidth]{figures/supplementary/supp_fig_s5_p_channel_counterfactual_audit.pdf}
-\caption{P-channel counterfactual and short-bin reliability audit. Sequence-linked P features are compared with permuted or random added channels, blockwise drift is decomposed, and finite-bin sampling bounds are shown for the shortest read conditions.}
+\caption{Sequence-linked P/MSP counterfactual and short-bin reliability audit. (A) Mean standardized drift across 20 WGS length-by-perturbation cells compares CK4P-MSP with CK4 and with row-permuted or marginally matched Gaussian P/MSP controls, all under the fixed block-normalization contract. (B) Logistic grouped delta-readout across 12 local-change cells (250 template triplets per cell) is higher for sequence-linked CK4P-MSP (0.979) than for CK4 (0.892), permuted P/MSP (0.879) or Gaussian P/MSP (0.886). (C) K, P and MSP blockwise drift separates their perturbation responses. (D) Worst-case binomial standard error is shown for 2-, 3-, 4- and 6-bin scales over 69--150 bp, based on the shortest bin at each scale. Lower drift and sampling error and higher readout are preferable on their respective panels.}
 \label{fig:suppfigures5}
 {\small\noindent\textbf{Alt text:} Multi-panel audit of P-channel counterfactual behavior, drift decomposition and short-bin sampling bounds.\par}
 \end{figure*}
@@ -73,7 +75,7 @@ This supplementary file collects the visual audits and source-table preview that
 \begin{figure*}[p]
 \centering
 \includegraphics[width=0.95\textwidth]{figures/supplementary/supp_fig_s6_msp_bin_gamma_sensitivity.pdf}
-\caption{MSP binset and weight-sensitivity audit at 69 and 75 bp. Alternative coarse-to-fine binsets and $\gamma\in\{0,0.25,0.5,1,2\}$ are compared using stability and grouped local-change readout, testing whether the default MSP result depends on one fragile bin or weight setting.}
+\caption{MSP binset and weight-sensitivity audit. (A) Mean drift over the prespecified WGS perturbations at 69 and 75 bp for the complete 2+3+4+6 binset and $\gamma\in\{0,0.25,0.5,1,2\}$; lower is preferable. (B) Logistic grouped delta-readout macro-F1 over 12 local-change cells at $\gamma=1$ for cumulative binsets 2, 2+3, 2+3+4 and 2+3+4+6 at 69, 100 and 150 bp; higher is preferable. The audit tests sensitivity rather than selecting an optimal binset or weight.}
 \label{fig:suppfigures6}
 {\small\noindent\textbf{Alt text:} Line plots showing MSP binset and gamma-weight sensitivity for 69 and 75 bp reads and delta-readout.\par}
 \end{figure*}
@@ -81,15 +83,15 @@ This supplementary file collects the visual audits and source-table preview that
 \begin{figure*}[p]
 \centering
 \includegraphics[width=0.95\textwidth]{figures/supplementary/supp_fig_s7_method_hardening_audit.pdf}
-\caption{k-nearest-neighbour MI robustness and dimension-matched high-k compressed baseline audit. Estimator settings and subsamples test the stability of the empirical MI increment; hashed and sparse-random-projection canonical $k=15$ vectors test perturbation stability at the 222-feature CK4P-MSP budget.}
+\caption{Dimension-matched high-k and native MinHash audit across 24 controlled WGS length-by-perturbation cells. (A) Hashed and sparse-random-projection canonical $k=15$ vectors are compared with CK4, CK5 and CK4P-MSP at a 222-feature budget using mean standardized representation drift; lower is preferable. (B) Each point compares 222-hash MinHash signature agreement with exact $k=15$ Jaccard similarity in one matched cell; the diagonal denotes equality and lower absolute error indicates better approximation. MinHash is not treated as an L2 feature vector.}
 \label{fig:suppfigures7}
-{\small\noindent\textbf{Alt text:} Multi-panel audit showing kNN mutual-information robustness and dimension-matched high-k compressed baseline comparisons.\par}
+{\small\noindent\textbf{Alt text:} Multi-panel audit comparing dimension-matched high-k compressed vectors and native MinHash agreement with exact Jaccard similarity.\par}
 \end{figure*}
 
 \begin{figure*}[p]
 \centering
 \includegraphics[width=0.95\textwidth]{figures/supplementary/supp_fig_s8_redundancy_runtime_audit.pdf}
-\caption{P/MSP contribution, redundancy and runtime audit. Blockwise contribution summaries are shown alongside relation measures and feature-extraction time, separating scientific contribution from computational cost. The relation results support overlapping but non-equivalent P and MSP channels.}
+\caption{P/MSP relation and runtime audit. (A) Canonical correlations between P and MSP are shown across 600 clean reads at each of 69, 75, 100 and 150 bp; high early correlations indicate shared biochemical structure, whereas later components decline. (B) Mean feature-extraction time is reported from five repeated 10,000-read, 75-bp batches for each actual method path on the stated workstation. Lower runtime is faster. Timings are implementation- and hardware-specific and show that CK4P-MSP is compact in dimension but not the fastest encoder.}
 \label{fig:suppfigures8}
 {\small\noindent\textbf{Alt text:} Multi-panel audit showing P and MSP contributions, redundancy and runtime costs.\par}
 \end{figure*}
@@ -97,12 +99,12 @@ This supplementary file collects the visual audits and source-table preview that
 \begin{figure*}[p]
 \centering
 \includegraphics[width=0.95\textwidth]{figures/supplementary/supp_fig_s9_p_msp_relation_audit.pdf}
-\caption{P/MSP relation audit across the tested read lengths. Canonical-correlation, rank and row-wise alignment summaries quantify the shared biochemical component and the additional multiscale variation in MSP; they are not tests of statistical independence.}
+\caption{P/MSP relation audit using 600 clean reads at each of 69, 75, 100 and 150 bp. (A) Canonical-correlation analysis summarizes shared latent structure across the 11-dimensional P and 75-dimensional MSP blocks. (B) The heatmap reports mean absolute Pearson correlation between each P coordinate and each MSP bin-scale family, averaged across the four lengths. Values near one indicate strong association, not identity; the audit supports related-but-non-equivalent wording and is not a test of statistical independence.}
 \label{fig:suppfigures9}
 {\small\noindent\textbf{Alt text:} Line and heatmap panels showing CCA and correlation relationships between P and MSP feature layers.\par}
 \end{figure*}
 
-\begin{figure*}[p]
+\begin{figure*}[!tbp]
 \centering
 \includegraphics[width=0.95\textwidth]{figures/supplementary/supp_fig_s10_cami2_marine_probe.pdf}
 \caption{CAMI II marine anonymous-read stability probe. Paired cosine similarity, standardized L2 drift and nearest-clean retrieval are summarized for 4,000 anonymous source reads truncated to 69, 75 and 100 bp under N masking, substitution and combined perturbations. Read-level taxonomic labels were not reconstructed, so this figure supports external stability only.}
@@ -110,21 +112,71 @@ This supplementary file collects the visual audits and source-table preview that
 {\small\noindent\textbf{Alt text:} Line, heatmap and bar panels showing CAMI II marine anonymous-read stability across length and perturbation settings.\par}
 \end{figure*}
 
-\section{Supplementary Tables}
+\begin{figure*}[!tbp]
+\centering
+\includegraphics[width=0.95\textwidth]{figures/supplementary/supp_fig_s11_factorial_scaling.pdf}
+\caption{Mechanism-aligned local-change and property-scaling audits. (A) Grouped macro-F1 for spatial localization (contiguous versus dispersed substitutions) and substitution chemistry (property-directed versus random substitutions) across the four K-containing representations. Both tasks used 3,000 template-level observations per representation across 12 length-by-local-mode cells, with all derivatives of a template retained in one fold; error bars are 95\% bootstrap intervals across cells. (B) Mean standardized representation drift across 24 WGS length-by-perturbation cells under the declared mappings, fixed per-property $[0,1]$ mappings and train-fit coordinate z-scores. Higher macro-F1 and lower drift are preferable; z-scoring is a sensitivity analysis rather than an alternative default contract.}
+\label{fig:suppfigures11}
+{\small\noindent\textbf{Alt text:} Two panels showing that MSP improves spatial and chemistry readout, P adds a smaller chemistry increment, and fixed property remapping preserves drift while train-fit z-scoring does not.\par}
+\end{figure*}
+
+\clearpage
 \begin{table*}[p]
 \centering
+{\Large\bfseries Supplementary Tables\par}
+\vspace{0.8em}
 \scriptsize
 \caption{Preview of the CAMI II marine subset source table. The full CSV is retained in the data package.}
 \label{tab:supps10}
 \input{tables/supplementary/table_s10_preview.tex}
 \end{table*}
 
-\begin{table*}[p]
+\begin{table*}[!tbp]
 \centering
 \scriptsize
 \caption{Prespecified conditional-contribution contrasts from the seven-group K/P/MSP ablation. The full representation is CK4P-MSP. Improvement is signed so that positive values favour the full representation; for L2 drift, the sign is reversed because lower values are preferable. Confidence intervals are percentile intervals from 10,000 paired-cell bootstrap resamples. Two-sided Wilcoxon signed-rank tests were adjusted across all 12 rows by the Benjamini--Hochberg procedure. Global cells are length-by-perturbation pairs; local cells are length-by-local-mode grouped cross-validation summaries.}
 \label{tab:supps2}
 \resizebox{\textwidth}{!}{\input{tables/supplementary/table_s2_conditional_contrasts.tex}}
+\end{table*}
+
+\begin{table*}[!tbp]
+\centering
+\scriptsize
+\caption{Estimator-dependent empirical MI separability increment across 12 prespecified length-by-local-mode cells. The contrast is signed and was not clipped at zero. The confidence interval uses 10,000 paired-cell bootstrap resamples; the aggregate permutation $P$ value uses 100 shared label permutations per cell.}
+\label{tab:supps3}
+\resizebox{\textwidth}{!}{\input{tables/supplementary/table_s3_mi_inference.tex}}
+\end{table*}
+
+\begin{table*}[!tbp]
+\centering
+\scriptsize
+\caption{Prespecified conditional block contrasts in the $2\times2$ spatial-localization-by-substitution-chemistry audit. Macro-F1 was estimated by template-grouped fivefold cross-validation. Confidence intervals are 10,000-resample paired-cell bootstrap intervals, and $q$ values are Benjamini--Hochberg adjusted across the six contrasts.}
+\label{tab:supps4}
+\resizebox{\textwidth}{!}{\input{tables/supplementary/table_s4_factorial_contrasts.tex}}
+\end{table*}
+
+\begin{table*}[!tbp]
+\centering
+\scriptsize
+\caption{Property-scaling sensitivity across 24 WGS length-by-perturbation cells. The declared mapping is the manuscript contract; fixed $[0,1]$ maps and train-fit coordinate z-scores test sensitivity to coordinate scaling.}
+\label{tab:supps5}
+\resizebox{\textwidth}{!}{\input{tables/supplementary/table_s5_property_scaling.tex}}
+\end{table*}
+
+\begin{table*}[!tbp]
+\centering
+\scriptsize
+\caption{Complete P and MSP coordinate definitions. Population SD uses denominator $L$ over the read-level mapped values. MSP uses bin means only in the primary representation.}
+\label{tab:supps6}
+\resizebox{\textwidth}{!}{\input{tables/supplementary/table_s6_feature_definitions.tex}}
+\end{table*}
+
+\begin{table*}[!tbp]
+\centering
+\scriptsize
+\caption{Public reference assemblies used to sample the controlled WGS read templates. Each species is represented by the listed NCBI assembly accession.}
+\label{tab:supps7}
+\input{tables/supplementary/table_s7_genome_accessions.tex}
 \end{table*}
 \clearpage
 \end{document}

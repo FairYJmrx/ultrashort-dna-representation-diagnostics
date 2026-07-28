@@ -1,0 +1,31 @@
+{
+  "elapsed_seconds": 160.40894627571106,
+  "representations": [
+    "ck4",
+    "ck4_p",
+    "ck4_msp",
+    "ck4p_msp"
+  ],
+  "lengths": [
+    69,
+    100,
+    150
+  ],
+  "local_modes": [
+    "center",
+    "left",
+    "right",
+    "jittered"
+  ],
+  "mutation_fractions": [
+    0.01,
+    0.03,
+    0.05
+  ],
+  "n_reads": 180,
+  "cv_folds": 5,
+  "seed": 20260624,
+  "n_metric_rows": 25920,
+  "n_readout_rows": 576,
+  "n_summary_rows": 144
+}

@@ -1,6 +1,6 @@
 {
-  "elapsed_seconds": 124.68320178985596,
-  "input": "results\\stage3\\contract_v2\\compact_baselines\\stage3_compact_baseline_reads.csv",
+  "elapsed_seconds": 96.69448685646057,
+  "input": "D:\\AI-NGS\\info\\release_code\\results\\stage3\\contract_v2\\compact_baselines\\stage3_compact_baseline_reads.csv",
   "lengths": [
     69,
     75,
@@ -21,9 +21,9 @@
     "N_3pct"
   ],
   "representations": [
-    "ckmer4_count_l2",
+    "ck4",
     "ckmer5_count_l2",
-    "ckmer4_property_l2",
+    "ck4_p",
     "ck4p_msp",
     "hash_k15_d222",
     "rp_ck15_d222"

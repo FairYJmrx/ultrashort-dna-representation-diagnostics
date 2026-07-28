@@ -1,6 +1,6 @@
 """Stage-2 representation helpers.
 
-The stage-2 experiments compare exact-identity k-mer evidence with compact CSP
+The stage-2 experiments compare canonical k-mer composition evidence with compact CSP
 auxiliary evidence. This module keeps feature construction shared across the
 grid, ablation and readout scripts.
 """
@@ -428,13 +428,15 @@ def build_feature_matrix(
     # The manuscript-facing mixed method has a dedicated implementation.
     # Keep the historical ``ckmer*_property_*`` names below for archived
     # experiments, but do not use them as aliases for CK4P-MSP.
-    if name == "ck4p_msp":
-        from .ck4p_msp import build_ck4p_msp_features
+    public_block_names = {"ck4", "p", "msp", "ck4_p", "ck4_msp", "p_msp", "ck4p_msp"}
+    if name in public_block_names:
+        from .ck4p_msp import build_block_combination, build_ck4p_msp_features
 
-        x = build_ck4p_msp_features(
+        features = build_ck4p_msp_features(
             sequences,
             train_indices=train_indices,
-        ).matrix
+        )
+        x = build_block_combination(features, name)
         nnz = np.count_nonzero(np.abs(x) > 1e-12)
         total = x.shape[0] * x.shape[1]
         return x, FeatureInfo(

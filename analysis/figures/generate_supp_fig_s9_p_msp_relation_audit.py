@@ -7,18 +7,23 @@ import matplotlib as mpl
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-from PIL import Image
 
-PROJECT_ROOT = Path(r"D:\AI-NGS\info")
+def _find_project_root(start: Path) -> Path:
+    for candidate in [start.parent, *start.parents]:
+        if (candidate / "methods").is_dir() and (candidate / "configs").is_dir():
+            return candidate
+    raise RuntimeError("Could not locate the release repository root.")
+
+
+PROJECT_ROOT = _find_project_root(Path(__file__).resolve())
 sys.path.insert(0, str(PROJECT_ROOT))
 
-from src.stage2_features import build_feature_matrix
+from methods.ck4p_msp import build_msp_block, build_p_block
 
 
 ROOT = PROJECT_ROOT
-RESULTS = ROOT / "results" / "stage3" / "reviewer_response" / "property_redundancy_runtime"
-OUT = ROOT / "paper" / "figures"
-DOCX = ROOT / "paper" / "figures_docx"
+RESULTS = ROOT / "results" / "stage3" / "contract_v2" / "property_redundancy_runtime"
+OUT = ROOT / "figures" / "contract_v2"
 SAMPLE = RESULTS / "audit_clean_read_sample.csv"
 CCA_DETAIL = RESULTS / "property_msp_cca_detail.csv"
 
@@ -66,19 +71,12 @@ MSP_BIN_SIZES = (2, 3, 4, 6)
 MSP_CHANNELS = ("H", "GC", "Pur", "EIIP", "N")
 
 
-def save_all(fig: plt.Figure, stem: str, docx_width: int = 1800) -> None:
+def save_all(fig: plt.Figure, stem: str) -> None:
     OUT.mkdir(parents=True, exist_ok=True)
-    DOCX.mkdir(parents=True, exist_ok=True)
     base = OUT / stem
     fig.savefig(base.with_suffix(".svg"), bbox_inches="tight")
     fig.savefig(base.with_suffix(".pdf"), bbox_inches="tight")
     fig.savefig(base.with_suffix(".png"), dpi=450, bbox_inches="tight")
-    fig.savefig(base.with_suffix(".tiff"), dpi=600, bbox_inches="tight")
-    im = Image.open(base.with_suffix(".png")).convert("RGB")
-    scale = docx_width / im.width
-    if scale < 1:
-        im = im.resize((int(im.width * scale), int(im.height * scale)), Image.Resampling.LANCZOS)
-    im.save(DOCX / f"{stem}.jpg", quality=92, optimize=True)
     plt.close(fig)
 
 
@@ -100,13 +98,8 @@ def p_feature_heatmap(sample: pd.DataFrame) -> tuple[np.ndarray, list[str]]:
         seqs = group["sequence"].astype(str).tolist()
         if not seqs:
             continue
-        p, _ = build_feature_matrix(seqs, "property_l2", length=int(length), train_indices=list(range(len(seqs))))
-        m, _ = build_feature_matrix(
-            seqs,
-            "property_multiscale_mean_l2",
-            length=int(length),
-            train_indices=list(range(len(seqs))),
-        )
+        p = build_p_block(seqs)
+        m = build_msp_block(seqs)
 
         corr_rows = np.zeros((len(P_LABELS), len(group_labels)), dtype=np.float64)
         start = 0
@@ -227,7 +220,7 @@ def main() -> None:
         va="top",
     )
 
-    save_all(fig, "supp_fig_s9_p_msp_relation_audit")
+    save_all(fig, "supplementary_figure_s9_p_msp_relation")
 
 
 if __name__ == "__main__":

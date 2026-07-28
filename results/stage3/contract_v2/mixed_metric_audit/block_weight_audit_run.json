@@ -1,0 +1,61 @@
+{
+  "elapsed_seconds": 158.8885657787323,
+  "input": "D:\\AI-NGS\\info\\release_code\\results\\stage3\\contract_v2\\compact_baselines\\stage3_compact_baseline_reads.csv",
+  "triplets": "D:\\AI-NGS\\info\\release_code\\results\\stage3\\contract_v2\\local_mutation_sensitivity\\local_mutation_triplets.csv",
+  "lengths": [
+    69,
+    75,
+    100,
+    150
+  ],
+  "conditions": [
+    "substitution_1pct",
+    "N_3pct",
+    "trim_5bp",
+    "substitution_1pct_N_3pct",
+    "local_mismatch_6bp",
+    "short_indel"
+  ],
+  "weights": [
+    {
+      "name": "identity_only",
+      "count_weight": 1.0,
+      "property_weight": 0.0,
+      "msp_weight": 0.0
+    },
+    {
+      "name": "property_only",
+      "count_weight": 0.0,
+      "property_weight": 1.0,
+      "msp_weight": 1.0
+    },
+    {
+      "name": "ck4_plus_p",
+      "count_weight": 1.0,
+      "property_weight": 1.0,
+      "msp_weight": 0.0
+    },
+    {
+      "name": "ck4p_msp",
+      "count_weight": 1.0,
+      "property_weight": 1.0,
+      "msp_weight": 1.0
+    },
+    {
+      "name": "identity_dominant",
+      "count_weight": 2.0,
+      "property_weight": 1.0,
+      "msp_weight": 1.0
+    },
+    {
+      "name": "property_dominant",
+      "count_weight": 1.0,
+      "property_weight": 2.0,
+      "msp_weight": 2.0
+    }
+  ],
+  "max_pairs": 250,
+  "n_stability_rows": 144,
+  "n_local_metric_rows": 18000,
+  "n_local_readout_rows": 144
+}

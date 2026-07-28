@@ -17,29 +17,22 @@ def _find_project_root(start: Path) -> Path:
 
 
 PROJECT_ROOT = _find_project_root(Path(__file__).resolve())
-RESULT_DIR = PROJECT_ROOT / "results" / "stage3" / "cami2_marine_lightweight_probe_core"
-PAPER_FIG = PROJECT_ROOT / "paper" / "figures"
-PAPER_DOCX = PROJECT_ROOT / "paper" / "figures_docx"
+RESULT_DIR = PROJECT_ROOT / "results" / "stage3" / "contract_v2" / "cami2_marine_stability"
+FIGURE_DIR = PROJECT_ROOT / "figures" / "contract_v2"
 
 
 LABELS = {
-    "ckmer4_count_l2": "CK4",
-    "ckmer4_property_l2": "CK4+P",
-    "ckmer4_property_multiscale_mean_l2": "CK4P-MSP\n(222-dim)",
-    "ckmer4_property_multiscale_l2": "CK4P-MSP+SD\n(297-dim)",
+    "ck4": "CK4",
+    "ck4_p": "CK4+P",
+    "ck4p_msp": "CK4P-MSP\n(222-dim)",
     "ckmer5_count_l2": "CK5",
-    "cspaced_property_l2": "CSP",
-    "hybrid:ckmer5_count_l2+ckmer4_property_multiscale_mean_l2": "CK5+CK4P-MSP",
 }
 
 ORDER = [
     "CK4",
     "CK5",
-    "CSP",
     "CK4+P",
     "CK4P-MSP\n(222-dim)",
-    "CK4P-MSP+SD\n(297-dim)",
-    "CK5+CK4P-MSP",
 ]
 
 CONDITION_LABELS = {
@@ -80,8 +73,7 @@ def pivot_metric(df: pd.DataFrame, metric: str) -> pd.DataFrame:
 
 def main() -> None:
     configure_matplotlib()
-    PAPER_FIG.mkdir(parents=True, exist_ok=True)
-    PAPER_DOCX.mkdir(parents=True, exist_ok=True)
+    FIGURE_DIR.mkdir(parents=True, exist_ok=True)
 
     stability = pd.read_csv(RESULT_DIR / "cami2_marine_stability.csv")
     meta = json.loads((RESULT_DIR / "cami2_marine_lightweight_probe_run.json").read_text(encoding="utf-8"))
@@ -95,7 +87,7 @@ def main() -> None:
         .groupby(["condition", "length"], as_index=False)
         .first()
     )
-    best["best_is_ck4pmsp"] = best["representation"].eq("ckmer4_property_multiscale_mean_l2")
+    best["best_is_ck4pmsp"] = best["representation"].eq("ck4p_msp")
     best_counts = best.groupby("condition")["best_is_ck4pmsp"].sum().reindex(l2.columns)
 
     fig = plt.figure(figsize=(7.2, 6.35), constrained_layout=True)
@@ -172,12 +164,10 @@ def main() -> None:
         fontsize=8.5,
         fontweight="bold",
     )
-    base = PAPER_FIG / "supp_fig_s10_cami2_marine_probe"
+    base = FIGURE_DIR / "supplementary_figure_s10_cami2_marine_probe"
     fig.savefig(base.with_suffix(".svg"), bbox_inches="tight")
     fig.savefig(base.with_suffix(".pdf"), bbox_inches="tight")
     fig.savefig(base.with_suffix(".png"), dpi=600, bbox_inches="tight")
-    fig.savefig(base.with_suffix(".tiff"), dpi=600, bbox_inches="tight")
-    fig.savefig(PAPER_DOCX / "supp_fig_s10_cami2_marine_probe.jpg", dpi=300, bbox_inches="tight")
     plt.close(fig)
 
     source = stability[
@@ -195,7 +185,7 @@ def main() -> None:
             "retrieval_top1",
         ]
     ].sort_values(["condition", "length", "method"])
-    source.to_csv(PROJECT_ROOT / "paper" / "tables" / "supp_table_s10_cami2_marine_probe_source.csv", index=False, encoding="utf-8-sig")
+    source.to_csv(RESULT_DIR / "cami2_marine_figure_source.csv", index=False, encoding="utf-8-sig")
     print(f"Wrote {base.with_suffix('.png')}")
 
 

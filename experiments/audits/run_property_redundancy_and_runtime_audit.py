@@ -4,6 +4,7 @@ import argparse
 import json
 import sys
 import time
+import tracemalloc
 from pathlib import Path
 
 import numpy as np
@@ -29,7 +30,7 @@ from experiments.audits.run_high_k_compressed_baselines import (  # noqa: E402
     random_projection_kmer_matrix,
 )
 from experiments.main.run_stage2_representation_grid import parse_int_list, set_global_seed  # noqa: E402
-from methods.ck4p_msp import build_ck4p_msp_features  # noqa: E402
+from methods.ck4p_msp import build_ck4_block, build_ck4p_msp_features, build_p_block  # noqa: E402
 
 
 REPRESENTATIONS = [
@@ -143,10 +144,11 @@ def build_representation_timed(seqs: list[str], length: int, representation: str
             if representation == "ck4p_msp":
                 x = build_ck4p_msp_features(seqs, train_indices=train_indices).matrix
             elif representation == "ck4":
-                x = build_ck4p_msp_features(seqs, train_indices=train_indices).ck4
+                x, _ = build_ck4_block(seqs, train_indices=train_indices)
             elif representation == "ck4_p":
-                features = build_ck4p_msp_features(seqs, train_indices=train_indices)
-                x = safe_norm(np.hstack([features.ck4, features.p]))
+                ck4, _ = build_ck4_block(seqs, train_indices=train_indices)
+                p = build_p_block(seqs)
+                x = np.hstack([ck4, p]) / np.sqrt(2.0)
             else:
                 raise ValueError(f"Unsupported runtime representation: {representation}")
             x = safe_norm(x)
@@ -177,6 +179,17 @@ def runtime_audit(sample: pd.DataFrame, seed: int, repeats: int) -> pd.DataFrame
                 seed=seed + int(length),
                 repeats=repeats,
             )
+            tracemalloc.start()
+            build_representation_timed(
+                seqs=seqs,
+                length=int(length),
+                representation=representation,
+                train_indices=train,
+                seed=seed + int(length),
+                repeats=1,
+            )
+            _, peak_python_bytes = tracemalloc.get_traced_memory()
+            tracemalloc.stop()
             seconds = np.asarray(durations, dtype=np.float64)
             rows.append(
                 {
@@ -190,6 +203,7 @@ def runtime_audit(sample: pd.DataFrame, seed: int, repeats: int) -> pd.DataFrame
                     "seconds_median": float(np.median(seconds)),
                     "ms_per_10k_reads": float(seconds.mean() / max(len(seqs), 1) * 10000 * 1000),
                     "microseconds_per_read": float(seconds.mean() / max(len(seqs), 1) * 1_000_000),
+                    "peak_python_allocation_mib": float(peak_python_bytes / (1024**2)),
                     "density": matrix_density(x),
                 }
             )
@@ -208,6 +222,7 @@ def summarize(redundancy: pd.DataFrame, cca_detail: pd.DataFrame, runtime: pd.Da
             median_features=("n_features", "median"),
             ms_per_10k_reads=("ms_per_10k_reads", "mean"),
             microseconds_per_read=("microseconds_per_read", "mean"),
+            peak_python_allocation_mib=("peak_python_allocation_mib", "max"),
             density=("density", "mean"),
         )
         .sort_values("ms_per_10k_reads")
@@ -225,7 +240,9 @@ def summarize(redundancy: pd.DataFrame, cca_detail: pd.DataFrame, runtime: pd.Da
         "## P/MSP redundancy summary",
         redundancy.to_markdown(index=False, floatfmt=".4f"),
         "",
-        "## Feature runtime summary",
+        "## Feature runtime and Python-allocation summary",
+        "Peak allocation uses Python tracemalloc and therefore excludes memory retained solely by native-library allocators.",
+        "",
         runtime_overall.to_markdown(index=False, floatfmt=".4f"),
         "",
     ]
@@ -260,6 +277,7 @@ def main() -> None:
         "n_sampled_reads": int(len(sample)),
         "max_per_length": int(args.max_per_length),
         "runtime_repeats": int(args.runtime_repeats),
+        "peak_allocation_method": "Python tracemalloc; excludes native-only allocator retention",
         "max_cca_components": int(args.max_cca_components),
     }
     (out_dir / "property_redundancy_runtime_run.json").write_text(json.dumps(meta, indent=2, ensure_ascii=False), encoding="utf-8")

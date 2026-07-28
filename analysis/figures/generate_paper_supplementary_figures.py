@@ -6,7 +6,14 @@ import matplotlib as mpl
 import matplotlib.pyplot as plt
 from PIL import Image
 
-ROOT = Path(r'D:\AI-NGS\info')
+def _find_project_root(start: Path) -> Path:
+    for candidate in [start.parent, *start.parents]:
+        if (candidate / 'methods').is_dir() and (candidate / 'configs').is_dir():
+            return candidate
+    raise RuntimeError('Could not locate the release repository root.')
+
+
+ROOT = _find_project_root(Path(__file__).resolve())
 OUT = ROOT / 'paper' / 'figures'
 DOCX = ROOT / 'paper' / 'figures_docx'
 OUT.mkdir(parents=True, exist_ok=True)

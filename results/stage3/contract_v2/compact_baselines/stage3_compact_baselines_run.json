@@ -1,11 +1,14 @@
 {
-  "elapsed_seconds": 150.96011638641357,
-  "input": "data\\real_slices\\close_relative_reads.csv",
+  "elapsed_seconds": 1966.443344116211,
+  "input": "D:\\AI-NGS\\info\\release_code\\data\\real_slices\\close_relative_reads.csv",
   "lengths": [
     69,
     75,
     100,
-    150
+    110,
+    125,
+    150,
+    300
   ],
   "readout_lengths": [
     69,
@@ -23,24 +26,37 @@
     "local_mismatch_6bp"
   ],
   "representations": [
-    "ckmer4_count_l2",
-    "ckmer4_property_l2",
+    "ck4",
+    "ck4_p",
     "ck4p_msp",
     "ckmer5_count_l2",
-    "cspaced_property_l2"
+    "ckmer7_count_l2",
+    "cspaced_count_l2",
+    "cspaced_property_l2",
+    "hybrid_ckmer5_csp",
+    "hybrid_ckmer7_csp",
+    "minhash_k5_s128",
+    "minhash_k7_s128",
+    "eiip_l2",
+    "eiip_summary_l2"
   ],
   "readout_representations": [
-    "ckmer4_count_l2",
-    "ckmer4_property_l2",
+    "ck4",
+    "ck4_p",
     "ck4p_msp",
     "ckmer5_count_l2",
-    "cspaced_property_l2"
+    "cspaced_count_l2",
+    "cspaced_property_l2",
+    "hybrid_ckmer5_csp",
+    "minhash_k5_s128",
+    "eiip_l2",
+    "eiip_summary_l2"
   ],
   "classifiers": [
     "nearest_centroid",
     "logistic"
   ],
-  "n_reads": 16800,
-  "n_stability_rows": 120,
-  "n_readout_rows": 2200
+  "n_reads": 25200,
+  "n_stability_rows": 468,
+  "n_readout_rows": 4400
 }

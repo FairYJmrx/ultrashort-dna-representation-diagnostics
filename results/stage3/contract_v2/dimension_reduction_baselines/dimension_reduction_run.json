@@ -1,0 +1,45 @@
+{
+  "elapsed_seconds": 321.2645947933197,
+  "input": "D:\\AI-NGS\\info\\release_code\\results\\stage3\\contract_v2\\compact_baselines\\stage3_compact_baseline_reads.csv",
+  "lengths": [
+    69,
+    75,
+    100,
+    150
+  ],
+  "stability_conditions": [
+    "substitution_1pct",
+    "N_3pct",
+    "trim_5bp",
+    "substitution_1pct_N_3pct",
+    "local_mismatch_6bp",
+    "short_indel"
+  ],
+  "readout_conditions": [
+    "clean",
+    "substitution_1pct",
+    "N_3pct"
+  ],
+  "base_representations": [
+    "ckmer5_count_l2",
+    "ckmer7_count_l2"
+  ],
+  "reducers": [
+    "pca",
+    "svd"
+  ],
+  "target_dims": [
+    147,
+    222
+  ],
+  "comparators": [
+    "ck4",
+    "ck4_p",
+    "ck4p_msp",
+    "ckmer5_count_l2"
+  ],
+  "max_pairs": 250,
+  "max_per_class": 40,
+  "n_stability_rows": 288,
+  "n_readout_rows": 3168
+}

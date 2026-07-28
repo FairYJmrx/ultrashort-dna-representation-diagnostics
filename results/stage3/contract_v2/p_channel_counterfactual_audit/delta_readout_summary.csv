@@ -1,0 +1,5 @@
+﻿representation,representation_label,classifier,n_cells,macro_f1_mean,macro_f1_std_mean,accuracy_mean
+ck4p_msp,CK4P-MSP,logistic,12,0.978630385373886,0.008992777621473972,0.9786666666666667
+ck4,CK4,logistic,12,0.8922999894700521,0.02636358919737365,0.8925
+ck4_gaussian_pmsp,CK4 + Gaussian P/MSP,logistic,12,0.8860513528697472,0.019476382404343368,0.8865
+ck4_permuted_pmsp,CK4 + permuted P/MSP,logistic,12,0.8790960587061001,0.023715596396371028,0.8793333333333333

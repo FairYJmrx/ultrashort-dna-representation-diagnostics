@@ -1,5 +1,9 @@
 # Figure and Table Inventory
 
+> Historical pre-LaTeX inventory. The current contract-v2 mapping is
+> `docs/manuscript_script_mapping.md`, and the canonical submission assets are
+> under `paper_latex/` and `figures/contract_v2/`.
+
 ## Main figures
 
 - Figure 1: Representation-diagnostic framework and read-length regime. Source script: `info/scripts/generate_nature_main_figures.py`. Asset: `paper/figures/nature_fig1_framework.*`.

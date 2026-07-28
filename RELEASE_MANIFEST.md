@@ -10,6 +10,12 @@ local delta readout, and separating vector-space high-k controls from the
 native MinHash Jaccard audit. These outputs are the only results eligible for
 the corresponding revised manuscript claims.
 
+The archival release intentionally excludes streamed archive prefixes
+(`*.part`), full TIFF duplicates and expanded per-read intermediate tables when
+the same public input can be downloaded or reconstructed by the documented
+pipeline. PDF/PNG figures, compact source summaries and run manifests are the
+submission-facing assets.
+
 The independently distributed `ck4p_msp_standalone.py` is intentionally not
 part of this repository; it is a separate single-file handoff artifact.
 
@@ -30,6 +36,7 @@ part of this repository; it is a separate single-file handoff artifact.
 - `analysis/figures/generate_supp_fig_s7_method_hardening_audit.py`
 - `analysis/figures/generate_supp_fig_s8_redundancy_runtime_audit.py`
 - `analysis/figures/generate_supp_fig_s9_p_msp_relation_audit.py`
+- `analysis/figures/generate_contract_v2_figures.py`
 - `analysis/manuscript/__init__.py`
 - `analysis/manuscript/build_paper_manuscript_docx.py`
 - `analysis/manuscript/build_stage2_manuscript.py`
@@ -42,6 +49,7 @@ part of this repository; it is a separate single-file handoff artifact.
 - `analysis/tables/generate_fullmatrix_property_contribution_ci.py`
 - `analysis/tables/generate_nature_main_tables.py`
 - `analysis/tables/generate_stage3_bootstrap_ci.py`
+- `analysis/tables/generate_contract_v2_tables.py`
 - `configs/experiment_matrix.yaml`
 - `configs/release_defaults.yaml`
 - `data/README.md`
@@ -53,8 +61,6 @@ part of this repository; it is a separate single-file handoff artifact.
 - `data/stage3/cami/cami_toy_low_subset_reads.csv`
 - `data/stage3/cami/cami_toy_low_subset_reads_expanded.csv`
 - `data/stage3/cami2_marine/README.md`
-- `data/stage3/cami2_marine/marmgCAMI2_sample_0_reads.head8mb.tar.gz.part`
-- `data/stage3/cami2_marine/marmgCAMI2_setup.head64mb.tar.gz.part`
 - `data/stage3/cami2_marine/setup_head_extract/simulation_short_read/config.ini`
 - `data/stage3/cami2_marine/setup_head_extract/simulation_short_read/genome_to_id.tsv`
 - `data/stage3/cami2_marine/setup_head_extract/simulation_short_read/metadata.tsv`
@@ -89,13 +95,17 @@ part of this repository; it is a separate single-file handoff artifact.
 - `data_pipeline/simulate/run_stage3_art_generate_and_evaluate.py`
 - `data_pipeline/simulate/summarize_stage3_art_quality.py`
 - `docs/final_release_provenance_map.md`
+- `docs/contract_v2_evidence_map.md`
 - `docs/manuscript_script_mapping.md`
 - `docs/method_contract.md`
+- `docs/manuscript_source_of_truth.md`
 - `docs/repository_structure.md`
 - `docs/stage3_download_scope_decision.md`
 - `docs/stage3_external_validation_task_plan.md`
 - `docs/stage3_reinforcement_execution_report.md`
 - `docs/stage3_submission_metadata_and_reproducibility.md`
+- `docs/submission_repair_master_checklist_20260728.md`
+- `docs/submission_repair_completion_report_20260729.md`
 - `experiments/README.md`
 - `experiments/audits/__init__.py`
 - `experiments/audits/generate_reviewer_statistical_tests.py`
@@ -110,6 +120,8 @@ part of this repository; it is a separate single-file handoff artifact.
 - `experiments/audits/run_p_msp_contribution_audit.py`
 - `experiments/audits/run_parameter_sensitivity.py`
 - `experiments/audits/run_property_redundancy_and_runtime_audit.py`
+- `experiments/audits/run_local_change_factorial_audit.py`
+- `experiments/audits/run_property_scaling_audit.py`
 - `experiments/main/__init__.py`
 - `experiments/main/run_local_mutation_sensitivity.py`
 - `experiments/main/run_position_property_controlled_tasks.py`
@@ -225,11 +237,9 @@ part of this repository; it is a separate single-file handoff artifact.
 - `paper/figures/supp_fig_s10_cami2_marine_probe.pdf`
 - `paper/figures/supp_fig_s10_cami2_marine_probe.png`
 - `paper/figures/supp_fig_s10_cami2_marine_probe.svg`
-- `paper/figures/supp_fig_s10_cami2_marine_probe.tiff`
 - `paper/figures/supp_fig_s1_baseline_audit.pdf`
 - `paper/figures/supp_fig_s1_baseline_audit.png`
 - `paper/figures/supp_fig_s1_baseline_audit.svg`
-- `paper/figures/supp_fig_s1_baseline_audit.tiff`
 - `paper/figures/supp_fig_s2_mi_audit.pdf`
 - `paper/figures/supp_fig_s2_mi_audit.png`
 - `paper/figures/supp_fig_s2_mi_audit.svg`
@@ -287,6 +297,8 @@ part of this repository; it is a separate single-file handoff artifact.
 - `paper/tables/nature_table5_boundary_summary.csv`
 - `paper/tables/nature_table5_boundary_summary.md`
 - `paper/tables/supp_table_s10_cami2_marine_probe_source.csv`
+- `paper_latex/` (canonical submission LaTeX source, figures, tables and compiled review PDFs; build caches excluded)
+- `paper_latex/README.md` (compile entry point and manuscript source-of-truth summary)
 - `references/references.bib`
 - `requirements.txt`
 - `results/README.md`
@@ -450,6 +462,10 @@ part of this repository; it is a separate single-file handoff artifact.
 - `scripts/run_stage3_compact_baselines.py`
 - `scripts/summarize_stage3_art_quality.py`
 - `smoke_tests/test_imports.py`
+- `smoke_tests/test_method_contract.py`
+- `smoke_tests/test_repository_layout.py`
+- `smoke_tests/test_contract_artifacts.py`
+- `results/stage3/contract_v2/` (current manuscript-facing result namespace)
 - `src/__init__.py`
 - `src/base_encodings.py`
 - `src/evaluation.py`

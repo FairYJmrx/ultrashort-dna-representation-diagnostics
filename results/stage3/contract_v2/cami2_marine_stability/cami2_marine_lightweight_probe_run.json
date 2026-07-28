@@ -1,0 +1,94 @@
+{
+  "elapsed_seconds": 254.18003964424133,
+  "reads_url": "https://frl.publisso.de/data/frl:6425521/marine/short_read/marmgCAMI2_sample_0_reads.tar.gz",
+  "setup_url": "https://frl.publisso.de/data/frl:6425521/marine/short_read/marmgCAMI2_setup.tar.gz",
+  "reads_prefix": "data\\stage3\\cami2_marine\\marmgCAMI2_sample_0_reads.head8mb.tar.gz.part",
+  "setup_prefix": "data\\stage3\\cami2_marine\\marmgCAMI2_setup.head64mb.tar.gz.part",
+  "reads_prefix_mib": 8,
+  "setup_prefix_mib": 64,
+  "inner_fastq_prefix_mib": 6,
+  "n_clean_reads": 4000,
+  "n_probe_rows": 48000,
+  "n_stability_rows": 36,
+  "lengths": [
+    69,
+    75,
+    100
+  ],
+  "conditions": [
+    "clean",
+    "N_3pct",
+    "substitution_1pct",
+    "substitution_1pct_N_3pct"
+  ],
+  "representations": [
+    "ck4",
+    "ck4_p",
+    "ck4p_msp",
+    "ckmer5_count_l2"
+  ],
+  "max_pairs": 4000,
+  "seed": 626,
+  "setup_meta": {
+    "setup_prefix": "data\\stage3\\cami2_marine\\marmgCAMI2_setup.head64mb.tar.gz.part",
+    "extracted_dir": "data\\stage3\\cami2_marine\\setup_head_extract",
+    "members_seen": [
+      {
+        "name": "simulation_short_read/config.ini",
+        "size": 2168
+      },
+      {
+        "name": "simulation_short_read/metadata.tsv",
+        "size": 34869
+      },
+      {
+        "name": "simulation_short_read/genome_to_id.tsv",
+        "size": 129393
+      },
+      {
+        "name": "simulation_short_read/taxonomic_profile_0.txt",
+        "size": 336026
+      },
+      {
+        "name": "simulation_short_read/taxonomic_profile_1.txt",
+        "size": 336026
+      },
+      {
+        "name": "simulation_short_read/taxonomic_profile_2.txt",
+        "size": 336026
+      },
+      {
+        "name": "simulation_short_read/taxonomic_profile_3.txt",
+        "size": 336026
+      },
+      {
+        "name": "simulation_short_read/taxonomic_profile_4.txt",
+        "size": 336026
+      },
+      {
+        "name": "simulation_short_read/taxonomic_profile_5.txt",
+        "size": 336026
+      },
+      {
+        "name": "simulation_short_read/taxonomic_profile_6.txt",
+        "size": 336026
+      },
+      {
+        "name": "simulation_short_read/taxonomic_profile_7.txt",
+        "size": 336026
+      },
+      {
+        "name": "simulation_short_read/taxonomic_profile_8.txt",
+        "size": 336027
+      },
+      {
+        "name": "simulation_short_read/taxonomic_profile_9.txt",
+        "size": 336026
+      },
+      {
+        "name": "simulation_short_read/anonymous_gsa_pooled.fasta.gz",
+        "size": 918322309
+      }
+    ]
+  }
+}

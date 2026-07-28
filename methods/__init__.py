@@ -1,8 +1,10 @@
 """Lightweight k-mer informatics experiment utilities."""
 
 from .ck4p_msp import (
+    BLOCK_COMBINATIONS,
     CK4PMSPConfig,
     CK4PMSPFeatures,
+    build_block_combination,
     build_ck4_block,
     build_ck4p_msp,
     build_ck4p_msp_features,
@@ -14,8 +16,10 @@ from .ck4p_msp import (
 )
 
 __all__ = [
+    "BLOCK_COMBINATIONS",
     "CK4PMSPConfig",
     "CK4PMSPFeatures",
+    "build_block_combination",
     "build_ck4_block",
     "build_ck4p_msp",
     "build_ck4p_msp_features",

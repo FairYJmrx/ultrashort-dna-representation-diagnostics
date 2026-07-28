@@ -13,7 +13,7 @@ import numpy as np
 import pandas as pd
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import accuracy_score, f1_score
-from sklearn.model_selection import StratifiedKFold, train_test_split
+from sklearn.model_selection import StratifiedGroupKFold
 from sklearn.pipeline import make_pipeline
 from sklearn.preprocessing import StandardScaler, normalize
 
@@ -28,8 +28,9 @@ PROJECT_ROOT = _find_project_root(Path(__file__).resolve())
 sys.path.insert(0, str(PROJECT_ROOT))
 
 from experiments.main.run_stage2_representation_grid import paired_subsets, parse_csv_list, parse_int_list, set_global_seed  # noqa: E402
+from methods.ck4p_msp import build_ck4p_msp_features, build_msp_block, build_p_block  # noqa: E402
 from scripts.run_mi_audit import discretize, mutual_information_bits  # noqa: E402
-from src.stage2_features import build_feature_matrix, paired_retrieval_metrics  # noqa: E402
+from methods.stage2_features import paired_retrieval_metrics  # noqa: E402
 
 REP_LABELS = {
     "ck4": "CK4",
@@ -44,24 +45,27 @@ def _safe_norm(x: np.ndarray) -> np.ndarray:
 
 
 def build_blocks(sequences: list[str], length: int, train_indices: list[int]) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
-    k, _ = build_feature_matrix(sequences, "ckmer4_count_l2", length=length, train_indices=train_indices)
-    p, _ = build_feature_matrix(sequences, "property_l2", length=length, train_indices=train_indices)
-    msp, _ = build_feature_matrix(sequences, "property_multiscale_mean_l2", length=length, train_indices=train_indices)
-    return np.asarray(k, dtype=np.float64), np.asarray(p, dtype=np.float64), np.asarray(msp, dtype=np.float64)
+    features = build_ck4p_msp_features(sequences, train_indices=train_indices)
+    return features.ck4, features.p, features.msp
 
 
 def assemble_representations(k: np.ndarray, p: np.ndarray, msp: np.ndarray, rng: np.random.Generator) -> dict[str, np.ndarray]:
-    pmsp = np.hstack([p, msp])
-    perm_idx = rng.permutation(pmsp.shape[0])
-    col_mean = pmsp.mean(axis=0)
-    col_std = pmsp.std(axis=0)
-    col_std = np.where(col_std > 1e-12, col_std, 1.0)
-    gaussian = rng.normal(loc=col_mean, scale=col_std, size=pmsp.shape)
+    perm_idx = rng.permutation(p.shape[0])
+    p_perm = _safe_norm(p[perm_idx])
+    msp_perm = _safe_norm(msp[perm_idx])
+
+    def gaussian_control(block: np.ndarray) -> np.ndarray:
+        col_mean = block.mean(axis=0)
+        col_std = np.where(block.std(axis=0) > 1e-12, block.std(axis=0), 1.0)
+        return _safe_norm(rng.normal(loc=col_mean, scale=col_std, size=block.shape))
+
+    p_gaussian = gaussian_control(p)
+    msp_gaussian = gaussian_control(msp)
     return {
         "ck4": _safe_norm(k),
-        "ck4p_msp": _safe_norm(np.hstack([k, p, msp])),
-        "ck4_permuted_pmsp": _safe_norm(np.hstack([k, pmsp[perm_idx]])),
-        "ck4_gaussian_pmsp": _safe_norm(np.hstack([k, gaussian])),
+        "ck4p_msp": np.hstack([_safe_norm(k), _safe_norm(p), _safe_norm(msp)]) / math.sqrt(3.0),
+        "ck4_permuted_pmsp": np.hstack([_safe_norm(k), p_perm, msp_perm]) / math.sqrt(3.0),
+        "ck4_gaussian_pmsp": np.hstack([_safe_norm(k), p_gaussian, msp_gaussian]) / math.sqrt(3.0),
     }
 
 
@@ -116,26 +120,36 @@ def classifier_registry(seed: int) -> dict[str, object]:
     return {"logistic": make_pipeline(StandardScaler(), LogisticRegression(max_iter=5000, random_state=seed))}
 
 
-def evaluate_delta_readout(clean: np.ndarray, noise: np.ndarray, local: np.ndarray, seed: int, cv_folds: int) -> list[dict[str, object]]:
+def evaluate_delta_readout(
+    clean: np.ndarray,
+    noise: np.ndarray,
+    local: np.ndarray,
+    sample_ids: list[str],
+    seed: int,
+    cv_folds: int,
+) -> list[dict[str, object]]:
     x_delta = np.vstack([np.abs(noise - clean), np.abs(local - clean)])
     y = np.asarray([0] * clean.shape[0] + [1] * clean.shape[0])
+    groups = np.asarray(sample_ids + sample_ids)
     rows: list[dict[str, object]] = []
-    train_idx, test_idx = train_test_split(np.arange(len(y)), test_size=0.3, random_state=seed, stratify=y)
+    holdout = StratifiedGroupKFold(n_splits=3, shuffle=True, random_state=seed)
+    train_idx, test_idx = next(holdout.split(x_delta, y, groups))
     for clf_name, clf in classifier_registry(seed).items():
         clf.fit(x_delta[train_idx], y[train_idx])
         pred = clf.predict(x_delta[test_idx])
         rows.append({"split": "holdout", "classifier": clf_name, "accuracy": float(accuracy_score(y[test_idx], pred)), "macro_f1": float(f1_score(y[test_idx], pred, average="macro", zero_division=0))})
     if cv_folds > 1:
-        skf = StratifiedKFold(n_splits=cv_folds, shuffle=True, random_state=seed)
+        n_splits = min(cv_folds, len(np.unique(groups)))
+        skf = StratifiedGroupKFold(n_splits=n_splits, shuffle=True, random_state=seed)
         for clf_name in classifier_registry(seed):
             acc, f1 = [], []
-            for cv_train, cv_test in skf.split(x_delta, y):
+            for cv_train, cv_test in skf.split(x_delta, y, groups):
                 clf = classifier_registry(seed)[clf_name]
                 clf.fit(x_delta[cv_train], y[cv_train])
                 pred = clf.predict(x_delta[cv_test])
                 acc.append(float(accuracy_score(y[cv_test], pred)))
                 f1.append(float(f1_score(y[cv_test], pred, average="macro", zero_division=0)))
-            rows.append({"split": f"{cv_folds}fold_cv", "classifier": clf_name, "accuracy": float(np.mean(acc)), "accuracy_std": float(np.std(acc)), "macro_f1": float(np.mean(f1)), "macro_f1_std": float(np.std(f1))})
+            rows.append({"split": f"{n_splits}fold_grouped_cv", "classifier": clf_name, "accuracy": float(np.mean(acc)), "accuracy_std": float(np.std(acc)), "macro_f1": float(np.mean(f1)), "macro_f1_std": float(np.std(f1))})
     return rows
 
 
@@ -209,9 +223,9 @@ def local_block_information(k: np.ndarray, p: np.ndarray, msp: np.ndarray, n: in
         dm_perm = dm[perm_idx]
         cmi_perm.append(conditional_mutual_information_bits(pm_perm, y, k_bins))
         perm_joint_bins = joint_discretize([dk, dp_perm, dm_perm], n_bins=5)
-        incr_perm.append(max(mutual_information_bits(perm_joint_bins, y) - ck4_mi, 0.0))
+        incr_perm.append(mutual_information_bits(perm_joint_bins, y) - ck4_mi)
     cmi_perm = np.asarray(cmi_perm, dtype=np.float64)
-    incr = float(max(joint_mi - ck4_mi, 0.0))
+    incr = float(joint_mi - ck4_mi)
     incr_perm = np.asarray(incr_perm, dtype=np.float64)
     return {
         "ck4_distance_mi_bits": float(ck4_mi),
@@ -278,7 +292,14 @@ def local_counterfactual(triplets: pd.DataFrame, lengths: list[int], max_triplet
                 "n_triplets": int(n),
             })
             mi_rows.append(mi)
-            for row in evaluate_delta_readout(clean, noise, local, seed=seed + int(length), cv_folds=cv_folds):
+            for row in evaluate_delta_readout(
+                clean,
+                noise,
+                local,
+                sample_ids=sample_ids,
+                seed=seed + int(length),
+                cv_folds=cv_folds,
+            ):
                 row.update({
                     "length": int(length),
                     "local_mode": mode,
@@ -302,8 +323,8 @@ def reliability_audit(reads: pd.DataFrame, lengths: list[int], max_reads: int, s
             sub = sub.sample(n=max_reads, random_state=seed + int(length))
         seqs = sub["sequence"].astype(str).tolist()
         train = list(range(len(seqs)))
-        p, _ = build_feature_matrix(seqs, "property_l2", length=int(length), train_indices=train)
-        msp, _ = build_feature_matrix(seqs, "property_multiscale_mean_l2", length=int(length), train_indices=train)
+        p = build_p_block(seqs)
+        msp = build_msp_block(seqs)
         for block_name, mat in [("global_property_P", p), ("multiscale_property_MSP", msp)]:
             mat = np.asarray(mat, dtype=np.float64)
             rng = np.random.default_rng(seed + int(length) + mat.shape[1])
@@ -367,7 +388,7 @@ def aggregate_outputs(stability: pd.DataFrame, block: pd.DataFrame, local_pairs:
             selective_sensitivity_ratio_mean=("selective_sensitivity_ratio", "mean"),
         ).sort_values("local_minus_noise_l2_mean", ascending=False)
     if not readout.empty:
-        outputs["delta_readout_summary"] = readout[readout["split"].astype(str).str.contains("fold_cv")].groupby(["representation", "representation_label", "classifier"], as_index=False).agg(
+        outputs["delta_readout_summary"] = readout[readout["split"].astype(str).str.contains("grouped_cv")].groupby(["representation", "representation_label", "classifier"], as_index=False).agg(
             n_cells=("macro_f1", "count"),
             macro_f1_mean=("macro_f1", "mean"),
             macro_f1_std_mean=("macro_f1_std", "mean"),
@@ -451,28 +472,17 @@ def plot_audit(outputs: dict[str, pd.DataFrame], out_dir: Path) -> None:
         ax.axis("off")
 
     ax = axes[0, 1]
-    cmi = outputs.get("conditional_mi_summary", pd.DataFrame())
-    mi = outputs.get("mi_summary", pd.DataFrame())
     readout = outputs.get("delta_readout_summary", pd.DataFrame())
-    if not cmi.empty:
-        vals = cmi.iloc[0]
-        labels = ["CK4 distance", "P/MSP | CK4", "Joint increment"]
-        heights = [vals.get("ck4_distance_mi_bits", 0.0), vals.get("pmsp_conditional_on_ck4_mi_bits", 0.0), vals.get("joint_minus_ck4_mi_bits", 0.0)]
-        ax.barh(labels, heights, color=["#4C78A8", "#1B9E77", "#59A14F"])
-        ax.set_xlabel("MI proxy (bits)")
-        ax.set_title("B. Conditional P/MSP information", loc="left", fontweight="bold")
-    elif not mi.empty:
-        mi = mi.sort_values("mi_bits_mean", ascending=False)
-        ax.barh(mi["representation_label"], mi["mi_bits_mean"], color=[palette.get(v, "0.5") for v in mi["representation_label"]])
-        ax.set_xlabel("MI proxy (bits)")
-        ax.set_title("B. Local perturbation information", loc="left", fontweight="bold")
-        if not readout.empty:
-            ax2 = ax.twiny()
-            read = readout.set_index("representation_label").reindex(mi["representation_label"])
-            y = np.arange(len(mi))
-            ax2.plot(read["macro_f1_mean"], y, marker="o", color="black", linewidth=0.8, markersize=3)
-            ax2.set_xlabel("Delta-readout F1")
-            ax2.set_xlim(0, 1.05)
+    if not readout.empty:
+        readout = readout.sort_values("macro_f1_mean")
+        ax.barh(
+            readout["representation_label"],
+            readout["macro_f1_mean"],
+            color=[palette.get(v, "0.5") for v in readout["representation_label"]],
+        )
+        ax.set_xlabel("Grouped delta-readout macro-F1")
+        ax.set_xlim(0.45, 1.01)
+        ax.set_title("B. Sequence-linked counterfactual readout", loc="left", fontweight="bold")
     else:
         ax.axis("off")
 
@@ -517,9 +527,9 @@ def plot_audit(outputs: dict[str, pd.DataFrame], out_dir: Path) -> None:
 
 def main() -> None:
     parser = argparse.ArgumentParser(description="Run P-channel counterfactual, block drift, and short-read reliability audits.")
-    parser.add_argument("--reads-csv", default=str(PROJECT_ROOT / "results" / "stage3" / "position_property_ablation" / "stage3_compact_baseline_reads.csv"))
-    parser.add_argument("--triplets-csv", default=str(PROJECT_ROOT / "results" / "stage3" / "local_mutation_sensitivity" / "local_mutation_triplets.csv"))
-    parser.add_argument("--output-dir", default=str(PROJECT_ROOT / "results" / "stage3" / "reviewer_response" / "p_channel_counterfactual_audit"))
+    parser.add_argument("--reads-csv", default=str(PROJECT_ROOT / "results" / "stage3" / "contract_v2" / "compact_baselines" / "stage3_compact_baseline_reads.csv"))
+    parser.add_argument("--triplets-csv", default=str(PROJECT_ROOT / "results" / "stage3" / "contract_v2" / "local_mutation_sensitivity" / "local_mutation_triplets.csv"))
+    parser.add_argument("--output-dir", default=str(PROJECT_ROOT / "results" / "stage3" / "contract_v2" / "p_channel_counterfactual_audit"))
     parser.add_argument("--lengths", default="69,75,100,150")
     parser.add_argument("--conditions", default="substitution_1pct,N_3pct,substitution_1pct_N_3pct,local_mismatch_6bp,short_indel")
     parser.add_argument("--max-pairs", type=int, default=250)

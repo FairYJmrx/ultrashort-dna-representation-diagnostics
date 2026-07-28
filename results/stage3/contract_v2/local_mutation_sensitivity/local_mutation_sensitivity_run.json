@@ -1,14 +1,10 @@
 {
-  "elapsed_seconds": 174.95334482192993,
+  "elapsed_seconds": 45.11871027946472,
   "representations": [
-    "ckmer4_count_l2",
-    "ckmer4_property_l2",
-    "ck4p_msp",
-    "cspaced_property_l2",
-    "property_channels",
-    "one_hot",
-    "base_property",
-    "kmer_property"
+    "ck4",
+    "ck4_p",
+    "ck4_msp",
+    "ck4p_msp"
   ],
   "lengths": [
     69,
@@ -26,6 +22,6 @@
   "cv_folds": 5,
   "seed": 20260624,
   "n_triplet_rows": 9000,
-  "n_metric_rows": 24000,
-  "n_readout_rows": 384
+  "n_metric_rows": 12000,
+  "n_readout_rows": 192
 }

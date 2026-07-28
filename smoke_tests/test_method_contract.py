@@ -32,7 +32,7 @@ def load_standalone():
 
 
 def main() -> None:
-    from methods.ck4p_msp import build_ck4p_msp_features, expected_dimensions
+    from methods.ck4p_msp import build_block_combination, build_ck4p_msp_features, expected_dimensions
     from methods.stage2_features import build_feature_matrix
 
     sequences = ["ACGTACGTACGTACGT", "TGCATGCATGCATGCA", "ACGTNNNNACGTACGT"]
@@ -55,10 +55,22 @@ def main() -> None:
         ("P", "M"): 86,
         ("K", "P", "M"): 222,
     }
+    names = {
+        ("K",): "ck4",
+        ("P",): "p",
+        ("M",): "msp",
+        ("K", "P"): "ck4_p",
+        ("K", "M"): "ck4_msp",
+        ("P", "M"): "p_msp",
+        ("K", "P", "M"): "ck4p_msp",
+    }
     for parts, dimension in expected_combinations.items():
-        combined = np.hstack([blocks[part] for part in parts]) / np.sqrt(len(parts))
+        combined = build_block_combination(public, names[parts])
         assert combined.shape == (len(sequences), dimension)
         np.testing.assert_allclose(np.linalg.norm(combined, axis=1), 1.0, rtol=0.0, atol=1e-12)
+        via_registry, registry_info = build_feature_matrix(sequences, names[parts], length=16)
+        assert registry_info.n_features == dimension
+        np.testing.assert_allclose(via_registry, combined, rtol=0.0, atol=1e-12)
 
     standalone = load_standalone()
     if standalone is not None:

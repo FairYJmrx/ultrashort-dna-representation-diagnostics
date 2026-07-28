@@ -1,0 +1,2 @@
+﻿contrast,n_cells,paired_unit,mean_signed_increment_bits,median_signed_increment_bits,bootstrap_95_ci_low,bootstrap_95_ci_high,wilcoxon_two_sided_p,aggregate_label_permutation_p,aggregate_null_mean_bits,n_permutations_per_cell,n_subsamples_per_cell,k_neighbors
+"I_hat(dK,dP,dM;Y)-I_hat(dK;Y)",12,length+local_mode,0.13755567377615144,0.09191751334751802,0.07322729791836229,0.20721211729098202,0.00048828125,0.009900990099009901,6.460449856345785e-05,100,100,5

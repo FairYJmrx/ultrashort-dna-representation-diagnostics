@@ -37,7 +37,7 @@ def write_summary(summary: pd.DataFrame, readout: pd.DataFrame, out_dir: Path) -
     )
     distance["selective_sensitivity_ratio"] = distance["local_l2"] / distance["noise_l2"].clip(lower=1e-12)
     delta_readout = (
-        readout[readout["split"].astype(str).str.contains("fold_cv")]
+        readout[readout["split"].astype(str).str.contains("grouped_cv")]
         .groupby(["mutation_fraction", "representation", "classifier"], as_index=False)
         .agg(
             n_cells=("macro_f1", "count"),
@@ -70,8 +70,8 @@ def main() -> None:
     warnings.filterwarnings("ignore", category=UserWarning, module="sklearn.neighbors._nearest_centroid")
     warnings.filterwarnings("ignore", category=RuntimeWarning, module="sklearn.neighbors._nearest_centroid")
     parser = argparse.ArgumentParser(description="Run a focused local-mutation fraction sweep for reviewer response.")
-    parser.add_argument("--output-dir", default=str(PROJECT_ROOT / "results" / "stage3" / "reviewer_response" / "local_mutation_fraction_sweep"))
-    parser.add_argument("--representations", default="ckmer4_count_l2,ckmer4_property_l2,ckmer4_property_multiscale_mean_l2,property_channels,one_hot")
+    parser.add_argument("--output-dir", default=str(PROJECT_ROOT / "results" / "stage3" / "contract_v2" / "local_mutation_fraction_sweep"))
+    parser.add_argument("--representations", default="ck4,ck4_p,ck4_msp,ck4p_msp")
     parser.add_argument("--lengths", default="69,100,150")
     parser.add_argument("--local-modes", default="center,left,right,jittered")
     parser.add_argument("--mutation-fractions", default="0.01,0.03,0.05")

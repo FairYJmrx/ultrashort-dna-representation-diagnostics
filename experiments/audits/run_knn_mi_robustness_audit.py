@@ -9,6 +9,7 @@ from pathlib import Path
 
 import numpy as np
 import pandas as pd
+from scipy.stats import wilcoxon
 from sklearn.preprocessing import StandardScaler
 
 def _find_project_root(start: Path) -> Path:
@@ -153,8 +154,83 @@ def subsample_ci(x: np.ndarray, y: np.ndarray, k: int, n_subsamples: int, frac: 
     return float(np.mean(vals)), float(np.quantile(vals, 0.025)), float(np.quantile(vals, 0.975))
 
 
-def run_audit(triplets: pd.DataFrame, lengths: list[int], max_triplets: int, k_neighbors: int, n_perm: int, n_subsamples: int, seed: int) -> tuple[pd.DataFrame, pd.DataFrame]:
+def permutation_increment(
+    x_full: np.ndarray,
+    x_base: np.ndarray,
+    y: np.ndarray,
+    observed: float,
+    k: int,
+    n_perm: int,
+    seed: int,
+) -> tuple[float, float, np.ndarray]:
+    """Test the signed MI-estimate difference under a shared label null."""
+    rng = np.random.default_rng(seed)
+    values = []
+    for idx in range(n_perm):
+        permuted = rng.permutation(y)
+        full = mixed_knn_mi_bits(x_full, permuted, k=k, seed=seed + 2 * idx + 1)
+        base = mixed_knn_mi_bits(x_base, permuted, k=k, seed=seed + 2 * idx + 2)
+        values.append(full - base)
+    null = np.asarray(values, dtype=np.float64)
+    null = null[np.isfinite(null)]
+    if null.size == 0:
+        return float("nan"), float("nan"), null
+    p_value = float((1.0 + np.sum(np.abs(null) >= abs(observed))) / (1.0 + null.size))
+    return p_value, float(np.mean(null)), null
+
+
+def subsample_increment_ci(
+    x_full: np.ndarray,
+    x_base: np.ndarray,
+    y: np.ndarray,
+    k: int,
+    n_subsamples: int,
+    frac: float,
+    seed: int,
+) -> tuple[float, float, float]:
+    """Estimate signed increment sensitivity using shared stratified subsets."""
+    rng = np.random.default_rng(seed)
+    values = []
+    labels = np.unique(y)
+    for idx in range(n_subsamples):
+        keep = []
+        for label in labels:
+            label_idx = np.where(y == label)[0]
+            size = min(len(label_idx), max(k + 2, int(round(len(label_idx) * frac))))
+            keep.extend(rng.choice(label_idx, size=size, replace=False).tolist())
+        keep = np.asarray(sorted(keep), dtype=int)
+        full = mixed_knn_mi_bits(x_full[keep], y[keep], k=k, seed=seed + 2 * idx + 1)
+        base = mixed_knn_mi_bits(x_base[keep], y[keep], k=k, seed=seed + 2 * idx + 2)
+        values.append(full - base)
+    estimates = np.asarray(values, dtype=np.float64)
+    estimates = estimates[np.isfinite(estimates)]
+    if estimates.size == 0:
+        return float("nan"), float("nan"), float("nan")
+    return (
+        float(np.mean(estimates)),
+        float(np.quantile(estimates, 0.025)),
+        float(np.quantile(estimates, 0.975)),
+    )
+
+
+def bootstrap_mean_ci(values: np.ndarray, n_bootstrap: int, seed: int) -> tuple[float, float]:
+    rng = np.random.default_rng(seed)
+    sample_indices = rng.integers(0, len(values), size=(n_bootstrap, len(values)))
+    means = values[sample_indices].mean(axis=1)
+    return float(np.quantile(means, 0.025)), float(np.quantile(means, 0.975))
+
+
+def run_audit(
+    triplets: pd.DataFrame,
+    lengths: list[int],
+    max_triplets: int,
+    k_neighbors: int,
+    n_perm: int,
+    n_subsamples: int,
+    seed: int,
+) -> tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame]:
     rows = []
+    increment_nulls = []
     triplets = triplets[triplets["source_length"].astype(int).isin(lengths)].copy()
     for (length, mode), subset in triplets.groupby(["source_length", "local_mode"], sort=True):
         dk, dp, dm, y = distances_for_cell(subset, max_triplets=max_triplets, seed=seed + int(length) + len(str(mode)))
@@ -188,17 +264,37 @@ def run_audit(triplets: pd.DataFrame, lengths: list[int], max_triplets: int, k_n
                     "k_neighbors": int(k_neighbors),
                 }
             )
+        increment = float(mi_vals["dK_dP_dM"] - mi_vals["dK"])
+        inc_p, inc_perm_mean, inc_null = permutation_increment(
+            features["dK_dP_dM"],
+            features["dK"],
+            y,
+            observed=increment,
+            k=k_neighbors,
+            n_perm=n_perm,
+            seed=seed + 6000 + int(length) + len(str(mode)),
+        )
+        inc_sub_mean, inc_ci_low, inc_ci_high = subsample_increment_ci(
+            features["dK_dP_dM"],
+            features["dK"],
+            y,
+            k=k_neighbors,
+            n_subsamples=n_subsamples,
+            frac=0.8,
+            seed=seed + 8000 + int(length) + len(str(mode)),
+        )
+        increment_nulls.append(inc_null)
         rows.append(
             {
                 "length": int(length),
                 "local_mode": mode,
                 "feature_set": "increment_dP_dM_given_dK",
-                "knn_mi_bits": float(max(mi_vals["dK_dP_dM"] - mi_vals["dK"], 0.0)),
-                "perm_p": np.nan,
-                "perm_mean_bits": np.nan,
-                "subsample_mean_bits": np.nan,
-                "subsample_ci_low": np.nan,
-                "subsample_ci_high": np.nan,
+                "knn_mi_bits": increment,
+                "perm_p": inc_p,
+                "perm_mean_bits": inc_perm_mean,
+                "subsample_mean_bits": inc_sub_mean,
+                "subsample_ci_low": inc_ci_low,
+                "subsample_ci_high": inc_ci_high,
                 "n_rows": int(len(y)),
                 "k_neighbors": int(k_neighbors),
             }
@@ -216,7 +312,46 @@ def run_audit(triplets: pd.DataFrame, lengths: list[int], max_triplets: int, k_n
         )
         .sort_values("mean_knn_mi_bits", ascending=False)
     )
-    return detail, summary
+    increments = detail.loc[
+        detail["feature_set"].eq("increment_dP_dM_given_dK"), "knn_mi_bits"
+    ].to_numpy(dtype=np.float64)
+    ci_low, ci_high = bootstrap_mean_ci(increments, n_bootstrap=10000, seed=seed + 10000)
+    if np.allclose(increments, 0.0):
+        wilcoxon_p = 1.0
+    else:
+        wilcoxon_p = float(wilcoxon(increments, alternative="two-sided", zero_method="wilcox").pvalue)
+    valid_nulls = [values for values in increment_nulls if len(values) == n_perm]
+    if valid_nulls:
+        aggregate_null = np.vstack(valid_nulls).mean(axis=0)
+        observed_mean = float(np.mean(increments))
+        aggregate_perm_p = float(
+            (1.0 + np.sum(np.abs(aggregate_null) >= abs(observed_mean)))
+            / (1.0 + len(aggregate_null))
+        )
+        aggregate_perm_mean = float(np.mean(aggregate_null))
+    else:
+        aggregate_perm_p = float("nan")
+        aggregate_perm_mean = float("nan")
+    inference = pd.DataFrame(
+        [
+            {
+                "contrast": "I_hat(dK,dP,dM;Y)-I_hat(dK;Y)",
+                "n_cells": int(len(increments)),
+                "paired_unit": "length+local_mode",
+                "mean_signed_increment_bits": float(np.mean(increments)),
+                "median_signed_increment_bits": float(np.median(increments)),
+                "bootstrap_95_ci_low": ci_low,
+                "bootstrap_95_ci_high": ci_high,
+                "wilcoxon_two_sided_p": wilcoxon_p,
+                "aggregate_label_permutation_p": aggregate_perm_p,
+                "aggregate_null_mean_bits": aggregate_perm_mean,
+                "n_permutations_per_cell": int(n_perm),
+                "n_subsamples_per_cell": int(n_subsamples),
+                "k_neighbors": int(k_neighbors),
+            }
+        ]
+    )
+    return detail, summary, inference
 
 
 def main() -> None:
@@ -236,7 +371,7 @@ def main() -> None:
     out_dir = Path(args.output_dir)
     out_dir.mkdir(parents=True, exist_ok=True)
     triplets = pd.read_csv(args.triplets_csv)
-    detail, summary = run_audit(
+    detail, summary, inference = run_audit(
         triplets=triplets,
         lengths=parse_int_list(args.lengths),
         max_triplets=args.max_triplets,
@@ -247,6 +382,7 @@ def main() -> None:
     )
     detail.to_csv(out_dir / "knn_mi_detail.csv", index=False, encoding="utf-8-sig")
     summary.to_csv(out_dir / "knn_mi_summary.csv", index=False, encoding="utf-8-sig")
+    inference.to_csv(out_dir / "knn_mi_increment_inference.csv", index=False, encoding="utf-8-sig")
     lines = [
         "# kNN/KSG-style MI robustness audit",
         "",
@@ -255,6 +391,10 @@ def main() -> None:
         "## Summary",
         "",
         summary.to_markdown(index=False, floatfmt=".4f") if not summary.empty else "No rows.",
+        "",
+        "## Signed paired increment inference",
+        "",
+        inference.to_markdown(index=False, floatfmt=".4f"),
         "",
     ]
     (out_dir / "knn_mi_summary.md").write_text("\n".join(lines), encoding="utf-8")

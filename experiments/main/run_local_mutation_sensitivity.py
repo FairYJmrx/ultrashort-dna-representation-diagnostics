@@ -350,7 +350,7 @@ def main() -> None:
     parser.add_argument("--output-dir", default=str(PROJECT_ROOT / "results" / "stage3" / "local_mutation_sensitivity"))
     parser.add_argument(
         "--representations",
-        default="ckmer4_count_l2,ckmer4_property_l2,ck4p_msp,ckmer4_property_multiscale_l2,ckmer5_count_l2,property_channels,one_hot,base_property,rope_property,rope_onehot,kmer_property,cspaced_property_l2",
+        default="ck4,ck4_p,ck4_msp,ck4p_msp",
     )
     parser.add_argument("--lengths", default="69,100,150")
     parser.add_argument("--local-modes", default="center,left,right,jittered")

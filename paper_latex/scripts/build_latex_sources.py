@@ -1,13 +1,14 @@
 from __future__ import annotations
 
+import argparse
 import csv
 import re
 from pathlib import Path
 
 
-ROOT = Path(r"D:\AI-NGS")
-PAPER = ROOT / "info" / "paper"
-LATEX = ROOT / "info" / "paper_latex"
+LATEX = Path(__file__).resolve().parents[1]
+REPOSITORY = LATEX.parent
+PAPER = REPOSITORY / "paper"
 SECTIONS = LATEX / "sections"
 TABLE_MAIN = LATEX / "tables" / "main"
 TABLE_SUPP = LATEX / "tables" / "supplementary"
@@ -15,20 +16,20 @@ TABLE_SUPP = LATEX / "tables" / "supplementary"
 
 FIGURES = {
     "Figure 1": ("figures/main/nature_fig1_framework.pdf", "Representation-diagnostic framework and read-length regime."),
-    "Figure 2": ("figures/main/nature_fig2_compact_stability.pdf", "Compact stability under controlled perturbation."),
-    "Figure 3": ("figures/main/nature_fig3_ck4p_msp_tradeoff.pdf", "CK4P-MSP stability-readout-dimension trade-off."),
-    "Figure 4": ("figures/main/nature_fig4_external_probes.pdf", "ART stability and CAMI coarse/fine readout probes."),
+    "Figure 2": ("figures/main/nature_fig2_compact_stability.pdf", "P/MSP contribution and counterfactual property-mapping audit."),
+    "Figure 3": ("figures/main/nature_fig3_ck4p_msp_tradeoff.pdf", "Dimension-matched compact stability and readability audit."),
+    "Figure 4": ("figures/main/nature_fig4_external_probes.pdf", "External stability and coarse-readout probes."),
     "Figure 5": ("figures/main/nature_fig5_full_position_upper_bound.pdf", "Full-position diagnostic upper bound for positional information."),
-    "Figure 6": ("figures/main/nature_fig6_local_mutation_sensitivity.pdf", "Local mutation sensitivity and delta-readout."),
+    "Figure 6": ("figures/main/nature_fig6_local_mutation_sensitivity.pdf", "Local-change readability and distance-ratio boundary."),
 }
 
 FIGURE_ALT_TEXT = {
     "Figure 1": "Workflow diagram showing short reads separated into identity, biochemical and positional representation channels before diagnostic readouts and boundary checks.",
-    "Figure 2": "Bar plots comparing paired cosine, L2 drift and feature dimension across compact k-mer, biochemical and spaced-property representations.",
-    "Figure 3": "Scatter plots showing CK4P-MSP among compact representations in the stability, readout and dimension trade-off space.",
-    "Figure 4": "Three-panel comparison of ART stability and CAMI coarse and fine readout probes, highlighting stable external behavior and limited fine-label readability.",
+    "Figure 2": "Bar plots showing P/MSP contribution to drift, local-change readout and real-versus-counterfactual property mapping.",
+    "Figure 3": "Scatter plots comparing CK4P-MSP with compact k-mer and dimension-matched high-k compressed baselines for stability and shallow readability.",
+    "Figure 4": "Three-panel comparison of ART stability, CAMI coarse target-background readout and CAMI II anonymous-read stability.",
     "Figure 5": "Bar and scatter plots showing that full-position matrices add positional readout value at substantially higher feature dimension.",
-    "Figure 6": "Bar and scatter plots comparing local biochemical mutation sensitivity and delta-readout across representation families.",
+    "Figure 6": "Bar plots showing MSP-driven local-change readability and the separate distance-ratio boundary against full-position property probes.",
 }
 
 SUPP_FIGURES = {
@@ -465,7 +466,6 @@ def main_tex() -> str:
 
 \input{sections/introduction}
 \input{sections/materials_results}
-\clearpage
 \input{sections/discussion}
 \input{sections/back_matter}
 
@@ -538,6 +538,20 @@ def supplementary_tex() -> str:
 
 
 def main() -> None:
+    parser = argparse.ArgumentParser(
+        description="Re-run the historical Markdown-to-LaTeX migration."
+    )
+    parser.add_argument(
+        "--overwrite",
+        action="store_true",
+        help="Overwrite the canonical LaTeX sources with migration output.",
+    )
+    args = parser.parse_args()
+    if not args.overwrite:
+        parser.error(
+            "This is a migration-only utility. The edited .tex files are the source of truth; "
+            "pass --overwrite only when intentionally rebuilding them from paper/*.md."
+        )
     write_tables()
     write_sections()
     (LATEX / "main.tex").write_text(main_tex(), encoding="utf-8")

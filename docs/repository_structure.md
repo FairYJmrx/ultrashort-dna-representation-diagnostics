@@ -19,7 +19,8 @@ This release is organized around four reproducibility questions:
 | `data/` | Lightweight release data and public benchmark subsets. |
 | `results/` | Generated result tables, summaries and audit outputs. |
 | `figures/` | Central copy of final main and supplementary figure bitmaps. |
-| `paper/` | Current split paper draft, paper figures, paper tables and manuscript build products. |
+| `paper_latex/` | Canonical submission manuscript source, figures, tables and supplementary file. |
+| `paper/` | Historical pre-LaTeX writing notes retained for provenance; not a numerical or wording source of truth. |
 | `manuscript/` | Historical stage-2/stage-3 manuscript artifacts retained for provenance. |
 | `docs/` | Method contract, provenance maps and release notes. |
 | `configs/` | Experiment matrices and current release defaults. |
@@ -37,6 +38,10 @@ than carrying a second implementation. The manuscript-facing method itself is
 defined only in `methods/ck4p_msp.py` and selected with the explicit
 representation name `ck4p_msp`; historical feature-name strings are not method
 aliases. See `docs/code_layout.md` for detailed rules.
+
+The canonical manuscript contract is documented in
+`docs/manuscript_source_of_truth.md`. In particular, historical Word and
+Markdown artifacts are not eligible sources for current numerical claims.
 
 This means historical commands continue to work, while new users can start from
 the organized entrypoints.

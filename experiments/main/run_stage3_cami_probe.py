@@ -31,8 +31,8 @@ from experiments.main.run_stage2_representation_grid import (  # noqa: E402
 
 DEFAULT_REPRESENTATIONS = ",".join(
     [
-        "ckmer4_count_l2",
-        "ckmer4_property_l2",
+        "ck4",
+        "ck4_p",
         "ck4p_msp",
         "ckmer5_count_l2",
         "ckmer7_count_l2",

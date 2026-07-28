@@ -1,0 +1,30 @@
+{
+  "elapsed_seconds": 153.93806052207947,
+  "reads_csv": "data/stage3/cami/cami_toy_low_subset_reads_expanded.csv",
+  "fastq": "",
+  "labels_csv": "",
+  "lengths": [
+    69,
+    75,
+    100
+  ],
+  "conditions": [
+    "clean",
+    "N_3pct",
+    "substitution_1pct"
+  ],
+  "representations": [
+    "ck4",
+    "ck4_p",
+    "ck4p_msp",
+    "ckmer5_count_l2"
+  ],
+  "classifiers": [
+    "nearest_centroid",
+    "logistic"
+  ],
+  "target_label": "tax_1122939",
+  "n_input_reads": 24000,
+  "n_probe_rows": 216000,
+  "n_readout_rows": 144
+}

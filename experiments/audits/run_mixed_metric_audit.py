@@ -11,7 +11,7 @@ import numpy as np
 import pandas as pd
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import accuracy_score, f1_score
-from sklearn.model_selection import StratifiedKFold, train_test_split
+from sklearn.model_selection import StratifiedGroupKFold
 from sklearn.pipeline import make_pipeline
 from sklearn.preprocessing import StandardScaler
 from sklearn.preprocessing import normalize
@@ -28,7 +28,8 @@ PROJECT_ROOT = _find_project_root(Path(__file__).resolve())
 sys.path.insert(0, str(PROJECT_ROOT))
 
 from experiments.main.run_stage2_representation_grid import paired_subsets, parse_csv_list, parse_int_list, set_global_seed  # noqa: E402
-from src.stage2_features import build_feature_matrix, paired_retrieval_metrics  # noqa: E402
+from methods.ck4p_msp import build_ck4p_msp_features, concatenate_weighted_blocks  # noqa: E402
+from methods.stage2_features import paired_retrieval_metrics  # noqa: E402
 
 
 @dataclass(frozen=True)
@@ -59,16 +60,15 @@ def weighted_block_features(
     train_indices: list[int],
     weight: BlockWeight,
 ) -> np.ndarray:
-    count, _ = build_feature_matrix(sequences, "ckmer4_count_l2", length=length, train_indices=train_indices)
-    prop, _ = build_feature_matrix(sequences, "property_l2", length=length, train_indices=train_indices)
-    msp, _ = build_feature_matrix(sequences, "property_multiscale_mean_l2", length=length, train_indices=train_indices)
-    blocks = [
-        weight.count_weight * np.asarray(count, dtype=np.float64),
-        weight.property_weight * np.asarray(prop, dtype=np.float64),
-        weight.msp_weight * np.asarray(msp, dtype=np.float64),
-    ]
-    x = np.hstack(blocks)
-    return normalize(np.nan_to_num(x, nan=0.0, posinf=0.0, neginf=0.0), norm="l2", axis=1)
+    features = build_ck4p_msp_features(sequences, train_indices=train_indices)
+    return concatenate_weighted_blocks(
+        features.ck4,
+        features.p,
+        features.msp,
+        alpha=weight.count_weight,
+        beta=weight.property_weight,
+        gamma=weight.msp_weight,
+    )
 
 
 def stability_audit(
@@ -118,10 +118,19 @@ def classifier_registry(seed: int) -> dict[str, object]:
     }
 
 
-def evaluate_delta_readout(clean: np.ndarray, noise: np.ndarray, local: np.ndarray, seed: int, cv_folds: int = 5) -> list[dict[str, object]]:
+def evaluate_delta_readout(
+    clean: np.ndarray,
+    noise: np.ndarray,
+    local: np.ndarray,
+    sample_ids: list[str],
+    seed: int,
+    cv_folds: int = 5,
+) -> list[dict[str, object]]:
     x_delta = np.vstack([np.abs(noise - clean), np.abs(local - clean)])
     y = np.asarray([0] * clean.shape[0] + [1] * clean.shape[0])
-    train_idx, test_idx = train_test_split(np.arange(len(y)), test_size=0.3, random_state=seed, stratify=y)
+    groups = np.asarray(sample_ids + sample_ids)
+    holdout = StratifiedGroupKFold(n_splits=3, shuffle=True, random_state=seed)
+    train_idx, test_idx = next(holdout.split(x_delta, y, groups))
     rows: list[dict[str, object]] = []
     for clf_name, clf in classifier_registry(seed).items():
         clf.fit(x_delta[train_idx], y[train_idx])
@@ -135,11 +144,12 @@ def evaluate_delta_readout(clean: np.ndarray, noise: np.ndarray, local: np.ndarr
             }
         )
     if cv_folds > 1:
-        skf = StratifiedKFold(n_splits=cv_folds, shuffle=True, random_state=seed)
+        n_splits = min(cv_folds, len(np.unique(groups)))
+        skf = StratifiedGroupKFold(n_splits=n_splits, shuffle=True, random_state=seed)
         for clf_name in classifier_registry(seed):
             scores_acc: list[float] = []
             scores_f1: list[float] = []
-            for cv_train, cv_test in skf.split(x_delta, y):
+            for cv_train, cv_test in skf.split(x_delta, y, groups):
                 clf = classifier_registry(seed)[clf_name]
                 clf.fit(x_delta[cv_train], y[cv_train])
                 pred = clf.predict(x_delta[cv_test])
@@ -147,7 +157,7 @@ def evaluate_delta_readout(clean: np.ndarray, noise: np.ndarray, local: np.ndarr
                 scores_f1.append(float(f1_score(y[cv_test], pred, average="macro", zero_division=0)))
             rows.append(
                 {
-                    "split": f"{cv_folds}fold_cv",
+                    "split": f"{n_splits}fold_grouped_cv",
                     "classifier": clf_name,
                     "accuracy": float(np.mean(scores_acc)),
                     "macro_f1": float(np.mean(scores_f1)),
@@ -211,7 +221,13 @@ def local_mutation_audit(triplets: pd.DataFrame, seed: int) -> tuple[pd.DataFram
                     "n_triplets": int(n_triplets),
                 }
             )
-            for row in evaluate_delta_readout(clean, noise, local, seed=seed + int(length)):
+            for row in evaluate_delta_readout(
+                clean,
+                noise,
+                local,
+                sample_ids=sample_ids,
+                seed=seed + int(length),
+            ):
                 row.update(
                     {
                         "length": int(length),
@@ -230,7 +246,7 @@ def write_summary(stability: pd.DataFrame, local_summary: pd.DataFrame, local_re
     lines = [
         "# Mixed-metric block-weight audit",
         "",
-        "This audit keeps the k-mer, global property, and multi-scale property blocks separate and varies their weights before final L2 normalization. The point is to test whether the observed stability and selective-sensitivity trends survive reasonable block reweighting instead of relying on one fixed concatenation scale.",
+        "This audit keeps the k-mer, global property, and multi-scale property blocks separately normalized and varies their weights under the fixed weighted-block denominator. The point is to test whether the observed stability and selective-sensitivity trends survive reasonable block reweighting instead of relying on one selected concatenation scale.",
         "",
     ]
     if not stability.empty:
@@ -262,7 +278,7 @@ def write_summary(stability: pd.DataFrame, local_summary: pd.DataFrame, local_re
         lines.extend(["## Local mutation sensitivity across block weights", "", loc.to_markdown(index=False, floatfmt=".3f"), ""])
     if not local_readout.empty:
         readout = (
-            local_readout[local_readout["split"].astype(str).str.contains("fold_cv")]
+            local_readout[local_readout["split"].astype(str).str.contains("grouped_cv")]
             .groupby(["weight_name", "weight_label", "classifier"], as_index=False)
             .agg(
                 n_cells=("macro_f1", "count"),
@@ -279,9 +295,9 @@ def write_summary(stability: pd.DataFrame, local_summary: pd.DataFrame, local_re
 
 def main() -> None:
     parser = argparse.ArgumentParser(description="Audit block weighting for mixed k-mer + property features.")
-    parser.add_argument("--input", default=str(PROJECT_ROOT / "results" / "stage3" / "position_property_ablation" / "stage3_compact_baseline_reads.csv"))
-    parser.add_argument("--triplets", default=str(PROJECT_ROOT / "results" / "stage3" / "local_mutation_sensitivity" / "local_mutation_triplets.csv"))
-    parser.add_argument("--output-dir", default=str(PROJECT_ROOT / "results" / "stage3" / "reviewer_response" / "mixed_metric_audit"))
+    parser.add_argument("--input", default=str(PROJECT_ROOT / "results" / "stage3" / "contract_v2" / "compact_baselines" / "stage3_compact_baseline_reads.csv"))
+    parser.add_argument("--triplets", default=str(PROJECT_ROOT / "results" / "stage3" / "contract_v2" / "local_mutation_sensitivity" / "local_mutation_triplets.csv"))
+    parser.add_argument("--output-dir", default=str(PROJECT_ROOT / "results" / "stage3" / "contract_v2" / "mixed_metric_audit"))
     parser.add_argument("--lengths", default="69,75,100,150")
     parser.add_argument("--conditions", default="substitution_1pct,N_3pct,trim_5bp,substitution_1pct_N_3pct,local_mismatch_6bp,short_indel")
     parser.add_argument("--max-pairs", type=int, default=250)

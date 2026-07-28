@@ -46,7 +46,7 @@ from .stage2_features import property_multiscale_matrix
 #       CN: False 表示仅保留均值 MSP；True 额外加入每个分箱的标准差，用于审计变体。
 #   alpha, beta, gamma = 1.0, 1.0, 1.0
 #       EN: weights for CK4, P and MSP before concatenation. They define a
-#           standardized diagnostic representation, not physical unit conversion.
+#           standardized representation, not physical unit conversion.
 #       CN: 分别为 CK4、P 和 MSP 的拼接权重；定义标准化诊断表征，不是物理单位换算。
 #   vocabulary_mode="full"
 #       EN: uses the complete canonical vocabulary. For k=4, CK4 is 136D and
@@ -57,22 +57,21 @@ from .stage2_features import property_multiscale_matrix
 #           grids, but its dimensionality is data-dependent.
 #       CN: 仅根据训练 reads 拟合词表；适用于历史网格，但维度会随数据变化。
 # ---------------------------------------------------------------------------
-#           222-dimensional CK4P-MSP vector.
-#       CN: 使用完整反向互补规范化 k-mer 词表。k=4 时 CK4 固定为
-#           136 维，默认 CK4P-MSP 为 222 维。
-#
-#   vocabulary_mode="observed"
-#       EN: fits the k-mer vocabulary from training reads only. This is useful
-#           for some historical grids, but the dimensionality becomes
-#           data-dependent.
-#       CN: 只从训练 reads 中拟合 k-mer 词表，适合部分历史实验网格；
-#           但维度会依赖数据集。
-# ---------------------------------------------------------------------------
 
 DEFAULT_MSP_BINS = (2, 3, 4, 6)
 DEFAULT_WEIGHTS = (1.0, 1.0, 1.0)
 P_DIMENSION = 11
 MSP_CHANNELS = 5
+
+BLOCK_COMBINATIONS = {
+    "ck4": ("K",),
+    "p": ("P",),
+    "msp": ("M",),
+    "ck4_p": ("K", "P"),
+    "ck4_msp": ("K", "M"),
+    "p_msp": ("P", "M"),
+    "ck4p_msp": ("K", "P", "M"),
+}
 
 
 @dataclass(frozen=True)
@@ -216,6 +215,26 @@ def concatenate_weighted_blocks(
     return np.hstack(blocks) / denominator
 
 
+def build_block_combination(
+    features: CK4PMSPFeatures,
+    name: str,
+) -> np.ndarray:
+    """Assemble one of the seven public K/P/MSP block combinations.
+
+    Every selected block is internally L2-normalized. Equal-weight
+    combinations are divided by the square root of the selected block count,
+    so the scale is fixed by the declared contract rather than by row energy.
+    """
+    try:
+        parts = BLOCK_COMBINATIONS[name]
+    except KeyError as exc:
+        supported = ", ".join(sorted(BLOCK_COMBINATIONS))
+        raise ValueError(f"Unsupported public block combination {name!r}; choose from {supported}.") from exc
+    blocks = {"K": features.ck4, "P": features.p, "M": features.msp}
+    selected = [_normalize_rows(blocks[part]) for part in parts]
+    return np.hstack(selected) / np.sqrt(float(len(selected)))
+
+
 def build_ck4p_msp_features(
     sequences: Sequence[str],
     *,
@@ -257,7 +276,7 @@ def paired_cosine(clean: np.ndarray, perturbed: np.ndarray) -> np.ndarray:
 
 
 def standardized_diagnostic_drift(clean: np.ndarray, perturbed: np.ndarray) -> np.ndarray:
-    """Row-wise L2 drift used as a standardized diagnostic metric."""
+    """Row-wise L2 drift used as a standardized representation metric."""
     clean_norm = _normalize_rows(clean)
     perturbed_norm = _normalize_rows(perturbed)
     return np.linalg.norm(clean_norm - perturbed_norm, axis=1)

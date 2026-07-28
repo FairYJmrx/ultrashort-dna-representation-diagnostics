@@ -1,0 +1,7 @@
+﻿weight_name,weight_label,classifier,n_cells,macro_f1,accuracy,n_features
+ck4p_msp,"ck4p_msp (k=1, P=1, MSP=1)",logistic,12,0.978630385373886,0.9786666666666667,222.0
+identity_dominant,"identity_dominant (k=2, P=1, MSP=1)",logistic,12,0.978630385373886,0.9786666666666667,222.0
+property_dominant,"property_dominant (k=1, P=2, MSP=2)",logistic,12,0.978630385373886,0.9786666666666667,222.0
+property_only,"property_only (k=0, P=1, MSP=1)",logistic,12,0.9704137018661654,0.9704999999999999,222.0
+ck4_plus_p,"ck4_plus_p (k=1, P=1, MSP=0)",logistic,12,0.9043111385266598,0.9045,222.0
+identity_only,"identity_only (k=1, P=0, MSP=0)",logistic,12,0.8922999894700521,0.8925,222.0

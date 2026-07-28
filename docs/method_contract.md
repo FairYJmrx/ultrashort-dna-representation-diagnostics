@@ -60,7 +60,7 @@ default weights are:
 | `beta` | P global property block | 1.0 |
 | `gamma` | MSP positional property block | 1.0 |
 
-The reported mixed-space L2 metric is standardized diagnostic drift. It is not
+The reported mixed-space L2 metric is standardized representation drift. It is not
 a natural biophysical distance between commensurate physical units.
 
 ## MSP Default Bins

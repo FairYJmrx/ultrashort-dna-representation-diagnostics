@@ -1,0 +1,10 @@
+{
+  "elapsed_seconds": 90.433,
+  "reads_rows": 25200,
+  "triplet_rows": 9000,
+  "lengths": "69,75,100,150",
+  "conditions": "substitution_1pct,N_3pct,substitution_1pct_N_3pct,local_mismatch_6bp,short_indel",
+  "max_pairs": 250,
+  "max_triplets": 250,
+  "seed": 20260625
+}

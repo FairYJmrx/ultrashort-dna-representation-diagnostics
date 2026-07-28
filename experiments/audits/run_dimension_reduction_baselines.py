@@ -33,9 +33,9 @@ from src.stage2_features import build_feature_matrix, paired_retrieval_metrics  
 
 
 REP_LABELS = {
-    "ckmer4_property_multiscale_mean_l2": "CK4P-MSP",
-    "ckmer4_property_l2": "CK4+P",
-    "ckmer4_count_l2": "CK4",
+    "ck4p_msp": "CK4P-MSP",
+    "ck4_p": "CK4+P",
+    "ck4": "CK4",
     "ckmer5_count_l2": "CK5",
     "ckmer7_count_l2": "CK7",
 }
@@ -300,15 +300,15 @@ def summarize(stability: pd.DataFrame, readout: pd.DataFrame, out_dir: Path) -> 
 
 def main() -> None:
     parser = argparse.ArgumentParser(description="Run same-dimension PCA/SVD/NMF k-mer reduction baselines for reviewer response.")
-    parser.add_argument("--input", default=str(PROJECT_ROOT / "results" / "stage3" / "position_property_ablation" / "stage3_compact_baseline_reads.csv"))
-    parser.add_argument("--output-dir", default=str(PROJECT_ROOT / "results" / "stage3" / "reviewer_response" / "dimension_reduction_baselines"))
+    parser.add_argument("--input", default=str(PROJECT_ROOT / "results" / "stage3" / "contract_v2" / "compact_baselines" / "stage3_compact_baseline_reads.csv"))
+    parser.add_argument("--output-dir", default=str(PROJECT_ROOT / "results" / "stage3" / "contract_v2" / "dimension_reduction_baselines"))
     parser.add_argument("--lengths", default="69,75,100,150")
     parser.add_argument("--stability-conditions", default="substitution_1pct,N_3pct,trim_5bp,substitution_1pct_N_3pct,local_mismatch_6bp,short_indel")
     parser.add_argument("--readout-conditions", default="clean,substitution_1pct,N_3pct")
     parser.add_argument("--base-representations", default="ckmer5_count_l2,ckmer7_count_l2")
     parser.add_argument("--reducers", default="pca,svd")
     parser.add_argument("--target-dims", default="147,222")
-    parser.add_argument("--comparators", default="ckmer4_count_l2,ckmer4_property_l2,ckmer4_property_multiscale_mean_l2,ckmer5_count_l2")
+    parser.add_argument("--comparators", default="ck4,ck4_p,ck4p_msp,ckmer5_count_l2")
     parser.add_argument("--classifiers", default="nearest_centroid,logistic")
     parser.add_argument("--max-pairs", type=int, default=250)
     parser.add_argument("--max-per-class", type=int, default=40)
