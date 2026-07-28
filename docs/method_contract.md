@@ -32,12 +32,13 @@ read-level taxonomic labels were not reconstructed for that lightweight probe.
 
 | Name | Definition | Role |
 |---|---|---|
-| CK4 | Reverse-complement canonical contiguous 4-mer identity block. | Compact identity backbone. |
-| CK5 | Reverse-complement canonical contiguous 5-mer identity block. | Identity baseline. |
+| CK4 | Reverse-complement canonical contiguous 4-mer composition block. | Compact local-token composition backbone. |
+| CK5 | Reverse-complement canonical contiguous 5-mer composition block. | Local-token composition baseline. |
 | P | Global biochemical-property summary over each read, including base-property means/standard deviations plus read-level N fraction, length and entropy summaries. | Global property stability channel. |
 | MSP | Multi-scale positional pooling of per-base property channels over relative-position bins. | Coarse positional property channel. |
 | CK4+P | Concatenated CK4 and P under block normalization. | Tests global property contribution. |
 | CK4+MSP | Concatenated CK4 and MSP under block normalization. | Tests positional property contribution. |
+| P+MSP | Concatenated P and MSP under block normalization. | Tests the property channels without the CK4 composition block. |
 | CK4P-MSP | Concatenated CK4, P and MSP under block normalization. | Main compact mixed representation. |
 | Full-position matrices | Per-position identity or property matrices. | Diagnostic positional upper bound. |
 | CSP | Canonical spaced-property control. | Spaced-seed boundary comparator. |
@@ -86,6 +87,12 @@ not be described as universal information-theoretic proofs.
 
 P and MSP are related but non-equivalent property layers. They should not be
 described as orthogonal or independent physical axes.
+
+The seven-group ablation evaluates every non-empty K/P/MSP combination. Its
+prespecified conditional contrasts test K given P+MSP, P given CK4+MSP, and
+MSP given CK4+P. A block is interpreted as conditionally contributing only to
+the metric supported by its matched contrast; the audit does not require each
+block to improve every metric.
 
 Pipeline-facing triage, false-hit reduction and classifier-output auditing are
 future work unless explicitly evaluated.

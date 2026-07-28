@@ -8,6 +8,7 @@ from pathlib import Path
 
 import numpy as np
 import pandas as pd
+from scipy.stats import wilcoxon
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import accuracy_score, f1_score
 from sklearn.model_selection import StratifiedGroupKFold
@@ -31,16 +32,29 @@ from src.stage2_features import paired_retrieval_metrics  # noqa: E402
 
 REP_BLOCKS = {
     "ck4": ("K",),
+    "p": ("P",),
+    "msp": ("M",),
     "ck4_p": ("K", "P"),
     "ck4_msp": ("K", "M"),
+    "p_msp": ("P", "M"),
     "ck4_p_msp": ("K", "P", "M"),
 }
 
 REP_LABELS = {
     "ck4": "CK4",
+    "p": "P",
+    "msp": "MSP",
     "ck4_p": "CK4+P",
     "ck4_msp": "CK4+MSP",
+    "p_msp": "P+MSP",
     "ck4_p_msp": "CK4P-MSP",
+}
+
+
+CONDITIONAL_CONTRASTS = {
+    "K | P+MSP": "p_msp",
+    "P | CK4+MSP": "ck4_msp",
+    "MSP | CK4+P": "ck4_p",
 }
 
 
@@ -60,6 +74,125 @@ def assemble(blocks: dict[str, np.ndarray], parts: tuple[str, ...]) -> np.ndarra
     # normalization is therefore equivalent to a fixed sqrt(n_blocks) scaling
     # for nonzero rows, not a data-dependent cross-block reweighting.
     return safe_norm(x)
+
+
+def benjamini_hochberg(p_values: list[float]) -> list[float]:
+    values = np.asarray(p_values, dtype=float)
+    adjusted = np.full(values.shape, np.nan, dtype=float)
+    valid = np.where(np.isfinite(values))[0]
+    if valid.size == 0:
+        return adjusted.tolist()
+    ordered = valid[np.argsort(values[valid])]
+    running = 1.0
+    m = float(valid.size)
+    for reverse_rank, idx in enumerate(ordered[::-1], start=1):
+        rank = valid.size - reverse_rank + 1
+        running = min(running, float(values[idx]) * m / float(rank))
+        adjusted[idx] = min(running, 1.0)
+    return adjusted.tolist()
+
+
+def bootstrap_mean_ci(values: np.ndarray, seed: int, n_bootstrap: int = 10000) -> tuple[float, float]:
+    values = np.asarray(values, dtype=float)
+    if values.size == 0:
+        return np.nan, np.nan
+    rng = np.random.default_rng(seed)
+    indices = rng.integers(0, values.size, size=(n_bootstrap, values.size))
+    means = values[indices].mean(axis=1)
+    low, high = np.quantile(means, [0.025, 0.975])
+    return float(low), float(high)
+
+
+def conditional_contrast_row(
+    df: pd.DataFrame,
+    *,
+    contrast: str,
+    comparator: str,
+    metric: str,
+    keys: list[str],
+    higher_is_better: bool,
+    evidence_layer: str,
+    seed: int,
+) -> dict[str, object]:
+    full = "ck4_p_msp"
+    subset = df[df["representation"].isin([full, comparator])].copy()
+    pivot = subset.pivot_table(index=keys, columns="representation", values=metric, aggfunc="mean")
+    if full not in pivot.columns or comparator not in pivot.columns:
+        return {
+            "contrast": contrast,
+            "evidence_layer": evidence_layer,
+            "metric": metric,
+            "paired_unit": "+".join(keys),
+            "n_pairs": 0,
+        }
+    paired = pivot[[full, comparator]].dropna()
+    raw_difference = paired[full].to_numpy(dtype=float) - paired[comparator].to_numpy(dtype=float)
+    improvement = raw_difference if higher_is_better else -raw_difference
+    ci_low, ci_high = bootstrap_mean_ci(improvement, seed=seed)
+    if improvement.size == 0 or np.allclose(improvement, 0.0):
+        p_value = 1.0
+    else:
+        p_value = float(wilcoxon(improvement, alternative="two-sided", zero_method="wilcox").pvalue)
+    return {
+        "contrast": contrast,
+        "full_representation": full,
+        "comparator": comparator,
+        "evidence_layer": evidence_layer,
+        "metric": metric,
+        "metric_direction": "higher" if higher_is_better else "lower",
+        "paired_unit": "+".join(keys),
+        "n_pairs": int(len(paired)),
+        "full_mean": float(paired[full].mean()),
+        "comparator_mean": float(paired[comparator].mean()),
+        "mean_improvement_positive_is_better": float(improvement.mean()),
+        "bootstrap_95_ci_low": ci_low,
+        "bootstrap_95_ci_high": ci_high,
+        "wilcoxon_two_sided_p": p_value,
+        "full_better_fraction": float(np.mean(improvement > 0)),
+    }
+
+
+def conditional_contribution_tests(
+    stability: pd.DataFrame,
+    readout: pd.DataFrame,
+    seed: int,
+) -> pd.DataFrame:
+    rows: list[dict[str, object]] = []
+    stability_metrics = {
+        "paired_cosine_mean": True,
+        "l2_delta_mean": False,
+        "retrieval_top1": True,
+    }
+    grouped_readout = readout[readout["split"].astype(str).str.contains("grouped_cv")].copy()
+    for contrast_index, (contrast, comparator) in enumerate(CONDITIONAL_CONTRASTS.items()):
+        for metric_index, (metric, higher_is_better) in enumerate(stability_metrics.items()):
+            rows.append(
+                conditional_contrast_row(
+                    stability,
+                    contrast=contrast,
+                    comparator=comparator,
+                    metric=metric,
+                    keys=["length", "condition"],
+                    higher_is_better=higher_is_better,
+                    evidence_layer="global_perturbation_stability",
+                    seed=seed + 100 * contrast_index + metric_index,
+                )
+            )
+        rows.append(
+            conditional_contrast_row(
+                grouped_readout,
+                contrast=contrast,
+                comparator=comparator,
+                metric="macro_f1",
+                keys=["length", "local_mode", "split"],
+                higher_is_better=True,
+                evidence_layer="grouped_local_delta_readout",
+                seed=seed + 100 * contrast_index + 50,
+            )
+        )
+    out = pd.DataFrame(rows)
+    out["bh_q"] = benjamini_hochberg(out["wilcoxon_two_sided_p"].astype(float).tolist())
+    return out
 
 
 def assemble_all(blocks: dict[str, np.ndarray]) -> dict[str, np.ndarray]:
@@ -232,6 +365,8 @@ def summarize(
     stability.to_csv(out_dir / "p_msp_contribution_stability.csv", index=False, encoding="utf-8-sig")
     local_pairs.to_csv(out_dir / "p_msp_contribution_local_pairs.csv", index=False, encoding="utf-8-sig")
     readout.to_csv(out_dir / "p_msp_contribution_delta_readout.csv", index=False, encoding="utf-8-sig")
+    contrasts = conditional_contribution_tests(stability, readout, seed=int(meta["seed"]))
+    contrasts.to_csv(out_dir / "p_msp_contribution_conditional_contrasts.csv", index=False, encoding="utf-8-sig")
 
     stability_summary = (
         stability.groupby(["representation", "representation_label"], as_index=False)
@@ -300,11 +435,11 @@ def summarize(
         df.to_csv(out_dir / f"{name}.csv", index=False, encoding="utf-8-sig")
 
     lines = [
-        "# P/MSP contribution audit",
+        "# Seven-group K/P/MSP contribution audit",
         "",
-        "Purpose: separate the global biochemical property block (P) from the multi-scale positional property block (MSP) under the same internally normalized block-concatenation rule used in the manuscript.",
+        "Purpose: evaluate all seven non-empty combinations of the canonical local k-mer composition block (K), global biochemical property block (P), and multi-scale positional property block (MSP) under the same internally normalized block-concatenation rule used in the manuscript.",
         "",
-        "Interpretation boundary: this audit does not assume that P and MSP are orthogonal. It asks whether adding P, MSP, or both changes perturbation stability and local-delta readability in distinct ways.",
+        "Interpretation boundary: this audit does not assume that K, P and MSP are orthogonal or statistically independent. It tests metric-specific conditional contributions under the controlled perturbation grid.",
         "",
         "## Run metadata",
         "",
@@ -330,17 +465,23 @@ def summarize(
         "",
         readout_by_length.to_markdown(index=False, floatfmt=".4f"),
         "",
+        "## Prespecified conditional-contribution contrasts",
+        "",
+        "Positive improvement values favour the complete CK4P-MSP representation. Confidence intervals are paired-cell bootstrap intervals; Wilcoxon tests are two-sided and q values use Benjamini-Hochberg correction across the 12 prespecified rows.",
+        "",
+        contrasts.to_markdown(index=False, floatfmt=".4f"),
+        "",
     ]
     (out_dir / "p_msp_contribution_summary.md").write_text("\n".join(lines), encoding="utf-8")
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="Audit the separate contribution of P and MSP blocks.")
-    parser.add_argument("--reads", default=str(PROJECT_ROOT / "results" / "stage3" / "position_property_ablation" / "stage3_compact_baseline_reads.csv"))
-    parser.add_argument("--triplets", default=str(PROJECT_ROOT / "results" / "stage3" / "local_mutation_sensitivity" / "local_mutation_triplets.csv"))
-    parser.add_argument("--output-dir", default=str(PROJECT_ROOT / "results" / "stage3" / "reviewer_response" / "p_msp_contribution"))
+    parser = argparse.ArgumentParser(description="Run the seven-group K/P/MSP contribution audit.")
+    parser.add_argument("--reads", default=str(PROJECT_ROOT / "results" / "stage3" / "contract_v2" / "compact_baselines" / "stage3_compact_baseline_reads.csv"))
+    parser.add_argument("--triplets", default=str(PROJECT_ROOT / "results" / "stage3" / "contract_v2" / "local_mutation_sensitivity" / "local_mutation_triplets.csv"))
+    parser.add_argument("--output-dir", default=str(PROJECT_ROOT / "results" / "stage3" / "contract_v2" / "p_msp_contribution"))
     parser.add_argument("--lengths", default="69,75,100,150")
-    parser.add_argument("--conditions", default="substitution_1pct,N_3pct,trim_5bp,substitution_1pct_N_3pct,local_mismatch_6bp,short_indel_1pct")
+    parser.add_argument("--conditions", default="substitution_1pct,N_3pct,trim_5bp,substitution_1pct_N_3pct,local_mismatch_6bp,short_indel")
     parser.add_argument("--max-pairs", type=int, default=500)
     parser.add_argument("--max-triplets", type=int, default=400)
     parser.add_argument("--cv-folds", type=int, default=5)
@@ -370,7 +511,7 @@ def main() -> None:
     }
     (out_dir / "p_msp_contribution_run.json").write_text(json.dumps(meta, indent=2, ensure_ascii=False), encoding="utf-8")
     summarize(stability, local_pairs, readout, out_dir, meta)
-    print(f"Wrote P/MSP contribution audit to {out_dir}")
+    print(f"Wrote seven-group K/P/MSP contribution audit to {out_dir}")
 
 
 if __name__ == "__main__":

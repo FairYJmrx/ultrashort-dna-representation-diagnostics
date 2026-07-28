@@ -30,7 +30,7 @@ The analysis scripts used to generate tables, figures and reviewer-response audi
 
 ## Supplementary Data
 
-Supplementary Data are available at *NAR Genomics and Bioinformatics* Online. The supplementary file includes Supplementary Figures S1-S10 and Supplementary Table S1. The underlying machine-readable source tables and figure-generation inputs are included in the review-access repository and will be included in the public archived release.
+Supplementary Data are available at *NAR Genomics and Bioinformatics* Online. The supplementary file includes Supplementary Figures S1-S10 and Supplementary Tables S1 and S2. The underlying machine-readable source tables and figure-generation inputs are included in the review-access repository and will be included in the public archived release.
 
 ## Ethics and Data Governance
 
@@ -38,7 +38,7 @@ No patient-level clinical sequencing reads, patient identifiers or patient-deriv
 
 ## Author Contributions
 
-Ruixiang Mei: Conceptualization, methodology, software, formal analysis, investigation, data curation, visualization, writing - original draft, and writing - review and editing. Jianhua Huang: Supervision and writing - review and editing. Final CRediT roles should be confirmed before submission.
+Ruixiang Mei: Conceptualization, methodology, software, formal analysis, investigation, data curation, visualization, writing - original draft, and writing - review and editing. Jianhua Huang: Supervision and writing - review and editing. Ruixiang Mei ORCID: https://orcid.org/0009-0003-2128-0726.
 
 ## Funding
 
@@ -54,4 +54,4 @@ The authors declare no competing interests.
 
 ## References
 
-The final submission copy should convert temporary citation keys such as `[@Wood2019]` into NAR/OUP-compliant numbered references. Do not leave citation keys in the final submission manuscript. The current working bibliography is `info/references/references.bib`; unresolved or newly added citation keys should be checked against primary metadata before export.
+The final submission copy should convert temporary citation keys such as `[@Wood2019]` into NAR/OUP-compliant numbered references. Do not leave citation keys in the final submission manuscript. The current working bibliography is `info/paper_latex/references.bib`; unresolved or newly added citation keys should be checked against primary metadata before export.

@@ -25,14 +25,18 @@ DEFAULT_OUT = ROOT / "figures" / "contract_v2"
 
 COLORS = {
     "CK4": "#5B677A",
+    "P": "#70A5D8",
+    "MSP": "#5DBA9B",
     "CK4+P": "#2F6BDE",
     "CK4+MSP": "#009E73",
+    "P+MSP": "#7C6EA8",
     "CK4P-MSP": "#B83A62",
     "CK5": "#9A7D4F",
     "Hashed k=15": "#D17A22",
     "Sparse RP k=15": "#7768AE",
 }
-ORDER = ["CK4", "CK4+P", "CK4+MSP", "CK4P-MSP"]
+ABLATION_ORDER = ["CK4", "P", "MSP", "CK4+P", "CK4+MSP", "P+MSP", "CK4P-MSP"]
+NESTED_ORDER = ["CK4", "CK4+P", "CK4+MSP", "CK4P-MSP"]
 
 
 def style() -> None:
@@ -78,43 +82,39 @@ def contribution_data() -> tuple[pd.DataFrame, pd.DataFrame]:
 
 
 def figure_2(out: Path) -> None:
-    """Show complementary P and MSP roles without asserting independence."""
+    """Show metric-specific K, P and MSP roles across all seven combinations."""
     stability, readout = contribution_data()
-    stability = stability.set_index("representation_label").loc[ORDER].reset_index()
-    readout = readout.set_index("representation_label").loc[ORDER].reset_index()
-    fig, axes = plt.subplots(1, 3, figsize=(7.15, 2.35), gridspec_kw={"width_ratios": [1, 1, 1.08]})
-
-    for ax, column, ylabel, title in [
-        (axes[0], "l2_delta_mean", "mean paired L2 drift", "Nuisance stability"),
-        (axes[1], "macro_f1_mean", "grouped delta-readout macro-F1", "Local-change readout"),
-    ]:
-        source = stability if column in stability else readout
-        values = source[column].to_numpy()
-        ax.bar(np.arange(len(ORDER)), values, color=[COLORS[x] for x in ORDER], width=0.68)
-        ax.set_xticks(np.arange(len(ORDER)), ORDER, rotation=27, ha="right")
-        ax.set_ylabel(ylabel)
-        clean_axes(ax)
-        panel_label(ax, "A" if ax is axes[0] else "B", title)
-        if column == "l2_delta_mean":
-            ax.set_ylim(0, max(values) * 1.18)
-        else:
-            ax.set_ylim(0.84, 1.0)
-        for i, value in enumerate(values):
-            ax.text(i, value + (0.008 if column != "l2_delta_mean" else 0.005), f"{value:.3f}", ha="center", va="bottom", fontsize=7)
-
-    x = stability["n_features"].to_numpy()
-    y = stability["l2_delta_mean"].to_numpy()
-    for label, xx, yy in zip(ORDER, x, y):
-        axes[2].scatter(xx, yy, s=58, color=COLORS[label], edgecolor="white", linewidth=0.7, zorder=3)
-        axes[2].annotate(label, (xx, yy), xytext=(4, 3), textcoords="offset points", fontsize=7)
-    axes[2].set_xlabel("feature dimension")
-    axes[2].set_ylabel("mean paired L2 drift")
-    clean_axes(axes[2])
-    panel_label(axes[2], "C", "Compact trade-off")
-    axes[2].set_xlim(120, 235)
-    axes[2].set_ylim(0.10, 0.24)
-    fig.suptitle("P and MSP provide related layers with complementary empirical roles", y=1.03, fontsize=10.4, fontweight="bold")
-    fig.tight_layout()
+    stability = stability.set_index("representation_label").loc[ABLATION_ORDER].reset_index()
+    readout = readout.set_index("representation_label").loc[ABLATION_ORDER].reset_index()
+    merged = stability.merge(
+        readout[["representation_label", "macro_f1_mean", "macro_f1_std_mean"]],
+        on="representation_label",
+        how="left",
+    )
+    y = np.arange(len(ABLATION_ORDER))[::-1]
+    fig, axes = plt.subplots(1, 3, figsize=(7.15, 3.05), sharey=True, gridspec_kw={"wspace": 0.16})
+    panel_specs = [
+        ("l2_delta_mean", "mean paired L2 drift", (0.0, 0.27), "A", "Global drift"),
+        ("macro_f1_mean", "grouped delta-readout macro-F1", (0.56, 1.005), "B", "Local-change readout"),
+        ("retrieval_top1_mean", "nearest-clean retrieval", (0.0, 1.09), "C", "Nearest-clean retrieval"),
+    ]
+    for ax, (column, xlabel, xlim, tag, title) in zip(axes, panel_specs):
+        values = merged[column].to_numpy(dtype=float)
+        ax.hlines(y, xlim[0], values, color="#D9DDE3", linewidth=1.1, zorder=1)
+        for yy, label, value in zip(y, ABLATION_ORDER, values):
+            ax.scatter(value, yy, s=46, color=COLORS[label], edgecolor="white", linewidth=0.65, zorder=3)
+            offset = 0.008 * (xlim[1] - xlim[0])
+            ax.text(min(value + offset, xlim[1] - 0.005), yy, f"{value:.3f}", va="center", ha="left", fontsize=6.4)
+        ax.set_xlim(*xlim)
+        ax.set_xlabel(xlabel)
+        ax.grid(axis="x", color="#E1E4E8", linewidth=0.55, alpha=0.85)
+        ax.grid(axis="y", visible=False)
+        ax.spines[["top", "right"]].set_visible(False)
+        panel_label(ax, tag, title)
+    axes[0].set_yticks(y, ABLATION_ORDER)
+    axes[0].tick_params(axis="y", length=0)
+    fig.suptitle("K, P and MSP contribute along different representation-audit axes", y=1.01, fontsize=10.4, fontweight="bold")
+    fig.subplots_adjust(left=0.12, right=0.995, bottom=0.17, top=0.83, wspace=0.20)
     save(fig, out, "figure_2_p_msp_contribution")
 
 
@@ -127,7 +127,7 @@ def figure_3(out: Path) -> None:
     vector["display"] = vector["short"].replace({"Hashed k=15, d=222": "Hashed k=15", "CK15 random projection, d=222": "Sparse RP k=15"})
     order = ["CK4", "CK4+P", "CK4P-MSP", "CK5", "Hashed k=15", "Sparse RP k=15"]
     vector = vector.set_index("display").loc[order].reset_index()
-    short_ticks = ["CK4", "CK4+P", "CK4P", "CK5", "Hash\nk=15", "RP\nk=15"]
+    short_ticks = ["CK4", "CK4+P", "CK4P-\nMSP", "CK5", "Hash\nk=15", "RP\nk=15"]
 
     fig, axes = plt.subplots(1, 3, figsize=(7.15, 2.35), gridspec_kw={"width_ratios": [1.1, 1.05, 1.15]})
     for ax, col, ylabel, tag, title in [
@@ -167,7 +167,7 @@ def figure_6(out: Path) -> None:
     # Use the matched contribution audit for all four nested representations.
     _, contribution = contribution_data()
     readout = contribution.rename(columns={"representation_label": "display", "macro_f1_mean": "macro_f1", "macro_f1_std_mean": "std"})
-    readout = readout.set_index("display").loc[ORDER].reset_index()
+    readout = readout.set_index("display").loc[NESTED_ORDER].reset_index()
 
     ratio = pd.read_csv(RESULTS / "local_mutation_sensitivity" / "local_mutation_sensitivity_summary.csv")
     labels = {"ckmer4_count_l2": "CK4", "ckmer4_property_l2": "CK4+P", "ck4p_msp": "CK4P-MSP"}
@@ -177,9 +177,9 @@ def figure_6(out: Path) -> None:
     ratio = ratio.set_index("display").loc[["CK4", "CK4+P", "CK4P-MSP"]].reset_index()
 
     fig, axes = plt.subplots(1, 2, figsize=(7.15, 2.35), gridspec_kw={"width_ratios": [1.18, 0.82]})
-    x = np.arange(len(ORDER))
-    axes[0].bar(x, readout["macro_f1"], yerr=readout["std"], capsize=2.5, color=[COLORS[v] for v in ORDER], width=0.7)
-    axes[0].set_xticks(x, ORDER, rotation=20, ha="right")
+    x = np.arange(len(NESTED_ORDER))
+    axes[0].bar(x, readout["macro_f1"], yerr=readout["std"], capsize=2.5, color=[COLORS[v] for v in NESTED_ORDER], width=0.7)
+    axes[0].set_xticks(x, NESTED_ORDER, rotation=20, ha="right")
     axes[0].set_ylim(0.84, 1.025)
     axes[0].set_ylabel("grouped delta-readout macro-F1")
     clean_axes(axes[0])

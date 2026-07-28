@@ -45,6 +45,21 @@ def main() -> None:
     np.testing.assert_allclose(matrix, public.matrix, rtol=0.0, atol=1e-12)
     np.testing.assert_allclose(np.linalg.norm(public.matrix, axis=1), 1.0, rtol=0.0, atol=1e-12)
 
+    blocks = {"K": public.ck4, "P": public.p, "M": public.msp}
+    expected_combinations = {
+        ("K",): 136,
+        ("P",): 11,
+        ("M",): 75,
+        ("K", "P"): 147,
+        ("K", "M"): 211,
+        ("P", "M"): 86,
+        ("K", "P", "M"): 222,
+    }
+    for parts, dimension in expected_combinations.items():
+        combined = np.hstack([blocks[part] for part in parts]) / np.sqrt(len(parts))
+        assert combined.shape == (len(sequences), dimension)
+        np.testing.assert_allclose(np.linalg.norm(combined, axis=1), 1.0, rtol=0.0, atol=1e-12)
+
     standalone = load_standalone()
     if standalone is not None:
         external = standalone.build_ck4p_msp_features(sequences).matrix
@@ -53,6 +68,7 @@ def main() -> None:
     else:
         print("note: optional standalone script is intentionally not part of this repository checkout")
     print(f"ok: CK4P-MSP contract shape {public.matrix.shape}")
+    print("ok: all seven non-empty K/P/MSP block combinations satisfy the fixed normalization contract")
 
 
 if __name__ == "__main__":

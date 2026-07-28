@@ -15,12 +15,12 @@ Use this file to keep the split drafts coherent.
 - Preferred scenario phrase: `controlled short-read (69-150 bp) mNGS-motivated settings`.
 - Do not use `clinical-like` in the revised core draft.
 - Do not claim clinical validation.
-- Do not claim replacement of exact k-mer, alignment, or curated database methods.
+- Do not claim replacement of exact matching, alignment, or curated database methods.
 - Do not claim CK4P-MSP is a universal readout winner.
 
 ## Locked terminology
 
-- `identity backbone`
+- `canonical local k-mer composition backbone`
 - `biochemical side channel`
 - `multi-scale property pooling`
 - `diagnostic upper bound`
@@ -36,7 +36,7 @@ Use this file to keep the split drafts coherent.
 - Prefer `could serve`, `may support`, `is consistent with`, or `suggests` when the claim is bounded.
 - Prefer `fine-grained positional information` over `fine positional information`.
 - Prefer `scenario-specific` or `condition-specific` over vague `regime-specific` unless the regime is explicitly named.
-- Prefer `exact identity evidence` or `exact matching evidence` over looser phrases like `identity signal` when discussing backbone methods.
+- Use `canonical local k-mer composition` for CK4/CK5. Reserve `exact matching evidence` for database- or alignment-based systems.
 - Prefer `auxiliary channel`, `auxiliary descriptor`, or `auxiliary summary`, not `replacement`.
 
 ## Avoid list
@@ -60,8 +60,11 @@ Use this file to keep the split drafts coherent.
 ## Evidence priorities
 
 - Stability claims should center on paired cosine and L2 drift.
-- Local mutation claims should center on delta-readout and selective sensitivity, with careful wording about raw distance.
+- Local mutation claims should center on grouped delta-readout. Selective-sensitivity ratios are a boundary metric and must not be presented as a CK4P-MSP advantage.
 - Retrieval can appear as a supporting identity-preservation metric, but not as the lead inferential result.
+- The central ablation is CK4 versus CK4+P versus CK4+MSP versus CK4P-MSP: P and MSP reduce drift, MSP carries most local-change readout, and the combined representation is the compact trade-off.
+- Do not describe CK4P-MSP as globally most stable: CK4+P is more stable on the current global perturbation grid.
+- MinHash is a native collision/Jaccard control, not an L2-vector or shallow-readout baseline.
 
 ## Figure policy
 
@@ -106,8 +109,8 @@ These items must stay visible before the next manuscript/DOCX rebuild.
 - Add a `CK4 + random/permuted property block` control to test whether the observed stability gain can be reproduced by low-variance dilution alone.
 - Add block-wise drift reporting for identity, biochemical and MSP blocks instead of relying only on global L2.
 - Add a 69/75 bp pooled-feature reliability audit: bootstrap variance or confidence intervals for P/MSP pooled features by read length and bin scale.
-- Treat MI/conditional MI as empirical support under the tested perturbation grid, not as a universal information-theoretic proof.
-- In Results, make the claim conditional: P contributes perturbation-relevant information in the current controlled grid if it beats random/permuted blocks on MI, delta-readout and block-wise drift.
+- Treat MI/conditional MI as estimator-dependent empirical support under the tested perturbation grid, not as a universal information-theoretic proof.
+- In Results, make the claim conditional: KSG-style distance summaries show empirical local-versus-noise separability beyond CK4 under the tested grid. Do not rely on legacy permutation/Gaussian-block controls until they are regenerated under the public contract.
 - In Discussion, explicitly acknowledge that heterogeneous concatenation is an engineering diagnostic representation, not a claim of equal physical units across k-mer and biochemical summaries.
 
 ## Open Reviewer-Risk TODOs: Dataset Scale and Simulation Rationale
@@ -139,7 +142,7 @@ Status: added after the latest reviewer-style critique. Do not run additional ex
    - Avoid Word-hostile raw LaTeX in the final DOCX unless the builder converts it safely; if not, use equation text blocks with standard mathematical symbols carefully checked in PDF export.
 
 2. Normalization crosstalk / metric definition
-   - Clarify that the paper's intended diagnostic metric is block-normalized and block-orthogonal, not an unqualified raw concatenation followed by one opaque global normalization.
+   - Clarify that the paper's intended diagnostic metric is assembled from separately normalized blocks with fixed prespecified weights, not an unqualified raw concatenation followed by a read-specific global normalization. Concatenation keeps block coordinates disjoint, but this must not be described as statistical independence or physical orthogonality.
    - Define block-normalized vectors first, then define weighted block distance, preferably: `d_w^2(i,j) = alpha^2 ||Khat_i-Khat_j||_2^2 + beta^2 ||Phat_i-Phat_j||_2^2 + gamma^2 ||Mhat_i-Mhat_j||_2^2`.
    - State explicitly that this is a standardized diagnostic drift, not a natural physical distance equating k-mer counts and biochemical units.
    - Align this formula with actual experiments and with block-wise drift, block-weight audit, and P/MSP counterfactual controls.

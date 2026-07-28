@@ -65,7 +65,7 @@ and summaries, but does not include full FASTQ/SAM intermediates.
 
 The main method is CK4P-MSP:
 
-- CK4: reverse-complement canonical 4-mer identity block.
+- CK4: reverse-complement canonical 4-mer composition block.
 - P: global biochemical-property summary.
 - MSP: multi-scale positional property pooling over relative-position bins.
 - CK4P-MSP: block-normalized CK4, P and MSP with default weights
@@ -101,6 +101,11 @@ where local perturbation variants share a source template.
 .\.venv\Scripts\python.exe experiments\audits\run_msp_bin_gamma_sensitivity_audit.py --output-dir results\stage3\contract_v2\msp_bin_gamma_sensitivity
 .\.venv\Scripts\python.exe experiments\audits\run_property_redundancy_and_runtime_audit.py --output-dir results\stage3\contract_v2\property_redundancy_runtime
 ```
+
+The K/P/MSP contribution audit evaluates all seven non-empty block combinations
+and reports prespecified conditional contrasts for K given P+MSP, P given
+CK4+MSP, and MSP given CK4+P. Grouped delta-readout keeps all derivatives of a
+source template in the same fold.
 
 See `docs/contract_v2_evidence_map.md` for the claim, result-table and script
 mapping. Historical ART, CAMI and full-position probes remain available for

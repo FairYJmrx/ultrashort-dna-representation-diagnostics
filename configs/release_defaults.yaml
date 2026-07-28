@@ -29,6 +29,8 @@ representations:
       include_std_default: false
       normalization: l2
   mixed:
+    p_plus_msp:
+      blocks: [p, msp]
     ck4_plus_p:
       blocks: [ck4, p]
     ck4_plus_msp:
@@ -56,7 +58,7 @@ metrics:
   stability: [paired_cosine, l2_drift, nearest_clean_retrieval]
   readout: [macro_f1, accuracy]
   local_change: [selective_sensitivity_ratio, delta_readout]
-  audits: [paired_wilcoxon_bh, block_weight_sensitivity, empirical_mi, knn_mi, p_msp_redundancy, runtime]
+  audits: [seven_group_k_p_msp_ablation, conditional_contribution_bootstrap, paired_wilcoxon_bh, block_weight_sensitivity, empirical_mi, knn_mi, p_msp_redundancy, runtime]
 
 claim_boundaries:
   - Not a clinical diagnostic validation.

@@ -3,7 +3,7 @@
 This module is the stable, manuscript-facing entrypoint for the main compact
 representation. It keeps the three evidence blocks visible:
 
-- CK4: reverse-complement canonical 4-mer identity counts.
+- CK4: reverse-complement canonical 4-mer composition counts.
 - P: global biochemical-property summary.
 - MSP: multi-scale positional property pooling.
 
@@ -140,7 +140,7 @@ def build_ck4_block(
     config: CK4PMSPConfig | None = None,
     train_indices: Sequence[int] | None = None,
 ) -> tuple[np.ndarray, dict[str, int]]:
-    """Build the reverse-complement canonical k-mer identity block."""
+    """Build the reverse-complement canonical local k-mer composition block."""
     config = config or CK4PMSPConfig()
     sequence_list = _as_sequence_list(sequences)
     vocabulary = None

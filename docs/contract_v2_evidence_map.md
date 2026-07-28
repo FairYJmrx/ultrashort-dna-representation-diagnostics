@@ -7,7 +7,7 @@ results from being combined in a single claim.
 | Claim role | Script | Result directory | Interpretation boundary |
 |---|---|---|---|
 | Compact stability | `experiments/main/run_stage3_compact_baselines.py` | `results/stage3/contract_v2/compact_baselines/` | CK4P-MSP is more stable than CK4/CK5; CK4+P is more stable globally. |
-| P/MSP ablation | `experiments/audits/run_p_msp_contribution_audit.py` | `results/stage3/contract_v2/p_msp_contribution/` | P and MSP contribute distinct empirical effects; this is not an orthogonality proof. |
+| Seven-group K/P/MSP ablation | `experiments/audits/run_p_msp_contribution_audit.py` | `results/stage3/contract_v2/p_msp_contribution/` | All non-empty block combinations and three prespecified conditional contrasts are reported; metric-specific contributions are not an orthogonality or universal-necessity proof. |
 | Local-change readout | `experiments/main/run_local_mutation_sensitivity.py` | `results/stage3/contract_v2/local_mutation_sensitivity/` | Grouped template-level cross-validation tests local-change versus matched-noise readability. |
 | High-k compactness control | `experiments/audits/run_high_k_compressed_baselines.py` | `results/stage3/contract_v2/high_k_compressed_baselines/` | Hashing-trick and random-projection vectors are L2 controls; MinHash is reported only through native collision/Jaccard agreement. |
 | Empirical signal-separability audit | `experiments/audits/run_knn_mi_robustness_audit.py` | `results/stage3/contract_v2/knn_mi_robustness/` | KSG-style estimates are estimator-dependent empirical summaries, not a theorem. |

@@ -267,7 +267,7 @@ for i, (_, r) in enumerate(mi_plot.iterrows()):
 ax.set_ylabel('Mutual-information proxy (bits)')
 ax.set_xticks(x)
 ax.set_xticklabels(mi_plot['label'], rotation=20, ha='right')
-ax.set_title('Supplementary Figure S2 | Empirical information-gain audit', loc='left')
+ax.set_title('Supplementary Figure S2 | Empirical MI proxy audit', loc='left')
 ax.grid(True, axis='y', color='#E9ECEF', linewidth=0.6)
 ax.legend(loc='upper left')
 ax.text(0.99, 0.02, '* permutation P <= 0.01', transform=ax.transAxes, ha='right', va='bottom', fontsize=7, color='#495057')
