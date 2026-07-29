@@ -10,7 +10,7 @@ scripts and outputs.
 
 | Path | Purpose |
 |---|---|
-| `methods/` | Canonical implementation of sequence utilities, CK4/CK5, P, MSP, CK4P-MSP, CSP, full-position encodings and evaluation helpers. |
+| `methods/` | Canonical implementation of CK4P-MSP, historical handcrafted descriptors, sequence utilities, CSP/full-position controls and evaluation helpers. |
 | `src/` | Compatibility wrappers for older scripts that import `src.*`. New code should import `methods.*`. |
 | `data_pipeline/` | Maintained public download, preprocessing and simulation implementations. |
 | `experiments/` | Maintained main experiments and method-hardening audits. |
@@ -52,6 +52,7 @@ Run a quick import smoke test:
 ```powershell
 .\.venv\Scripts\python.exe smoke_tests\test_imports.py
 .\.venv\Scripts\python.exe smoke_tests\test_method_contract.py
+.\.venv\Scripts\python.exe smoke_tests\test_historical_descriptors.py
 .\.venv\Scripts\python.exe smoke_tests\test_repository_layout.py
 .\.venv\Scripts\python.exe smoke_tests\test_contract_artifacts.py
 ```
@@ -77,6 +78,12 @@ The main method is CK4P-MSP:
 The mixed L2 metric is standardized representation drift, not a natural
 biophysical distance. MI/KSG analyses are estimator-dependent empirical audits,
 not universal information-theoretic proofs.
+
+The manuscript does not claim first composition--property fusion or minimum
+drift. PseKNC, NCP+ANF and PseEIIP are implemented in
+`methods/historical_descriptors.py` as direct historical boundaries. Under the
+reported audit, PseKNC is smaller and more stable, whereas CK4P-MSP retains
+stronger grouped local-change readability and explicit K/P/MSP attribution.
 
 See `docs/method_contract.md` and `configs/release_defaults.yaml` for the
 formal method contract and default settings.
@@ -105,6 +112,7 @@ where local perturbation variants share a source template.
 .\.venv\Scripts\python.exe experiments\audits\run_property_scaling_audit.py --output-dir results\stage3\contract_v2\property_scaling
 .\.venv\Scripts\python.exe experiments\audits\run_msp_bin_gamma_sensitivity_audit.py --output-dir results\stage3\contract_v2\msp_bin_gamma_sensitivity
 .\.venv\Scripts\python.exe experiments\audits\run_property_redundancy_and_runtime_audit.py --output-dir results\stage3\contract_v2\property_redundancy_runtime
+.\.venv\Scripts\python.exe experiments\audits\run_historical_descriptor_audit.py --output-dir results\stage3\contract_v2\historical_descriptor_audit
 .\.venv\Scripts\python.exe experiments\main\run_stage3_cami_probe.py --input data\stage3\cami\cami_toy_low_subset_reads_expanded.csv --output-dir results\stage3\contract_v2\cami_toy_readout
 .\.venv\Scripts\python.exe data_pipeline\simulate\run_cami2_marine_lightweight_probe.py --output-dir results\stage3\contract_v2\cami2_marine_stability
 ```
@@ -159,6 +167,7 @@ must not be used to make claims about the public CK4P-MSP contract.
 .\.venv\Scripts\python.exe experiments\audits\run_local_mutation_fraction_sweep.py
 .\.venv\Scripts\python.exe experiments\audits\run_local_change_factorial_audit.py
 .\.venv\Scripts\python.exe experiments\audits\run_property_scaling_audit.py
+.\.venv\Scripts\python.exe experiments\audits\run_historical_descriptor_audit.py
 ```
 
 ### Figures, tables and audits
@@ -169,6 +178,8 @@ must not be used to make claims about the public CK4P-MSP contract.
 .\.venv\Scripts\python.exe analysis\figures\generate_nature_main_figures.py
 .\.venv\Scripts\python.exe analysis\figures\generate_paper_supplementary_figures.py
 .\.venv\Scripts\python.exe analysis\figures\generate_contract_v2_figures.py
+.\.venv\Scripts\python.exe analysis\figures\generate_supp_fig_s8_redundancy_runtime_audit.py
+.\.venv\Scripts\python.exe analysis\figures\generate_supp_fig_s12_historical_descriptor_audit.py
 .\.venv\Scripts\python.exe analysis\tables\generate_contract_v2_tables.py
 .\.venv\Scripts\python.exe analysis\audits\audit_result_inventory.py
 .\.venv\Scripts\python.exe analysis\audits\audit_final_provenance.py

@@ -1,0 +1,47 @@
+{
+  "elapsed_seconds": 831.0765812397003,
+  "reads_csv": "D:\\AI-NGS\\info\\release_code\\results\\stage3\\contract_v2\\compact_baselines\\stage3_compact_baseline_reads.csv",
+  "triplets_csv": "D:\\AI-NGS\\info\\release_code\\results\\stage3\\contract_v2\\local_mutation_sensitivity\\local_mutation_triplets.csv",
+  "representations": [
+    "ck4",
+    "ck4p_msp",
+    "pseknc_k3_l3",
+    "ncp_anf",
+    "pseeiip"
+  ],
+  "lengths": [
+    69,
+    75,
+    100,
+    125,
+    150
+  ],
+  "conditions": [
+    "substitution_1pct",
+    "N_3pct",
+    "trim_5bp",
+    "substitution_1pct_N_3pct",
+    "short_indel",
+    "local_mismatch_6bp"
+  ],
+  "readout_conditions": [
+    "clean",
+    "substitution_1pct",
+    "N_3pct",
+    "trim_5bp",
+    "substitution_1pct_N_3pct"
+  ],
+  "classifiers": [
+    "logistic"
+  ],
+  "max_retrieval_pairs": 400,
+  "max_per_class": 60,
+  "cv_folds": 5,
+  "runtime_length": 75,
+  "runtime_reads": 1000,
+  "runtime_repeats": 5,
+  "seed": 20260729,
+  "n_stability_rows": 150,
+  "n_readout_rows": 1375,
+  "n_local_rows": 60
+}

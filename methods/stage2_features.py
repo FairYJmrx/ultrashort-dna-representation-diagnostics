@@ -430,13 +430,50 @@ def build_feature_matrix(
     # experiments, but do not use them as aliases for CK4P-MSP.
     public_block_names = {"ck4", "p", "msp", "ck4_p", "ck4_msp", "p_msp", "ck4p_msp"}
     if name in public_block_names:
-        from .ck4p_msp import build_block_combination, build_ck4p_msp_features
-
-        features = build_ck4p_msp_features(
-            sequences,
-            train_indices=train_indices,
+        from .ck4p_msp import (
+            BLOCK_COMBINATIONS,
+            build_ck4_block,
+            build_msp_block,
+            build_p_block,
+            build_property_blocks,
         )
-        x = build_block_combination(features, name)
+
+        selected = BLOCK_COMBINATIONS[name]
+        shared_property_blocks: dict[str, np.ndarray] = {}
+        if "P" in selected and "M" in selected:
+            p_block, msp_block = build_property_blocks(sequences)
+            shared_property_blocks = {"P": p_block, "M": msp_block}
+        blocks: list[np.ndarray] = []
+        for block_name in selected:
+            if block_name == "K":
+                block, _ = build_ck4_block(sequences, train_indices=train_indices)
+            elif block_name == "P":
+                block = shared_property_blocks.get("P")
+                if block is None:
+                    block = build_p_block(sequences)
+            elif block_name == "M":
+                block = shared_property_blocks.get("M")
+                if block is None:
+                    block = build_msp_block(sequences)
+            else:  # pragma: no cover - guarded by the public contract mapping.
+                raise ValueError(f"Unsupported public block: {block_name}")
+            blocks.append(block)
+        x = np.hstack(blocks) / np.sqrt(float(len(blocks)))
+        nnz = np.count_nonzero(np.abs(x) > 1e-12)
+        total = x.shape[0] * x.shape[1]
+        return x, FeatureInfo(
+            name=name,
+            n_features=int(x.shape[1]),
+            density=float(nnz / total) if total else 0.0,
+            avg_nnz_per_read=float(nnz / max(1, x.shape[0])),
+            observed_vocab_size=None,
+        )
+
+    historical_descriptor_names = {"pseknc_k3_l3", "ncp_anf", "pseeiip"}
+    if name in historical_descriptor_names:
+        from .historical_descriptors import build_historical_descriptor_matrix
+
+        x = build_historical_descriptor_matrix(sequences, name, length=length)
         nnz = np.count_nonzero(np.abs(x) > 1e-12)
         total = x.shape[0] * x.shape[1]
         return x, FeatureInfo(

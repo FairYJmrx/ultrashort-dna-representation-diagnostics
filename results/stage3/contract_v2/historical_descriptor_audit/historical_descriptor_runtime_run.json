@@ -1,0 +1,17 @@
+{
+  "elapsed_seconds": 35.625860929489136,
+  "representations": [
+    "ck4",
+    "ck4p_msp",
+    "pseknc_k3_l3",
+    "ncp_anf",
+    "pseeiip"
+  ],
+  "runtime_length": 75,
+  "runtime_reads": 1000,
+  "runtime_repeats": 5,
+  "runtime_protocol": "warm-up; randomized order within repeat; garbage collection before timing; one numerical-library thread",
+  "platform": "Windows-11-10.0.26200-SP0",
+  "python": "3.13.9",
+  "seed": 20260729
+}

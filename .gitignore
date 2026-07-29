@@ -13,7 +13,8 @@ results/runs/
 results/_smoke*/
 results/stage3/figures/
 manuscript/figures/nature_fig*
-paper_latex/qa/
+paper_latex/qa/*
+!paper_latex/qa/latex_pdf_qa_report.md
 results/stage2/parameter_sensitivity/
 results/stage3/art_illumina/fastq/
 results/stage3/art_illumina/art_paired_reads.csv

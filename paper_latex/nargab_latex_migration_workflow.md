@@ -1,6 +1,6 @@
 # NAR G&B LaTeX Migration Workflow
 
-This document defines the workflow for migrating the current paper-folder manuscript into an OUP/NAR-compatible LaTeX source package and for auditing the generated PDF before submission.
+This document records the completed migration into an OUP/NAR-compatible LaTeX source package and defines the current build and PDF-audit workflow. It is not an instruction to regenerate the revised manuscript from historical Markdown.
 
 ## 1. Target and Submission Constraints
 
@@ -34,15 +34,14 @@ Still to confirm before final submission:
 
 ### Manuscript text
 
-Use the split Markdown manuscript as the authoritative text source:
+The canonical submission text is maintained directly in:
 
-- `D:/AI-NGS/info/paper/01_abstract.md`
-- `D:/AI-NGS/info/paper/02_intro_related_work.md`
-- `D:/AI-NGS/info/paper/03_method_experiments.md`
-- `D:/AI-NGS/info/paper/04_limitations_future_conclusion.md`
-- `D:/AI-NGS/info/paper/05_references.md`
+- `D:/AI-NGS/info/paper_latex/main.tex`
+- `D:/AI-NGS/info/paper_latex/sections/`
+- `D:/AI-NGS/info/paper_latex/supplementary.tex`
+- `D:/AI-NGS/info/paper_latex/references.bib`
 
-Do not use `final_manuscript.md` or older `manuscript/nature_style_manuscript.docx` as the source of truth.
+The split Markdown files in `paper/`, `final_manuscript.md` and older Word manuscripts are historical provenance only. They must not overwrite the revised LaTeX text or numerical claims.
 
 ### Citation source
 
@@ -74,7 +73,9 @@ Supplementary figures:
 - Supplementary Figure S7: `D:/AI-NGS/info/paper/figures/supp_fig_s7_method_hardening_audit.pdf`
 - Supplementary Figure S8: `D:/AI-NGS/info/paper/figures/supp_fig_s8_redundancy_runtime_audit.pdf`
 - Supplementary Figure S9: `D:/AI-NGS/info/paper/figures/supp_fig_s9_p_msp_relation_audit.pdf`
-- Supplementary Figure S10: `D:/AI-NGS/info/paper/figures/supp_fig_s10_cami2_marine_probe.pdf`
+- Supplementary Figure S10: `D:/AI-NGS/info/paper_latex/figures/supplementary/supp_fig_s10_cami2_marine_probe.pdf`
+- Supplementary Figure S11: `D:/AI-NGS/info/paper_latex/figures/supplementary/supp_fig_s11_factorial_scaling.pdf`
+- Supplementary Figure S12: `D:/AI-NGS/info/paper_latex/figures/supplementary/supp_fig_s12_historical_descriptor_audit.pdf`
 
 Figure inventory:
 
@@ -128,7 +129,7 @@ D:/AI-NGS/info/paper_latex/
   nargab_latex_migration_workflow.md
 ```
 
-The LaTeX project should be generated from the paper-folder source, not manually edited in many disconnected places.
+The LaTeX project is now the canonical, directly maintained source. Numerical changes must begin with the release result tables and figure-generation scripts, then be propagated to the corresponding LaTeX section, table or caption.
 
 ## 5. LaTeX Source-Building Rules
 
@@ -177,8 +178,8 @@ For each table:
 
 The supplementary file should:
 
-- Include Supplementary Figures S1-S10.
-- Include Supplementary Table S10 or reference it as source data if too large.
+- Include Supplementary Figures S1-S12.
+- Include Supplementary Tables S1-S7 and retain their machine-readable source tables in the release repository.
 - Start with the manuscript title and author list or the OUP-required supplementary format.
 - Use the standard sentence in the main manuscript if required: `Supplementary Data are available at NAR Genomics and Bioinformatics Online.`
 
@@ -191,9 +192,9 @@ The supplementary file should:
 - Copy supplementary figure PDFs to `paper_latex/figures/supplementary/`.
 - Copy CSV tables to `paper_latex/tables/main/` and `paper_latex/tables/supplementary/`.
 
-### Step 2. Generate TeX sections
+### Step 2. Edit TeX sections
 
-Run a build script that extracts the English manuscript text from the split Markdown files and writes:
+Edit and review the canonical section files directly:
 
 - `sections/abstract.tex`
 - `sections/introduction.tex`
@@ -202,7 +203,7 @@ Run a build script that extracts the English manuscript text from the split Mark
 - `sections/discussion.tex`
 - `sections/back_matter.tex`
 
-The first pass can preserve figure and table calls from the DOCX builder mapping, but the final pass should use explicit LaTeX floats.
+`scripts/build_latex_sources.py` is retained only as a migration record. It exits without changes unless `--overwrite` is supplied; do not use that option for routine manuscript editing.
 
 ### Step 3. Generate tables
 

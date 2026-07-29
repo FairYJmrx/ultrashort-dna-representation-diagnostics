@@ -15,6 +15,7 @@ main method should import from this module.
 from __future__ import annotations
 
 from dataclasses import dataclass
+from functools import lru_cache
 from typing import Sequence
 
 import numpy as np
@@ -22,8 +23,6 @@ from sklearn.preprocessing import normalize
 
 from .sequence_utils import all_kmers, reverse_complement
 from .sklearn_features import build_kmer_matrix, transform_feature_matrix
-from .spaced_features import property_summary_matrix
-from .stage2_features import property_multiscale_matrix
 
 
 # ---------------------------------------------------------------------------
@@ -62,6 +61,22 @@ DEFAULT_MSP_BINS = (2, 3, 4, 6)
 DEFAULT_WEIGHTS = (1.0, 1.0, 1.0)
 P_DIMENSION = 11
 MSP_CHANNELS = 5
+
+_BASE_CODE_LOOKUP = np.full(256, -1, dtype=np.int8)
+for _base_code, _base in enumerate("ACGTN"):
+    _BASE_CODE_LOOKUP[ord(_base)] = _base_code
+
+# Columns follow the public MSP contract: hydrogen, GC, purine, EIIP and N.
+_PROPERTY_LOOKUP = np.asarray(
+    [
+        [2.0, 0.0, 1.0, 0.1260, 0.0],  # A
+        [3.0, 1.0, 0.0, 0.1340, 0.0],  # C
+        [3.0, 1.0, 1.0, 0.0806, 0.0],  # G
+        [2.0, 0.0, 0.0, 0.1335, 0.0],  # T
+        [0.0, 0.0, 0.0, 0.0000, 1.0],  # N
+    ],
+    dtype=np.float64,
+)
 
 BLOCK_COMBINATIONS = {
     "ck4": ("K",),
@@ -115,6 +130,185 @@ def _normalize_rows(x: np.ndarray) -> np.ndarray:
     return normalize(x, norm="l2", axis=1)
 
 
+def _base_codes(sequence: str) -> np.ndarray:
+    """Map one upper-case sequence to A/C/G/T/N codes; invalid symbols are -1."""
+    raw = np.frombuffer(sequence.encode("ascii", errors="replace"), dtype=np.uint8)
+    return _BASE_CODE_LOOKUP[raw]
+
+
+def _reverse_complement_code(code: int, k: int) -> int:
+    reverse = 0
+    value = int(code)
+    for _ in range(k):
+        reverse = reverse * 4 + (3 - (value % 4))
+        value //= 4
+    return reverse
+
+
+@lru_cache(maxsize=None)
+def _full_canonical_vocabulary(k: int) -> tuple[dict[str, int], np.ndarray]:
+    terms = sorted({min(kmer, reverse_complement(kmer)) for kmer in all_kmers(k)})
+    vocabulary = {term: idx for idx, term in enumerate(terms)}
+    canonical_codes = sorted(
+        {min(code, _reverse_complement_code(code, k)) for code in range(4**k)}
+    )
+    code_to_column = np.full(4**k, -1, dtype=np.int32)
+    canonical_to_column = {code: idx for idx, code in enumerate(canonical_codes)}
+    for code in range(4**k):
+        canonical = min(code, _reverse_complement_code(code, k))
+        code_to_column[code] = canonical_to_column[canonical]
+    return vocabulary, code_to_column
+
+
+def _full_canonical_kmer_matrix(sequences: list[str], k: int) -> tuple[np.ndarray, dict[str, int]]:
+    """Dense integer fast path for the fixed full canonical vocabulary."""
+    vocabulary, code_to_column = _full_canonical_vocabulary(k)
+    matrix = np.zeros((len(sequences), len(vocabulary)), dtype=np.float64)
+    powers_forward = np.asarray([4 ** (k - 1 - offset) for offset in range(k)], dtype=np.int64)
+    powers_reverse = np.asarray([4**offset for offset in range(k)], dtype=np.int64)
+
+    for row_idx, sequence in enumerate(sequences):
+        codes = _base_codes(sequence)
+        n_windows = codes.size - k + 1
+        if n_windows <= 0:
+            continue
+        forward = np.zeros(n_windows, dtype=np.int64)
+        reverse = np.zeros(n_windows, dtype=np.int64)
+        valid = np.ones(n_windows, dtype=bool)
+        for offset in range(k):
+            values = codes[offset : offset + n_windows]
+            is_valid = (values >= 0) & (values < 4)
+            valid &= is_valid
+            safe_values = np.where(is_valid, values, 0).astype(np.int64, copy=False)
+            forward += safe_values * powers_forward[offset]
+            reverse += (3 - safe_values) * powers_reverse[offset]
+        if not np.any(valid):
+            continue
+        canonical = np.minimum(forward[valid], reverse[valid])
+        columns = code_to_column[canonical]
+        matrix[row_idx] = np.bincount(columns, minlength=matrix.shape[1])
+
+    return _normalize_rows(matrix), dict(vocabulary)
+
+
+def _property_rows(
+    sequences: list[str],
+    *,
+    bins: tuple[int, ...],
+    include_msp_std: bool,
+    include_p: bool,
+    include_msp: bool,
+) -> tuple[np.ndarray | None, np.ndarray | None]:
+    """Build P and MSP from one per-sequence numerical encoding pass."""
+    encoded = [_base_codes(sequence) for sequence in sequences]
+    if encoded and all(codes.size > 0 and np.all(codes >= 0) for codes in encoded):
+        p_matrix = np.zeros((len(sequences), P_DIMENSION), dtype=np.float64) if include_p else None
+        msp_width = sum(bins) * MSP_CHANNELS * (2 if include_msp_std else 1)
+        msp_matrix = np.zeros((len(sequences), msp_width), dtype=np.float64) if include_msp else None
+        groups: dict[int, list[int]] = {}
+        for row_idx, codes in enumerate(encoded):
+            groups.setdefault(int(codes.size), []).append(row_idx)
+
+        for sequence_length, row_indices in groups.items():
+            code_matrix = np.vstack([encoded[row_idx] for row_idx in row_indices])
+            signals = _PROPERTY_LOOKUP[code_matrix]
+
+            if include_p:
+                global_signals = signals[:, :, :4]
+                means = global_signals.mean(axis=1)
+                stds = global_signals.std(axis=1)
+                p_matrix[row_indices, :8:2] = means
+                p_matrix[row_indices, 1:8:2] = stds
+                counts = np.stack(
+                    [(code_matrix == code).sum(axis=1) for code in range(5)],
+                    axis=1,
+                ).astype(np.float64)
+                probabilities = counts / float(sequence_length)
+                entropy_terms = np.zeros_like(probabilities)
+                positive = probabilities > 0
+                entropy_terms[positive] = probabilities[positive] * np.log2(probabilities[positive])
+                p_matrix[row_indices, 8] = counts[:, 4] / float(sequence_length)
+                p_matrix[row_indices, 9] = sequence_length / 200.0
+                p_matrix[row_indices, 10] = -entropy_terms.sum(axis=1) / float(np.log2(5.0))
+
+            if include_msp:
+                pooled_parts: list[np.ndarray] = []
+                for n_bins in bins:
+                    edges = np.linspace(0, sequence_length, n_bins + 1)
+                    for left_float, right_float in zip(edges[:-1], edges[1:]):
+                        left = int(np.floor(left_float))
+                        right = int(np.floor(right_float))
+                        if right <= left:
+                            right = min(sequence_length, left + 1)
+                        block = signals[:, left:right, :]
+                        pooled_parts.append(block.mean(axis=1))
+                        if include_msp_std:
+                            pooled_parts.append(block.std(axis=1))
+                msp_matrix[row_indices] = np.concatenate(pooled_parts, axis=1)
+
+        return (
+            _normalize_rows(p_matrix) if p_matrix is not None else None,
+            _normalize_rows(msp_matrix) if msp_matrix is not None else None,
+        )
+
+    p_rows: list[np.ndarray] = []
+    msp_rows: list[np.ndarray] = []
+    entropy_scale = float(np.log2(5.0))
+
+    for sequence, codes in zip(sequences, encoded):
+        valid_codes = codes[codes >= 0]
+
+        if include_p:
+            if valid_codes.size:
+                global_signals = _PROPERTY_LOOKUP[valid_codes, :4]
+                means = global_signals.mean(axis=0)
+                stds = global_signals.std(axis=0)
+                interleaved = np.column_stack((means, stds)).ravel()
+                counts = np.bincount(valid_codes, minlength=5).astype(np.float64)
+                probabilities = counts[counts > 0] / float(valid_codes.size)
+                entropy = -float(np.sum(probabilities * np.log2(probabilities)))
+                n_fraction = float(counts[4] / valid_codes.size)
+            else:
+                interleaved = np.zeros(8, dtype=np.float64)
+                entropy = 0.0
+                n_fraction = 0.0
+            p_rows.append(
+                np.concatenate(
+                    (
+                        interleaved,
+                        np.asarray(
+                            [n_fraction, len(sequence) / 200.0, entropy / entropy_scale],
+                            dtype=np.float64,
+                        ),
+                    )
+                )
+            )
+
+        if include_msp:
+            positional_codes = valid_codes if valid_codes.size else np.asarray([4], dtype=np.int8)
+            signals = _PROPERTY_LOOKUP[positional_codes]
+            n_positions = signals.shape[0]
+            prefix = np.vstack((np.zeros((1, MSP_CHANNELS), dtype=np.float64), np.cumsum(signals, axis=0)))
+            values: list[np.ndarray] = []
+            for n_bins in bins:
+                edges = np.linspace(0, n_positions, n_bins + 1)
+                for left_float, right_float in zip(edges[:-1], edges[1:]):
+                    left = int(np.floor(left_float))
+                    right = int(np.floor(right_float))
+                    if right <= left:
+                        right = min(n_positions, left + 1)
+                    width = max(1, right - left)
+                    means = (prefix[right] - prefix[left]) / float(width)
+                    values.append(means)
+                    if include_msp_std:
+                        values.append(signals[left:right].std(axis=0))
+            msp_rows.append(np.concatenate(values))
+
+    p_matrix = _normalize_rows(np.vstack(p_rows)) if include_p else None
+    msp_matrix = _normalize_rows(np.vstack(msp_rows)) if include_msp else None
+    return p_matrix, msp_matrix
+
+
 def canonical_kmer_vocabulary_size(k: int = 4) -> int:
     """Return the full reverse-complement canonical vocabulary size."""
     return len({min(kmer, reverse_complement(kmer)) for kmer in all_kmers(k)})
@@ -142,6 +336,9 @@ def build_ck4_block(
     """Build the reverse-complement canonical local k-mer composition block."""
     config = config or CK4PMSPConfig()
     sequence_list = _as_sequence_list(sequences)
+    if config.vocabulary_mode == "full" and config.canonical:
+        return _full_canonical_kmer_matrix(sequence_list, config.k)
+
     vocabulary = None
     if config.vocabulary_mode == "observed":
         train_sequences = _training_sequences(sequence_list, train_indices)
@@ -172,7 +369,15 @@ def build_ck4_block(
 
 def build_p_block(sequences: Sequence[str]) -> np.ndarray:
     """Build the global biochemical-property summary block."""
-    return _normalize_rows(property_summary_matrix(_as_sequence_list(sequences)))
+    p, _ = _property_rows(
+        _as_sequence_list(sequences),
+        bins=DEFAULT_MSP_BINS,
+        include_msp_std=False,
+        include_p=True,
+        include_msp=False,
+    )
+    assert p is not None
+    return p
 
 
 def build_msp_block(
@@ -182,13 +387,33 @@ def build_msp_block(
 ) -> np.ndarray:
     """Build the multi-scale positional property pooling block."""
     config = config or CK4PMSPConfig()
-    return _normalize_rows(
-        property_multiscale_matrix(
-            _as_sequence_list(sequences),
-            bins=config.bins,
-            include_std=config.include_msp_std,
-        )
+    _, msp = _property_rows(
+        _as_sequence_list(sequences),
+        bins=config.bins,
+        include_msp_std=config.include_msp_std,
+        include_p=False,
+        include_msp=True,
     )
+    assert msp is not None
+    return msp
+
+
+def build_property_blocks(
+    sequences: Sequence[str],
+    *,
+    config: CK4PMSPConfig | None = None,
+) -> tuple[np.ndarray, np.ndarray]:
+    """Build P and MSP together without rescanning the input sequences."""
+    config = config or CK4PMSPConfig()
+    p, msp = _property_rows(
+        _as_sequence_list(sequences),
+        bins=config.bins,
+        include_msp_std=config.include_msp_std,
+        include_p=True,
+        include_msp=True,
+    )
+    assert p is not None and msp is not None
+    return p, msp
 
 
 def concatenate_weighted_blocks(
@@ -245,8 +470,7 @@ def build_ck4p_msp_features(
     config = config or CK4PMSPConfig()
     sequence_list = _as_sequence_list(sequences)
     ck4, vocabulary = build_ck4_block(sequence_list, config=config, train_indices=train_indices)
-    p = build_p_block(sequence_list)
-    msp = build_msp_block(sequence_list, config=config)
+    p, msp = build_property_blocks(sequence_list, config=config)
     matrix = concatenate_weighted_blocks(
         ck4,
         p,

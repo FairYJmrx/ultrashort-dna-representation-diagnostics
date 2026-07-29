@@ -29,7 +29,7 @@
 \renewcommand{\thetable}{S\arabic{table}}
 \maketitle
 \section{Supplementary data overview}
-This supplementary file collects the visual audits and source-table preview that support the main representation-diagnostic manuscript. Figures S1--S3 evaluate baseline controls, empirical information proxies and sequencing-error-aware perturbations. Figures S4--S7 examine local mutation fraction, P-channel counterfactuals, MSP bin and weight sensitivity, and dimension-matched high-k compressed baselines. Figures S8--S10 summarize P/MSP redundancy, runtime, relation audits and the CAMI II marine anonymous-read stability probe. Figure S11 reports the mechanism-aligned $2\times2$ local-change audit and property-scaling sensitivity. Tables S1--S7 provide the CAMI II preview, seven-group contrasts, MI inference, factorial contrasts, scaling sensitivity, complete feature definitions and public WGS assembly accessions.
+This supplementary file collects the visual audits and source-table preview that support the main representation-diagnostic manuscript. Figures S1--S3 evaluate baseline controls, empirical information proxies and sequencing-error-aware perturbations. Figures S4--S7 examine local mutation fraction, P-channel counterfactuals, MSP bin and weight sensitivity, and dimension-matched high-k compressed baselines. Figures S8--S10 summarize P/MSP contribution and relation audits and the CAMI II marine anonymous-read stability probe. Figure S11 reports the mechanism-aligned $2\times2$ local-change audit and property-scaling sensitivity. Figure S12 compares CK4P-MSP with representative historical handcrafted descriptors by drift, grouped local-change readability, dimension and common-protocol implementation time. Tables S1--S7 provide the CAMI II preview, seven-group contrasts, MI inference, factorial contrasts, scaling sensitivity, complete feature definitions and public WGS assembly accessions.
 \begin{figure*}[p]
 \centering
 {\Large\bfseries Supplementary Figures\par}
@@ -91,9 +91,9 @@ This supplementary file collects the visual audits and source-table preview that
 \begin{figure*}[p]
 \centering
 \includegraphics[width=0.95\textwidth]{figures/supplementary/supp_fig_s8_redundancy_runtime_audit.pdf}
-\caption{P/MSP relation and runtime audit. (A) Canonical correlations between P and MSP are shown across 600 clean reads at each of 69, 75, 100 and 150 bp; high early correlations indicate shared biochemical structure, whereas later components decline. (B) Mean feature-extraction time is reported from five repeated 10,000-read, 75-bp batches for each actual method path on the stated workstation. Lower runtime is faster. Timings are implementation- and hardware-specific and show that CK4P-MSP is compact in dimension but not the fastest encoder.}
+\caption{P/MSP contribution and relation audit. (A) Mean paired L2 drift across 24 controlled WGS length-by-perturbation cells for CK4, CK4+P, CK4+MSP and CK4P-MSP; lower is preferable. (B) Template-grouped local-versus-nuisance delta-readout macro-F1 across 12 length-by-local-mode cells; higher is preferable. (C) Canonical correlations and row-wise alignment between P and MSP across 600 clean reads at each of 69, 75, 100 and 150 bp. P and MSP share a strong leading biochemical component, whereas incomplete row-wise alignment and different numerical ranks support related-but-non-equivalent wording.}
 \label{fig:suppfigures8}
-{\small\noindent\textbf{Alt text:} Multi-panel audit showing P and MSP contributions, redundancy and runtime costs.\par}
+{\small\noindent\textbf{Alt text:} Three panels show that P and MSP both reduce paired drift, MSP contributes most of the grouped local-change readout gain, and the two property blocks share leading structure without being row-wise interchangeable.\par}
 \end{figure*}
 
 \begin{figure*}[p]
@@ -118,6 +118,14 @@ This supplementary file collects the visual audits and source-table preview that
 \caption{Mechanism-aligned local-change and property-scaling audits. (A) Grouped macro-F1 for spatial localization (contiguous versus dispersed substitutions) and substitution chemistry (property-directed versus random substitutions) across the four K-containing representations. Both tasks used 3,000 template-level observations per representation across 12 length-by-local-mode cells, with all derivatives of a template retained in one fold; error bars are 95\% bootstrap intervals across cells. (B) Mean standardized representation drift across 24 WGS length-by-perturbation cells under the declared mappings, fixed per-property $[0,1]$ mappings and train-fit coordinate z-scores. Higher macro-F1 and lower drift are preferable; z-scoring is a sensitivity analysis rather than an alternative default contract.}
 \label{fig:suppfigures11}
 {\small\noindent\textbf{Alt text:} Two panels showing that MSP improves spatial and chemistry readout, P adds a smaller chemistry increment, and fixed property remapping preserves drift while train-fit z-scoring does not.\par}
+\end{figure*}
+
+\begin{figure*}[!tbp]
+\centering
+\includegraphics[width=0.95\textwidth]{figures/supplementary/supp_fig_s12_historical_descriptor_audit.pdf}
+\caption{Historical handcrafted descriptor boundary audit. (A) Mean standardized representation drift with 95\% bootstrap intervals across 30 matched WGS length-by-perturbation cells; lower is preferable. PseKNC has lower drift than CK4P-MSP. (B) Logistic grouped local-versus-nuisance delta-readout macro-F1 with 95\% bootstrap intervals across 12 length-by-local-mode cells; all derivatives of a source template remained in one fold, and higher is preferable. CK4P-MSP has the strongest local-change readability in this comparison. (C) Feature dimensions at 75 bp. NCP+ANF scales with the declared read-length budget, whereas the other descriptors are fixed width. (D) Median wall-clock feature-extraction time and interquartile range over five repeats of the same 1,000 clean 75-bp reads, scaled to 10,000 reads and shown on a logarithmic axis. Methods were warmed up, their order was randomized within each repeat, garbage collection preceded timing and numerical libraries were limited to one thread. Timings were obtained on an Intel Core Ultra 5 125H workstation with 31.6 GB RAM and are implementation-specific. PseKNC used $k=3$, $\lambda=3$ and $w=0.05$; deterministic ambiguous-base extensions are defined in Methods. The figure establishes a stability--readability--dimension boundary rather than a universal ranking.}
+\label{fig:suppfigures12}
+{\small\noindent\textbf{Alt text:} Four panels show that PseKNC has the lowest drift and dimension, CK4P-MSP has the highest grouped local-change readability and near-CK4 optimized runtime, and NCP+ANF is position-explicit but length-dependent in dimension.\par}
 \end{figure*}
 
 \clearpage
@@ -169,10 +177,7 @@ This supplementary file collects the visual audits and source-table preview that
 \caption{Complete P and MSP coordinate definitions. Population SD uses denominator $L$ over the read-level mapped values. MSP uses bin means only in the primary representation.}
 \label{tab:supps6}
 \resizebox{\textwidth}{!}{\input{tables/supplementary/table_s6_feature_definitions.tex}}
-\end{table*}
-
-\begin{table*}[!tbp]
-\centering
+\vspace{1.2em}
 \scriptsize
 \caption{Public reference assemblies used to sample the controlled WGS read templates. Each species is represented by the listed NCBI assembly accession.}
 \label{tab:supps7}

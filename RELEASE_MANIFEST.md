@@ -33,6 +33,7 @@ part of this repository; it is a separate single-file handoff artifact.
 - `analysis/figures/generate_nature_main_figures.py`
 - `analysis/figures/generate_paper_supplementary_figures.py`
 - `analysis/figures/generate_supp_fig_s10_cami2_marine_probe.py`
+- `analysis/figures/generate_supp_fig_s12_historical_descriptor_audit.py`
 - `analysis/figures/generate_supp_fig_s7_method_hardening_audit.py`
 - `analysis/figures/generate_supp_fig_s8_redundancy_runtime_audit.py`
 - `analysis/figures/generate_supp_fig_s9_p_msp_relation_audit.py`
@@ -106,11 +107,13 @@ part of this repository; it is a separate single-file handoff artifact.
 - `docs/stage3_submission_metadata_and_reproducibility.md`
 - `docs/submission_repair_master_checklist_20260728.md`
 - `docs/submission_repair_completion_report_20260729.md`
+- `docs/historical_descriptor_runtime_revision_checklist_20260729.md`
 - `experiments/README.md`
 - `experiments/audits/__init__.py`
 - `experiments/audits/generate_reviewer_statistical_tests.py`
 - `experiments/audits/run_dimension_reduction_baselines.py`
 - `experiments/audits/run_high_k_compressed_baselines.py`
+- `experiments/audits/run_historical_descriptor_audit.py`
 - `experiments/audits/run_knn_mi_robustness_audit.py`
 - `experiments/audits/run_local_mutation_fraction_sweep.py`
 - `experiments/audits/run_mi_audit.py`
@@ -192,6 +195,7 @@ part of this repository; it is a separate single-file handoff artifact.
 - `methods/base_encodings.py`
 - `methods/ck4p_msp.py`
 - `methods/evaluation.py`
+- `methods/historical_descriptors.py`
 - `methods/ml_eval.py`
 - `methods/position_encodings.py`
 - `methods/representation_registry.py`
@@ -299,6 +303,7 @@ part of this repository; it is a separate single-file handoff artifact.
 - `paper/tables/supp_table_s10_cami2_marine_probe_source.csv`
 - `paper_latex/` (canonical submission LaTeX source, figures, tables and compiled review PDFs; build caches excluded)
 - `paper_latex/README.md` (compile entry point and manuscript source-of-truth summary)
+- `paper_latex/qa/latex_pdf_qa_report.md` (final compilation, visual-layout and pending-metadata audit)
 - `references/references.bib`
 - `requirements.txt`
 - `results/README.md`
@@ -463,6 +468,7 @@ part of this repository; it is a separate single-file handoff artifact.
 - `scripts/summarize_stage3_art_quality.py`
 - `smoke_tests/test_imports.py`
 - `smoke_tests/test_method_contract.py`
+- `smoke_tests/test_historical_descriptors.py`
 - `smoke_tests/test_repository_layout.py`
 - `smoke_tests/test_contract_artifacts.py`
 - `results/stage3/contract_v2/` (current manuscript-facing result namespace)

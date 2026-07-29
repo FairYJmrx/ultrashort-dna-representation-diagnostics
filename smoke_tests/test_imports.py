@@ -17,6 +17,7 @@ sys.path.insert(0, str(ROOT))
 
 MODULES = [
     "methods.ck4p_msp",
+    "methods.historical_descriptors",
     "methods.sequence_utils",
     "methods.stage2_features",
     "methods.representation_registry",
@@ -24,6 +25,7 @@ MODULES = [
     "src.stage2_features",
     "scripts.run_stage2_representation_grid",
     "scripts.run_stage3_compact_baselines",
+    "experiments.audits.run_historical_descriptor_audit",
 ]
 
 

@@ -11,6 +11,7 @@ historical scripts. New code should import from `methods.*`.
 | Module | Role |
 |---|---|
 | `ck4p_msp.py` | Public manuscript-facing CK4P-MSP API: CK4, P, MSP, weighted block concatenation and standardized drift helpers. |
+| `historical_descriptors.py` | Direct PseKNC, NCP+ANF and PseEIIP controls used in the historical handcrafted-descriptor audit. |
 | `sequence_utils.py` | DNA sequence helpers, reverse complement, k-mer tokenization and perturbation utilities. |
 | `base_encodings.py` | Global biochemical scalar encodings, including hydrogen-bond class, GC, purine and EIIP-related signals. |
 | `sklearn_features.py` | Canonical k-mer count matrices, TF-IDF-style transformations and compressed k-mer controls. |
@@ -39,3 +40,8 @@ print(features.matrix.shape)
 The default configuration uses a full reverse-complement canonical 4-mer
 vocabulary, global P summaries, mean-only MSP bins `2+3+4+6`, and
 `alpha=beta=gamma=1`.
+
+The default full-vocabulary path uses integer canonical k-mer encoding and
+batched property pooling. These are implementation optimizations only: the
+public dimensions, mappings, block normalization and numerical output remain
+identical to the standalone reference within floating-point tolerance.
