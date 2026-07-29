@@ -306,7 +306,7 @@ def figure5_full_position() -> plt.Figure:
     }
     plot["family"] = plot["representation_label"].map(family)
     colors = plot["family"].map(family_colors).tolist()
-    fig, axes = plt.subplots(2, 1, figsize=(3.45, 5.25), gridspec_kw={"height_ratios": [1.45, 1.0]})
+    fig, axes = plt.subplots(2, 1, figsize=(3.45, 4.65), gridspec_kw={"height_ratios": [1.45, 1.0]})
     axes[0].barh(plot["representation_label"], plot["macro_f1_mean"], color=colors, edgecolor=COLORS["ink"], linewidth=0.35)
     axes[0].set_xlabel("macro-F1")
     axes[0].set_title("A. Readout", loc="left", weight="bold", pad=4)
@@ -339,8 +339,8 @@ def figure5_full_position() -> plt.Figure:
         handletextpad=0.4,
         columnspacing=0.8,
     )
-    fig.suptitle("Full-position readout trades compactness\nfor positional detail", y=0.995, fontsize=9.2, weight="bold")
-    fig.tight_layout(rect=(0, 0.09, 1, 0.91), h_pad=1.5)
+    fig.suptitle("Full-position readout trades compactness\nfor positional detail", y=0.99, fontsize=9.2, weight="bold")
+    fig.tight_layout(rect=(0, 0.105, 1, 0.95), h_pad=0.9)
     return fig
 
 

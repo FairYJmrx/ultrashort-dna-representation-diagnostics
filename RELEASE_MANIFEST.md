@@ -29,6 +29,7 @@ part of this repository; it is a separate single-file handoff artifact.
 - `analysis/audits/audit_final_provenance.py`
 - `analysis/audits/audit_result_inventory.py`
 - `analysis/figures/generate_short_read_continuity_figures.py`
+- `analysis/figures/generate_cami_fixed_head_figures.py`
 - `analysis/figures/sync_manuscript_figures.py`
 - `analysis/figures/__init__.py`
 - `analysis/figures/generate_local_mutation_sensitivity_assets.py`
@@ -128,6 +129,9 @@ part of this repository; it is a separate single-file handoff artifact.
 - `experiments/audits/run_local_change_factorial_audit.py`
 - `experiments/audits/run_property_scaling_audit.py`
 - `experiments/audits/run_short_read_length_continuity_audit.py`
+- `experiments/audits/run_cami_fixed_head_transfer.py`
+- `experiments/audits/run_cami_fixed_head_coordinate_audit.py`
+- `experiments/audits/run_cami_multitarget_fixed_head_transfer.py`
 - `experiments/main/__init__.py`
 - `experiments/main/run_local_mutation_sensitivity.py`
 - `experiments/main/run_position_property_controlled_tasks.py`
@@ -309,6 +313,9 @@ part of this repository; it is a separate single-file handoff artifact.
 - `paper_latex/qa/latex_pdf_qa_report.md` (final compilation, visual-layout and pending-metadata audit)
 - `results/stage3/contract_v2/short_read_length_continuity/` (compressed shared-template inputs, summary tables and run manifest)
 - `results/stage3/contract_v2/art_current_contract/` (summary metrics, generation manifest, run manifests and quality-stratified outputs; expanded paired-read and FASTQ/SAM intermediates excluded)
+- `results/stage3/contract_v2/cami_fixed_head_transfer/` (single-target frozen-head metrics, coordinate audit and run manifests)
+- `results/stage3/contract_v2/cami_multitarget_fixed_head/` (six-target aggregate, target summaries, bootstrap contrasts, runtime and run manifest; expanded per-read predictions excluded)
+- `results/stage3/contract_v2/cami_multitarget_c_sensitivity/` (prespecified regularization sensitivity summaries)
 - `references/references.bib`
 - `requirements.txt`
 - `results/README.md`

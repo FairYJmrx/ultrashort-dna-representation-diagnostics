@@ -41,7 +41,7 @@
 \renewcommand{\thetable}{S\arabic{table}}
 \maketitle
 \section{Supplementary data overview}
-This supplementary file collects the visual audits and source-table preview that support the main representation-diagnostic manuscript. Figures S1--S3 evaluate baseline controls, empirical information proxies and sequencing-error-aware perturbations. Figures S4--S7 examine local mutation fraction, P-channel counterfactuals, MSP bin and weight sensitivity, and dimension-matched high-k compressed baselines. Figures S8--S10 summarize P/MSP contribution and relation audits and the CAMI II marine anonymous-read stability probe. Figure S11 reports the mechanism-aligned $2\times2$ local-change audit and property-scaling sensitivity. Figure S12 compares CK4P-MSP with representative historical handcrafted descriptors by drift, grouped local-change readability, dimension and common-protocol implementation time. Tables S1--S7 provide the CAMI II preview, seven-group contrasts, MI inference, factorial contrasts, scaling sensitivity, complete feature definitions and public WGS assembly accessions. Unless a caption explicitly defines an interval, bars, points and lines show analysis-cell means without error bars. Cell-bootstrap intervals summarize variation across prespecified matched length-by-condition or length-by-local-mode cells; because these cells reuse source template panels, they are not confidence intervals for independent biological cohorts.
+This supplementary file collects the visual audits and source-table preview that support the main representation-diagnostic manuscript. Figures S1--S3 evaluate baseline controls, empirical information proxies and sequencing-error-aware perturbations. Figures S4--S7 examine local mutation fraction, P-channel counterfactuals, MSP bin and weight sensitivity, and dimension-matched high-k compressed baselines. Figures S8--S10 summarize P/MSP contribution and relation audits and the CAMI II marine anonymous-read stability probe. Figure S11 reports the mechanism-aligned $2\times2$ local-change audit and property-scaling sensitivity. Figure S12 compares CK4P-MSP with representative historical handcrafted descriptors by drift, grouped local-change readability, dimension and common-protocol implementation time. Figure S13 reports the dense 50--75 bp continuity audit, and Figure S14 separates frozen-head representation geometry from downstream scaling and regularization. Tables S1--S8 provide the CAMI II preview, seven-group contrasts, MI inference, factorial contrasts, scaling sensitivity, complete feature definitions, public WGS assembly accessions and cross-target fixed-head results. Unless a caption explicitly defines an interval, bars, points and lines show analysis-cell means without error bars. Cell-bootstrap intervals summarize variation across prespecified matched length-by-condition or length-by-local-mode cells; because these cells reuse source template panels, they are not confidence intervals for independent biological cohorts.
 \begin{figure*}[p]
 \centering
 {\Large\bfseries Supplementary Figures\par}
@@ -148,6 +148,14 @@ This supplementary file collects the visual audits and source-table preview that
 {\small\noindent\textbf{Alt text:} Three line panels show smooth drift reduction, high grouped local-change readout and positive metric-specific P and MSP increments from 50 to 75 bp.\par}
 \end{figure*}
 
+\begin{figure*}[!tbp]
+\centering
+\includegraphics[width=0.95\textwidth]{figures/supplementary/supp_fig_s14_fixed_head_sensitivity.pdf}
+\caption{Frozen-head preprocessing and regularization sensitivity. (A) Macro-F1 for CK4P-MSP in the prespecified single CAMI target task. Contract-space probes use the declared row/block-normalized representation directly; train z-score probes apply coordinate-wise means and variances fitted only on the 100-bp clean training fold. Each point aggregates 2,486 held-out source groups through fivefold source-grouped cross-validation. (B) Mean absolute logistic-logit shifts of the seven most affected P coordinates under 100-bp, 3\% N masking, averaged over five folds. The log axis contrasts contract-space contributions with amplification after train-fit z-scoring. (C) Mean shifted macro-F1 across six CAMI target tasks and eight non-baseline length-by-condition cells per target at $C=0.1$, 1 and 10. The classifier was otherwise unchanged and was never refitted on shifted conditions. $C=1$ was prespecified; the other values are sensitivity analyses rather than selected alternatives. These panels show that low representation drift does not guarantee invariance to learned downstream preprocessing.}
+\label{fig:suppfigures14}
+{\small\noindent\textbf{Alt text:} A line panel shows N-mask-specific degradation after train-fit z-scoring, a log-scale bar panel identifies amplified low-variance biochemical coordinates, and a final line panel shows regularization-dependent fixed-head readout.\par}
+\end{figure*}
+
 \begin{table*}[p]
 \centering
 {\Large\bfseries Supplementary Tables\par}
@@ -196,11 +204,19 @@ This supplementary file collects the visual audits and source-table preview that
 \caption{Complete P and MSP coordinate definitions. Population SD uses denominator $L$ over the read-level mapped values. MSP uses bin means only in the primary representation.}
 \label{tab:supps6}
 \resizebox{\textwidth}{!}{\input{tables/supplementary/table_s6_feature_definitions.tex}}
-\vspace{1.2em}
+\end{table*}
+
+\begin{table*}[!tbp]
+\centering
 \scriptsize
 \caption{Public reference assemblies used to sample the controlled WGS read templates. Each species is represented by the listed NCBI assembly accession.}
 \label{tab:supps7}
 \input{tables/supplementary/table_s7_genome_accessions.tex}
+\vspace{1.2em}
+\scriptsize
+\caption{Six-target CAMI\_TOY\_low fixed-head summary at the prespecified contract-space $C=1$ probe. Clean F1 is averaged over the six 100-bp clean target tasks. Shifted F1 and retention are first averaged over eight non-baseline length-by-condition cells within each target and then over six targets. Minimum values are minima of the corresponding target-level means, not individual read-level observations. Each task used 1,200 target and 1,200 stratified background source groups with fivefold source-grouped cross-validation. The six tasks share a source pool and are not independent-community replicates.}
+\label{tab:supps8}
+\resizebox{\textwidth}{!}{\input{tables/supplementary/table_s8_cami_multitarget.tex}}
 \end{table*}
 \clearpage
 \end{document}

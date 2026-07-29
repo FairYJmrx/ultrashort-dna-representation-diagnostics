@@ -115,6 +115,10 @@ where local perturbation variants share a source template.
 .\.venv\Scripts\python.exe experiments\audits\run_historical_descriptor_audit.py --output-dir results\stage3\contract_v2\historical_descriptor_audit --runtime-read-counts 10000,100000 --runtime-repeats 5 --runtime-large-batch-repeats 1
 .\.venv\Scripts\python.exe experiments\audits\run_short_read_length_continuity_audit.py --output-dir results\stage3\contract_v2\short_read_length_continuity
 .\.venv\Scripts\python.exe experiments\main\run_stage3_cami_probe.py --input data\stage3\cami\cami_toy_low_subset_reads_expanded.csv --output-dir results\stage3\contract_v2\cami_toy_readout
+.\.venv\Scripts\python.exe experiments\audits\run_cami_fixed_head_transfer.py --output-dir results\stage3\contract_v2\cami_fixed_head_transfer
+.\.venv\Scripts\python.exe experiments\audits\run_cami_fixed_head_coordinate_audit.py --result-dir results\stage3\contract_v2\cami_fixed_head_transfer
+.\.venv\Scripts\python.exe experiments\audits\run_cami_multitarget_fixed_head_transfer.py --output-dir results\stage3\contract_v2\cami_multitarget_fixed_head --c-values 1
+.\.venv\Scripts\python.exe experiments\audits\run_cami_multitarget_fixed_head_transfer.py --output-dir results\stage3\contract_v2\cami_multitarget_c_sensitivity --representations ck4,ck4p_msp,ck5,pseknc_k3_l3,pseeiip --c-values 0.1,1,10
 .\.venv\Scripts\python.exe data_pipeline\simulate\run_cami2_marine_lightweight_probe.py --output-dir results\stage3\contract_v2\cami2_marine_stability
 .\.venv\Scripts\python.exe data_pipeline\simulate\run_stage3_art_generate_and_evaluate.py
 .\.venv\Scripts\python.exe data_pipeline\simulate\summarize_stage3_art_quality.py
@@ -126,8 +130,9 @@ CK4+MSP, and MSP given CK4+P. Grouped delta-readout keeps all derivatives of a
 source template in the same fold.
 
 See `docs/contract_v2_evidence_map.md` for the claim, result-table and script
-mapping. Current-contract CAMI\_TOY readout and CAMI II stability outputs are
-included in that map. The current ART audit uses the public CK4P-MSP contract at
+mapping. Current-contract CAMI\_TOY readout, six-target fixed-head transfer,
+learned-preprocessing sensitivity and CAMI II stability outputs are included in
+that map. The current ART audit uses the public CK4P-MSP contract at
 50, 60, 69, 75, 100, 125 and 150 bp. Full-position probes remain upper-bound
 controls; legacy feature labels must not be used to make claims about the public
 CK4P-MSP contract.
@@ -173,6 +178,9 @@ CK4P-MSP contract.
 .\.venv\Scripts\python.exe experiments\audits\run_property_scaling_audit.py
 .\.venv\Scripts\python.exe experiments\audits\run_historical_descriptor_audit.py
 .\.venv\Scripts\python.exe experiments\audits\run_short_read_length_continuity_audit.py
+.\.venv\Scripts\python.exe experiments\audits\run_cami_fixed_head_transfer.py
+.\.venv\Scripts\python.exe experiments\audits\run_cami_fixed_head_coordinate_audit.py
+.\.venv\Scripts\python.exe experiments\audits\run_cami_multitarget_fixed_head_transfer.py
 ```
 
 ### Figures, tables and audits
@@ -186,6 +194,7 @@ CK4P-MSP contract.
 .\.venv\Scripts\python.exe analysis\figures\generate_supp_fig_s8_redundancy_runtime_audit.py
 .\.venv\Scripts\python.exe analysis\figures\generate_supp_fig_s12_historical_descriptor_audit.py
 .\.venv\Scripts\python.exe analysis\figures\generate_short_read_continuity_figures.py
+.\.venv\Scripts\python.exe analysis\figures\generate_cami_fixed_head_figures.py
 .\.venv\Scripts\python.exe analysis\figures\sync_manuscript_figures.py
 .\.venv\Scripts\python.exe analysis\tables\generate_contract_v2_tables.py
 .\.venv\Scripts\python.exe analysis\audits\audit_result_inventory.py

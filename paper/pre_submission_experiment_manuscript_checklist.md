@@ -49,6 +49,24 @@ Under a fixed compact feature budget, CK4P-MSP organizes reverse-complement cano
 - [x] Residualized P/MSP audit not triggered: the prespecified conditional contrasts distinguish P's stability role from MSP's local-readout role under the tested grid.
 - [x] Do not add Transformer, Kraken2/triage, ARG/SNP, clinical sensitivity/specificity or a universal metric theorem to the current submission scope.
 
+### A4. Multi-target fixed-head external readout
+
+- [x] Prespecify six abundant CAMI_TOY_low one-versus-background targets before representation comparison.
+- [x] Use 1,200 target and 1,200 stratified background source groups per task and keep every derivative of one clean source in the same fold.
+- [x] Fit one contract-space logistic head only on 100-bp clean training sources, then reuse it unchanged over 69, 75 and 100 bp under clean, 3% N-mask and 1% substitution conditions.
+- [x] Compare CK4P-MSP with CK4, CK4+P, CK4+MSP, CK5, PseKNC, PseEIIP, NCP+ANF and a dimension-matched hashed k=15 vector.
+- [x] Report absolute shifted macro-F1 and retention relative to each method's own clean baseline; do not interpret near-chance retention as useful robustness.
+- [x] Treat the six targets as descriptive tasks sharing one source pool, not independent biological-community replicates.
+- [x] Retain the result boundary: CK4P-MSP is competitive with CK4/CK5, consistently exceeds PseKNC/PseEIIP in absolute shifted F1 across the six tasks, but is not the unique readout or retention optimum.
+
+### A5. Learned-preprocessing and regularization boundary
+
+- [x] Compare direct contract-space probing with train-fold-fitted coordinate z-scoring on the frozen single-target head.
+- [x] Audit P-coordinate train variance, N-mask displacement and fitted logit effects to identify the source of any degradation.
+- [x] Verify that the explicit N-fraction coordinate is not spuriously credited when it has zero clean-training variance.
+- [x] Repeat the six-target readout at logistic regularization `C = 0.1, 1, 10`, while retaining `C = 1` as the prespecified primary setting.
+- [x] State the boundary explicitly: low standardized representation drift does not guarantee invariance to arbitrary learned downstream preprocessing.
+
 ## B. Required manuscript evidence update
 
 ### B1. Methods
@@ -144,5 +162,6 @@ The manuscript is ready for submission only when:
 
 - **Scientific evidence:** complete for the locked representation-diagnostic claim. The seven-group result and grouped conditional contrasts distinguish P's global-stability contribution, MSP's local-change-readout contribution, and K's composition-linked retrieval contribution. A residualized P/MSP expansion is not triggered by the current result.
 - **Text and assets:** complete for the current scope. The Markdown, LaTeX main PDF, supplementary PDF and DOCX have been rebuilt; the DOCX main text contains main figures/tables only, while supplementary figures remain in the dedicated supplementary PDF.
+- **External validation:** the new six-target source-grouped frozen-head audit replaces the obsolete 30-label implication. CK4P-MSP retained competitive shifted readout, exceeded PseKNC and PseEIIP descriptively across all six targets, and exposed a train-z-score/N-mask failure mode that now constrains the downstream-preprocessing claim.
 - **External author actions before upload:** final reference metadata/publication-status review, funding statement, ethics/data-governance wording, public repository URL plus immutable release/DOI, and final selection of article type. These are submission metadata gates, not outstanding experiments.
-- **No further mandatory experiment is identified.** Optional scope-expansion studies (larger labelled CAMI II, learned embedding baselines, or a pipeline-facing triage study) can increase breadth, but are not required for the bounded claim supported here.
+- **No further mandatory experiment is identified.** A labelled CAMI II community study, learned embedding baseline or pipeline-facing triage study would expand scope, but is not required for the bounded representation-level claim supported here.

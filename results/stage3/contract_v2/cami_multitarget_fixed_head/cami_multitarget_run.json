@@ -1,0 +1,44 @@
+{
+  "elapsed_seconds": 355.1292932033539,
+  "reads_csv": "D:\\AI-NGS\\info\\release_code\\data\\stage3\\cami\\cami_toy_low_subset_reads_expanded.csv",
+  "target_selection": "top six labels by deduplicated source-read abundance",
+  "target_labels": [
+    "tax_434085",
+    "tax_247639",
+    "tax_1050222",
+    "tax_552396",
+    "tax_1122939",
+    "tax_1097667"
+  ],
+  "max_target_groups": 1200,
+  "lengths": [
+    69,
+    75,
+    100
+  ],
+  "conditions": [
+    "clean",
+    "N_3pct",
+    "substitution_1pct"
+  ],
+  "representations": [
+    "ck4",
+    "ck4_p",
+    "ck4_msp",
+    "ck4p_msp",
+    "ck5",
+    "pseknc_k3_l3",
+    "ncp_anf",
+    "pseeiip",
+    "hash_k15_d222"
+  ],
+  "c_values": [
+    1.0
+  ],
+  "primary_c": 1.0,
+  "probe_scaling": "contract",
+  "n_splits": 5,
+  "n_bootstrap": 1000,
+  "seed": 20260730,
+  "n_input_rows": 24000
+}
