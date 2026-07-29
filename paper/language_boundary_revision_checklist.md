@@ -9,18 +9,22 @@ This checklist records the manuscript-level language constraints derived from th
 3. MI, conditional MI and kNN/KSG analyses must be described as estimator-dependent empirical audits, not as universal information-theoretic proofs or theoretical lower bounds.
 4. P and MSP must be described as related but non-equivalent property layers. Do not call them orthogonal axes or independent physical dimensions.
 5. CAMI_TOY_low is a lightweight labelled external readout probe. CAMI II marine is an anonymous-read external stability probe without reconstructed read-level taxonomic labels.
-6. The 69 and 75 bp settings should be justified as representative length conditions within a published 50-75 bp post-QC mNGS regime. Restricted clinical provenance must not become a study-data source.
-7. DNA foundation models should be discussed as background representation paradigms and future comparators, not as methods proven unsuitable by this study.
-8. Dimension-matched high-k baselines should be framed as compactness-constrained diagnostic audits, not as evidence against production-scale high-k matching pipelines.
-9. Pipeline-facing triage, false-hit reduction and classifier-output auditing remain future work unless directly evaluated.
-10. Data Availability, Code Availability, Ethics, author, funding and conflict-of-interest placeholders must be replaced before submission.
+6. The 69 and 75 bp settings should be justified as representative lower-read-length conditions within a published 50-75 bp post-QC mNGS regime. Do not imply that 69-75 bp reads are intrinsically unclassifiable. The intended claim is that identity evidence has a reduced margin relative to longer reads, making representation-level auditing useful.
+7. DNA foundation models and Transformer embeddings should be discussed as powerful predictive representations and future comparators, not as methods proven unsuitable by this study. If their probes can be stronger, acknowledge that predictive strength and decomposable auditability are different goals.
+8. CK4P-MSP's main value is not predictive supremacy. It is a low-dimensional, training-free and block-decomposable coordinate system for auditing identity, biochemical and coarse positional information retention under controlled perturbation.
+9. Shallow readout macro-F1 is a readability probe, not the central proof of representation value. Stability, blockwise drift, MI/kNN-MI audits, P/MSP contribution and counterfactual controls carry the representation-level evidence.
+10. Dimension-matched high-k baselines should be framed as compactness-constrained diagnostic audits, not as evidence against production-scale high-k matching pipelines.
+11. Pipeline-facing triage, false-hit reduction and classifier-output auditing remain future work unless directly evaluated.
+12. Data Availability, Code Availability, Ethics, author, funding and conflict-of-interest placeholders must be replaced before submission.
 
 ## Required Text Revisions
 
 ### Abstract
 
 - Replace broad "can improve stability" language with observed-result language such as "showed lower perturbation drift".
-- Keep the final implication bounded to auxiliary representation-level robustness auditing.
+- Keep the final implication bounded to compact, decomposable representation-level robustness auditing.
+- Avoid implying that CK4P-MSP is expected to outperform learned sequence embeddings in predictive probes.
+- Avoid implying that 69-75 bp reads are unclassifiable. Use "lower-read-length regime" or "compressed identity margin" language.
 
 ### Introduction
 
@@ -28,6 +32,8 @@ This checklist records the manuscript-level language constraints derived from th
 - Replace "can remain strong" with "can remain competitive".
 - Recast DNA foundation model language from "poorly suited" to "not naturally aligned with the present front-end diagnostic audit".
 - Keep "not direct 69/75 bp comparators" as a scope statement, not as a performance judgement.
+- Explicitly state that learned embeddings may be stronger for prediction, whereas this study asks a different question: how identity, biochemical and positional evidence degrade in a decomposable representation.
+- Reframe 69-75 bp as lower-bound length conditions where identity margin is reduced relative to 150 bp, not as an automatic classification-failure setting.
 
 ### Methods
 
@@ -45,6 +51,8 @@ This checklist records the manuscript-level language constraints derived from th
 - Keep CAMI_TOY_low as lightweight external readout and CAMI II marine as anonymous-read stability.
 - Add a CAMI II marine composition caveat: marine metagenomes may differ from clinical/pathogen-rich contexts, so this probe tests external sequence-source stability, not clinical generalization.
 - Reduce repeated "not a standalone classifier" language in Results; keep the boundary mainly in Study design and Limitations.
+- Treat macro-F1 as a shallow readability probe. Do not use it as the main evidence that CK4P-MSP is "better" than learned embeddings or production classifiers.
+- When high-k or hash baselines are discussed, claim compact perturbation-stability and auditability advantages only under the stated feature-budget constraint.
 
 ### Discussion, Limitations and Conclusion
 
@@ -52,6 +60,8 @@ This checklist records the manuscript-level language constraints derived from th
 - Replace internal audit phrasing such as "compliant with the manuscript's current claim" with manuscript-ready prose.
 - Replace "improved perturbation stability" with "reduced perturbation drift" where consistency with standardized diagnostic drift is more important.
 - Keep practical implications bounded to representation-level robustness auditing.
+- Add or preserve one clear sentence: CK4P-MSP is not expected to beat large learned embeddings in predictive probes; its intended role is decomposable, low-dimensional perturbation auditing.
+- Keep "auxiliary" only when describing pipeline use. For the method's own contribution, prefer "compact, block-decomposable representation" or "representation-level audit coordinate system".
 
 ### Back Matter
 
@@ -62,5 +72,5 @@ This checklist records the manuscript-level language constraints derived from th
 ## Terms To Avoid Or Use Carefully
 
 - Avoid: proof, prove, theorem, universal guarantee, strict information gain, natural physical distance, orthogonal axes, independent physical axes, clinical validation, production classifier, replacement, deployment model.
-- Use instead: empirical audit, estimator-dependent signal, standardized diagnostic drift, related but non-equivalent layers, auxiliary representation-level robustness auditing, compactness-constrained baseline audit.
-
+- Avoid or qualify: better representation, stronger representation, predictive superiority, unclassifiable ultra-short reads, recovers positional information, restores position, high-density paradigm.
+- Use instead: empirical audit, estimator-dependent signal, standardized diagnostic drift, related but non-equivalent layers, compact block-decomposable representation, representation-level robustness auditing, compactness-constrained baseline audit, compressed identity margin, coarse positional property summary.

@@ -28,6 +28,8 @@ part of this repository; it is a separate single-file handoff artifact.
 - `analysis/audits/__init__.py`
 - `analysis/audits/audit_final_provenance.py`
 - `analysis/audits/audit_result_inventory.py`
+- `analysis/figures/generate_short_read_continuity_figures.py`
+- `analysis/figures/sync_manuscript_figures.py`
 - `analysis/figures/__init__.py`
 - `analysis/figures/generate_local_mutation_sensitivity_assets.py`
 - `analysis/figures/generate_nature_main_figures.py`
@@ -125,6 +127,7 @@ part of this repository; it is a separate single-file handoff artifact.
 - `experiments/audits/run_property_redundancy_and_runtime_audit.py`
 - `experiments/audits/run_local_change_factorial_audit.py`
 - `experiments/audits/run_property_scaling_audit.py`
+- `experiments/audits/run_short_read_length_continuity_audit.py`
 - `experiments/main/__init__.py`
 - `experiments/main/run_local_mutation_sensitivity.py`
 - `experiments/main/run_position_property_controlled_tasks.py`
@@ -304,6 +307,8 @@ part of this repository; it is a separate single-file handoff artifact.
 - `paper_latex/` (canonical submission LaTeX source, figures, tables and compiled review PDFs; build caches excluded)
 - `paper_latex/README.md` (compile entry point and manuscript source-of-truth summary)
 - `paper_latex/qa/latex_pdf_qa_report.md` (final compilation, visual-layout and pending-metadata audit)
+- `results/stage3/contract_v2/short_read_length_continuity/` (compressed shared-template inputs, summary tables and run manifest)
+- `results/stage3/contract_v2/art_current_contract/` (summary metrics, generation manifest, run manifests and quality-stratified outputs; expanded paired-read and FASTQ/SAM intermediates excluded)
 - `references/references.bib`
 - `requirements.txt`
 - `results/README.md`

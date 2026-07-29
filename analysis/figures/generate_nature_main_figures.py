@@ -284,26 +284,29 @@ def figure4_external_probes() -> plt.Figure:
 def figure5_full_position() -> plt.Figure:
     df = pd.read_csv(PROJECT_ROOT / "results/stage3/fullmatrix_property_contribution_ci/fullmatrix_property_controlled_ci.csv")
     plot = df[df["task"].eq("motif_jitter_position")].copy()
+    plot["representation_label"] = plot["representation_label"].replace(
+        {"CK4+P multi-scale mean": "CK4P-MSP", "canonical 5-mer": "CK5"}
+    )
     plot = plot.sort_values("macro_f1_mean", ascending=True)
     def family(label: str) -> str:
         lower = label.lower()
-        if "multi-scale" in lower:
+        if label == "CK4P-MSP" or "multi-scale" in lower:
             return "compact MSP"
         if "property" in lower:
             return "position + property"
         if "one-hot" in lower or "rope" in lower:
-            return "position identity"
-        return "k-mer identity"
+            return "position token"
+        return "k-mer composition"
 
     family_colors = {
         "compact MSP": COLORS["msp"],
         "position + property": "#fca5a5",
-        "position identity": "#c4b5fd",
-        "k-mer identity": COLORS["identity"],
+        "position token": "#c4b5fd",
+        "k-mer composition": COLORS["identity"],
     }
     plot["family"] = plot["representation_label"].map(family)
     colors = plot["family"].map(family_colors).tolist()
-    fig, axes = plt.subplots(1, 2, figsize=(7.65, 3.75), gridspec_kw={"width_ratios": [1.2, 1.05]})
+    fig, axes = plt.subplots(2, 1, figsize=(3.45, 5.25), gridspec_kw={"height_ratios": [1.45, 1.0]})
     axes[0].barh(plot["representation_label"], plot["macro_f1_mean"], color=colors, edgecolor=COLORS["ink"], linewidth=0.35)
     axes[0].set_xlabel("macro-F1")
     axes[0].set_title("A. Readout", loc="left", weight="bold", pad=4)
@@ -331,13 +334,13 @@ def figure5_full_position() -> plt.Figure:
         labels,
         frameon=False,
         loc="lower center",
-        bbox_to_anchor=(0.58, 0.02),
+        bbox_to_anchor=(0.5, 0.01),
         ncol=2,
         handletextpad=0.4,
-        columnspacing=1.0,
+        columnspacing=0.8,
     )
-    fig.suptitle("Full-position matrices expose positional information at high dimensional cost", y=1.02, fontsize=9.5, weight="bold")
-    fig.tight_layout(rect=(0, 0.22, 1, 0.96), w_pad=3.2)
+    fig.suptitle("Full-position readout trades compactness\nfor positional detail", y=0.995, fontsize=9.2, weight="bold")
+    fig.tight_layout(rect=(0, 0.09, 1, 0.91), h_pad=1.5)
     return fig
 
 

@@ -5,11 +5,8 @@ param(
 
 $ErrorActionPreference = "Stop"
 
-$miktexBin = "C:\Users\24409\AppData\Local\Programs\MiKTeX\miktex\bin\x64"
-$perlBin = "C:\Strawberry\perl\bin"
-$perlCBin = "C:\Strawberry\c\bin"
-$perlSiteBin = "C:\Strawberry\perl\site\bin"
-
-$env:Path = "$perlBin;$perlCBin;$perlSiteBin;$miktexBin;$env:Path"
+if (-not (Get-Command latexmk -ErrorAction SilentlyContinue)) {
+    throw "latexmk was not found on PATH. Install TeX Live or MiKTeX and reopen the shell."
+}
 
 latexmk -pdf -interaction=nonstopmode -halt-on-error -outdir="$OutputDirectory" "$MainTex"

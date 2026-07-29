@@ -79,8 +79,8 @@ def main() -> None:
     stability = stability.set_index("representation_label").reindex(rep_order).reset_index()
     readout = readout.set_index("representation_label").reindex(rep_order).reset_index()
 
-    fig, (ax_a, ax_b, ax_c) = plt.subplots(1, 3, figsize=(7.2, 2.65))
-    fig.subplots_adjust(left=0.09, right=0.98, top=0.86, bottom=0.22, wspace=0.55)
+    fig, (ax_a, ax_b, ax_c) = plt.subplots(1, 3, figsize=(7.2, 4.8))
+    fig.subplots_adjust(left=0.09, right=0.98, top=0.90, bottom=0.14, wspace=0.55)
 
     # Panel A: contribution to perturbation stability.
     y = np.arange(len(stability))
@@ -108,20 +108,28 @@ def main() -> None:
     # Panel C: redundancy is present but incomplete.
     x = redundancy["length"].astype(int).to_numpy()
     c_lines = [
-        ("First canonical |r|", redundancy["cca1_abs"], COLORS["warning"]),
+        ("CCA1 |r|", redundancy["cca1_abs"], COLORS["warning"]),
         ("Mean CCA |r|", redundancy["cca_mean_abs"], COLORS["CK4+MSP"]),
-        ("95th row |cosine|", redundancy["row_cosine_p95_abs"], COLORS["CK4"]),
-        ("Median row |cosine|", redundancy["row_cosine_median_abs"], COLORS["CK4+P"]),
+        ("Row |cosine|, 95th", redundancy["row_cosine_p95_abs"], COLORS["CK4"]),
+        ("Row |cosine|, median", redundancy["row_cosine_median_abs"], COLORS["CK4+P"]),
     ]
     for label, values, color in c_lines:
-        ax_c.plot(x, values, color=color, marker="o", linewidth=1.15)
-        ax_c.text(int(x[-1]) + 2.2, float(values.iloc[-1]), label, va="center", ha="left", fontsize=6.1, color=color)
+        ax_c.plot(x, values, color=color, marker="o", linewidth=1.15, label=label)
     ax_c.set_xlabel("Read length (bp)")
     ax_c.set_ylabel("P/MSP association")
     ax_c.set_ylim(0, 1.04)
-    ax_c.set_xlim(int(x.min()) - 4, int(x.max()) + 31)
+    ax_c.set_xlim(int(x.min()) - 4, int(x.max()) + 8)
     ax_c.set_title("C  Related, not interchangeable", loc="left", fontweight="bold")
     ax_c.grid(axis="y", color=COLORS["light"], linewidth=0.6)
+    ax_c.legend(
+        loc="center right",
+        bbox_to_anchor=(1.0, 0.59),
+        ncol=2,
+        fontsize=5.4,
+        handlelength=1.2,
+        columnspacing=0.7,
+        labelspacing=0.2,
+    )
     rank_text = f"P rank {int(redundancy['p_rank'].median())}; MSP rank {int(redundancy['msp_rank'].median())}"
     ax_c.text(0.02, 0.08, rank_text, transform=ax_c.transAxes, fontsize=6.4, color=COLORS["dark"])
 

@@ -1,5 +1,5 @@
 {
-  "elapsed_seconds": 831.0765812397003,
+  "elapsed_seconds": 1324.8125269412994,
   "reads_csv": "D:\\AI-NGS\\info\\release_code\\results\\stage3\\contract_v2\\compact_baselines\\stage3_compact_baseline_reads.csv",
   "triplets_csv": "D:\\AI-NGS\\info\\release_code\\results\\stage3\\contract_v2\\local_mutation_sensitivity\\local_mutation_triplets.csv",
   "representations": [
@@ -38,8 +38,15 @@
   "max_per_class": 60,
   "cv_folds": 5,
   "runtime_length": 75,
-  "runtime_reads": 1000,
+  "runtime_read_counts": [
+    10000,
+    100000
+  ],
   "runtime_repeats": 5,
+  "runtime_large_batch_repeats": 1,
+  "runtime_protocol": "actual batches; warm-up; randomized order within repeat; garbage collection before timing; one numerical-library thread",
+  "platform": "Windows-11-10.0.26200-SP0",
+  "python": "3.13.9",
   "seed": 20260729,
   "n_stability_rows": 150,
   "n_readout_rows": 1375,

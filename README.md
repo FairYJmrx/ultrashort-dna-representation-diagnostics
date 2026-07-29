@@ -1,7 +1,7 @@
-# Ultra-short DNA Read Representation Diagnostics
+# Short DNA Read Representation Diagnostics
 
 This repository is the reproducible release for the manuscript on
-representation diagnostics for ultra-short metagenomic reads. It is organized
+representation diagnostics for short metagenomic reads. It is organized
 as a methods repository: method definitions are centralized, data preparation
 and experiments have separate entrypoints, and manuscript claims are mapped to
 scripts and outputs.
@@ -112,9 +112,12 @@ where local perturbation variants share a source template.
 .\.venv\Scripts\python.exe experiments\audits\run_property_scaling_audit.py --output-dir results\stage3\contract_v2\property_scaling
 .\.venv\Scripts\python.exe experiments\audits\run_msp_bin_gamma_sensitivity_audit.py --output-dir results\stage3\contract_v2\msp_bin_gamma_sensitivity
 .\.venv\Scripts\python.exe experiments\audits\run_property_redundancy_and_runtime_audit.py --output-dir results\stage3\contract_v2\property_redundancy_runtime
-.\.venv\Scripts\python.exe experiments\audits\run_historical_descriptor_audit.py --output-dir results\stage3\contract_v2\historical_descriptor_audit
+.\.venv\Scripts\python.exe experiments\audits\run_historical_descriptor_audit.py --output-dir results\stage3\contract_v2\historical_descriptor_audit --runtime-read-counts 10000,100000 --runtime-repeats 5 --runtime-large-batch-repeats 1
+.\.venv\Scripts\python.exe experiments\audits\run_short_read_length_continuity_audit.py --output-dir results\stage3\contract_v2\short_read_length_continuity
 .\.venv\Scripts\python.exe experiments\main\run_stage3_cami_probe.py --input data\stage3\cami\cami_toy_low_subset_reads_expanded.csv --output-dir results\stage3\contract_v2\cami_toy_readout
 .\.venv\Scripts\python.exe data_pipeline\simulate\run_cami2_marine_lightweight_probe.py --output-dir results\stage3\contract_v2\cami2_marine_stability
+.\.venv\Scripts\python.exe data_pipeline\simulate\run_stage3_art_generate_and_evaluate.py
+.\.venv\Scripts\python.exe data_pipeline\simulate\summarize_stage3_art_quality.py
 ```
 
 The K/P/MSP contribution audit evaluates all seven non-empty block combinations
@@ -124,9 +127,10 @@ source template in the same fold.
 
 See `docs/contract_v2_evidence_map.md` for the claim, result-table and script
 mapping. Current-contract CAMI\_TOY readout and CAMI II stability outputs are
-included in that map. Historical ART and full-position probes remain available
-for bounded simulator and upper-bound roles, but their legacy feature labels
-must not be used to make claims about the public CK4P-MSP contract.
+included in that map. The current ART audit uses the public CK4P-MSP contract at
+50, 60, 69, 75, 100, 125 and 150 bp. Full-position probes remain upper-bound
+controls; legacy feature labels must not be used to make claims about the public
+CK4P-MSP contract.
 
 ### Data and simulation
 
@@ -168,6 +172,7 @@ must not be used to make claims about the public CK4P-MSP contract.
 .\.venv\Scripts\python.exe experiments\audits\run_local_change_factorial_audit.py
 .\.venv\Scripts\python.exe experiments\audits\run_property_scaling_audit.py
 .\.venv\Scripts\python.exe experiments\audits\run_historical_descriptor_audit.py
+.\.venv\Scripts\python.exe experiments\audits\run_short_read_length_continuity_audit.py
 ```
 
 ### Figures, tables and audits
@@ -180,6 +185,8 @@ must not be used to make claims about the public CK4P-MSP contract.
 .\.venv\Scripts\python.exe analysis\figures\generate_contract_v2_figures.py
 .\.venv\Scripts\python.exe analysis\figures\generate_supp_fig_s8_redundancy_runtime_audit.py
 .\.venv\Scripts\python.exe analysis\figures\generate_supp_fig_s12_historical_descriptor_audit.py
+.\.venv\Scripts\python.exe analysis\figures\generate_short_read_continuity_figures.py
+.\.venv\Scripts\python.exe analysis\figures\sync_manuscript_figures.py
 .\.venv\Scripts\python.exe analysis\tables\generate_contract_v2_tables.py
 .\.venv\Scripts\python.exe analysis\audits\audit_result_inventory.py
 .\.venv\Scripts\python.exe analysis\audits\audit_final_provenance.py

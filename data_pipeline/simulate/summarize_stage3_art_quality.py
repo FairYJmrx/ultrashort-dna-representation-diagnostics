@@ -23,17 +23,18 @@ from experiments.main.run_stage2_representation_grid import parse_csv_list, set_
 from src.stage2_features import build_feature_matrix, paired_retrieval_metrics  # noqa: E402
 
 DEFAULT_REPRESENTATIONS = ",".join([
+    "ck4",
+    "ck4_p",
+    "ck4_msp",
+    "ck4p_msp",
     "ckmer5_count_l2",
-    "ckmer7_count_l2",
-    "cspaced_count_l2",
-    "cspaced_property_l2",
-    "hybrid_ckmer5_csp",
-    "minhash_k5_s128",
-    "eiip_l2",
-    "eiip_summary_l2",
 ])
 
 REP_LABELS = {
+    "ck4": "CK4",
+    "ck4_p": "CK4+P",
+    "ck4_msp": "CK4+MSP",
+    "ck4p_msp": "CK4P-MSP",
     "ckmer5_count_l2": "canonical 5-mer",
     "ckmer7_count_l2": "canonical 7-mer",
     "cspaced_count_l2": "canonical spaced count",
@@ -43,6 +44,17 @@ REP_LABELS = {
     "eiip_l2": "EIIP positional signal",
     "eiip_summary_l2": "EIIP summary",
 }
+
+
+def observed_base_difference_rate(clean: str, perturbed: str) -> float:
+    """Return a descriptive same-coordinate difference rate for an ART pair."""
+    clean = str(clean)
+    perturbed = str(perturbed)
+    width = min(len(clean), len(perturbed))
+    if width == 0:
+        return float("nan")
+    differences = sum(left != right for left, right in zip(clean[:width], perturbed[:width]))
+    return float(differences / width)
 
 
 def mean_phred(quality: str) -> float:
@@ -94,6 +106,14 @@ def run_quality_grid(reads: pd.DataFrame, reps: list[str], max_pairs: int, seed:
             q_min = float(bin_art["mean_phred"].min())
             q_mean = float(bin_art["mean_phred"].mean())
             q_max = float(bin_art["mean_phred"].max())
+            observed_difference_mean = float(
+                pd.Series(
+                    [
+                        observed_base_difference_rate(left, right)
+                        for left, right in zip(clean["sequence"], pert["sequence"])
+                    ]
+                ).mean()
+            )
             for rep in reps:
                 try:
                     x, info = build_feature_matrix(all_seq, rep, length=length, train_indices=train_idx)
@@ -104,6 +124,7 @@ def run_quality_grid(reads: pd.DataFrame, reps: list[str], max_pairs: int, seed:
                         "mean_phred_min": q_min,
                         "mean_phred_mean": q_mean,
                         "mean_phred_max": q_max,
+                        "observed_base_difference_rate_mean": observed_difference_mean,
                         "representation": rep,
                         "representation_label": REP_LABELS.get(rep, rep),
                         "n_pairs": int(len(clean)),
@@ -155,8 +176,14 @@ def write_summary(metrics: pd.DataFrame, output_dir: Path) -> None:
 
 def main() -> None:
     parser = argparse.ArgumentParser(description="Summarize ART Illumina stability across FASTQ quality strata.")
-    parser.add_argument("--input", default=str(PROJECT_ROOT / "results" / "stage3" / "art_illumina" / "art_paired_reads.csv"))
-    parser.add_argument("--output-dir", default=str(PROJECT_ROOT / "results" / "stage3" / "art_quality_stratified"))
+    parser.add_argument(
+        "--input",
+        default=str(PROJECT_ROOT / "results" / "stage3" / "contract_v2" / "art_current_contract" / "art_paired_reads.csv"),
+    )
+    parser.add_argument(
+        "--output-dir",
+        default=str(PROJECT_ROOT / "results" / "stage3" / "contract_v2" / "art_current_contract" / "quality_stratified"),
+    )
     parser.add_argument("--representations", default=DEFAULT_REPRESENTATIONS)
     parser.add_argument("--max-pairs", type=int, default=400)
     parser.add_argument("--seed", type=int, default=707)

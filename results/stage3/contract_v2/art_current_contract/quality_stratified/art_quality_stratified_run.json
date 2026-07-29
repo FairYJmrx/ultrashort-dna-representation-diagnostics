@@ -1,0 +1,14 @@
+{
+  "elapsed_seconds": 11.05006194114685,
+  "input": "results/stage3/contract_v2/art_current_contract/art_paired_reads.csv",
+  "representations": [
+    "ck4",
+    "ck4_p",
+    "ck4_msp",
+    "ck4p_msp",
+    "ckmer5_count_l2"
+  ],
+  "max_pairs": 400,
+  "seed": 707,
+  "n_rows": 105
+}

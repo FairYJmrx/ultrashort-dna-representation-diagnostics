@@ -1,17 +1,13 @@
 # Figure and Table Inventory
 
-> Historical pre-LaTeX inventory. The current contract-v2 mapping is
-> `docs/manuscript_script_mapping.md`, and the canonical submission assets are
-> under `paper_latex/` and `figures/contract_v2/`.
-
 ## Main figures
 
 - Figure 1: Representation-diagnostic framework and read-length regime. Source script: `info/scripts/generate_nature_main_figures.py`. Asset: `paper/figures/nature_fig1_framework.*`.
-- Figure 2: Compact stability of identity, spaced, and property-aware representations. Source script: `info/scripts/generate_nature_main_figures.py` plus bootstrap tables. Asset: `paper/figures/nature_fig2_compact_stability.*`.
-- Figure 3: CK4P-MSP compact trade-off between stability, readout, and feature dimension. Source script: `info/scripts/generate_nature_main_figures.py`. Asset: `paper/figures/nature_fig3_ck4p_msp_tradeoff.*`.
-- Figure 4: External ART and CAMI probes, separating ART paired-cosine stability, CAMI coarse target/background readout and CAMI fine label-probe limits. Source script: `info/scripts/generate_nature_main_figures.py`. Asset: `paper/figures/nature_fig4_external_probes.*`.
+- Figure 2: P/MSP contribution and counterfactual property-mapping audit, separating global biochemical stability, positionalized property readout and real-versus-random property controls. Source script: `info/scripts/generate_nature_main_figures.py` plus P/MSP contribution and counterfactual tables. Asset: `paper/figures/nature_fig2_compact_stability.*`.
+- Figure 3: Dimension-matched compact stability and readability audit, comparing CK4P-MSP with compact identity baselines and high-k compressed controls under a low-dimensional feature budget. Source script: `info/scripts/generate_nature_main_figures.py`. Asset: `paper/figures/nature_fig3_ck4p_msp_tradeoff.*`.
+- Figure 4: Current-contract external probes, separating within-length ART drift ratios, CAMI coarse target/background readout and the weak CAMI 30-label boundary. Source script: `release_code/analysis/figures/generate_external_contract_figure.py`. Asset: `paper_latex/figures/main/nature_fig4_external_probes.*`.
 - Figure 5: Full-position diagnostic upper-bound analysis. Source script: `info/scripts/generate_nature_main_figures.py`. Asset: `paper/figures/nature_fig5_full_position_upper_bound.*`.
-- Figure 6: Local mutation sensitivity and delta-readout analysis. Source script: `info/scripts/generate_nature_main_figures.py`. Asset: `paper/figures/nature_fig6_local_mutation_sensitivity.*`.
+- Figure 6: Local-change readability and distance-ratio boundary, showing that MSP drives local-change readout while full-position/property channels remain the distance-sensitivity upper-bound probes. Source script: `info/scripts/generate_nature_main_figures.py`. Asset: `paper/figures/nature_fig6_local_mutation_sensitivity.*`.
 
 ## Supplementary figures generated for the paper folder
 
@@ -25,6 +21,7 @@
 - Supplementary Figure S8: P/MSP contribution, redundancy and runtime audit, separating global biochemical summaries from positionalized property pooling while reporting P/MSP association and extraction cost. Source scripts: `info/scripts/run_p_msp_contribution_audit.py`, `info/scripts/run_property_redundancy_and_runtime_audit.py`, and `info/scripts/generate_supp_fig_s8_redundancy_runtime_audit.py`. Asset: `paper/figures/supp_fig_s8_redundancy_runtime_audit.*`.
 - Supplementary Figure S9: P/MSP relation audit, combining CCA and a grouped correlation heatmap to summarize shared latent structure and redundancy. Source script: `info/scripts/generate_supp_fig_s9_p_msp_relation_audit.py`. Asset: `paper/figures/supp_fig_s9_p_msp_relation_audit.*`.
 - Supplementary Figure S10: CAMI II marine subset probe, testing whether CK4P-MSP perturbation-stability trends extend beyond CAMI_TOY_low in an external anonymous-read metagenomic short-read source without reconstructed read-level taxonomic labels in this lightweight analysis. Source scripts: `info/scripts/run_cami2_marine_lightweight_probe.py` and `info/scripts/generate_supp_fig_s10_cami2_marine_probe.py`. Asset: `paper/figures/supp_fig_s10_cami2_marine_probe.*`.
+- Supplementary Figure S13: Shared-template length-continuity audit over every integer length from 50 to 75 bp, showing representation drift, grouped local-change readout and MSP binset reliability without conflating source identity with read length. Source script: `release_code/experiments/audits/run_short_read_length_continuity_audit.py`. Asset: `paper_latex/figures/supp/supp_fig_s13_short_read_length_continuity.*`.
 
 ## Tables
 

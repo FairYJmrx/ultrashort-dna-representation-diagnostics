@@ -179,6 +179,8 @@ def main() -> None:
         & local["classifier"].eq("logistic")
     ].copy()
     runtime = pd.read_csv(RESULTS / "historical_descriptor_runtime.csv")
+    primary_runtime_reads = int(runtime["n_reads"].min())
+    runtime_primary = runtime[runtime["n_reads"].eq(primary_runtime_reads)].copy()
 
     stability_summary = summarize_metric(stability, "l2_delta_mean", seed=20260729)
     local_summary = summarize_metric(local, "macro_f1", seed=20260829)
@@ -193,7 +195,7 @@ def main() -> None:
         .loc[ORDER]
     )
     runtime_summary = (
-        runtime.groupby("representation", as_index=False)
+        runtime_primary.groupby("representation", as_index=False)
         .agg(
             runtime_ms=("milliseconds_per_10000_reads", "median"),
             runtime_q25=("milliseconds_per_10000_reads", lambda values: float(np.quantile(values, 0.25))),
@@ -237,14 +239,14 @@ def main() -> None:
                 "metric": "feature_dimension",
             }
         )
-    for representation, row in runtime.iterrows():
+    for _, row in runtime.iterrows():
         source_rows.append(
             {
                 "panel": "D",
                 "representation": row["representation"],
                 "cell_1": int(row["repeat"]),
-                "cell_2": "75_bp_1000_reads_scaled_to_10000",
-                "value": float(row["milliseconds_per_10000_reads"]) / 1000.0,
+                "cell_2": f"75_bp_actual_{int(row['n_reads'])}_reads",
+                "value": float(row["elapsed_seconds"]),
                 "metric": "reference_runtime_seconds",
             }
         )
@@ -309,7 +311,7 @@ def main() -> None:
     ax_d.set_yticks(y)
     ax_d.set_yticklabels([LABELS[item] for item in ORDER])
     ax_d.invert_yaxis()
-    ax_d.set_xlabel("Seconds per 10,000 reads (log scale)")
+    ax_d.set_xlabel(f"Seconds per actual {primary_runtime_reads:,}-read batch (log scale)")
     ax_d.set_title("D  Optimized reference implementation", loc="left", fontweight="bold")
     ax_d.grid(axis="x", which="both", color="#E1E5E8", linewidth=0.65, zorder=0)
     for idx, value in enumerate(runtime_seconds):

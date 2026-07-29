@@ -4,7 +4,7 @@ This file is the merged manuscript scaffold. Section drafts from `01` to `05` sh
 
 ## Title
 
-Layered representation diagnostics for ultra-short metagenomic reads
+Layered representation diagnostics for short metagenomic reads
 
 ## Subtitle
 

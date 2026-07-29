@@ -15,6 +15,9 @@ results/stage3/figures/
 manuscript/figures/nature_fig*
 paper_latex/qa/*
 !paper_latex/qa/latex_pdf_qa_report.md
+paper_latex/figures/**/*.png
+paper_latex/figures/**/*.svg
+paper_latex/figures/main/figure_4_external_contract_v2.pdf
 results/stage2/parameter_sensitivity/
 results/stage3/art_illumina/fastq/
 results/stage3/art_illumina/art_paired_reads.csv
@@ -22,6 +25,8 @@ results/stage3/compact_baselines/stage3_compact_baseline_reads.csv
 results/stage3/cami_probe_expanded/cami_probe_reads.csv
 results/stage3/cami_fullmatrix_property_contribution/cami_probe_reads.csv
 results/stage3/contract_v2/cami_toy_readout/cami_probe_reads.csv
+results/stage3/contract_v2/art_current_contract/art_paired_reads.csv
+results/stage3/contract_v2/art_current_contract/fastq/
 data/stage3/cami/remote_prefix_cache/
 paper_latex/build_*/
 paper_latex/tmp/

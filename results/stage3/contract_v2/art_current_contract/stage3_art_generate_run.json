@@ -1,0 +1,27 @@
+{
+  "elapsed_seconds": 21.556441068649292,
+  "art_exe": "D:\\AI-NGS\\info\\tools\\art\\extracted_bp\\Win64\\art_illumina.exe",
+  "genome_manifest": "D:\\AI-NGS\\info\\data\\real_slices\\close_relative_genomes_manifest.csv",
+  "data_root": "D:\\AI-NGS\\info",
+  "existing_fastq_dir": "D:\\AI-NGS\\info\\results\\stage3\\art_illumina\\fastq",
+  "lengths": [
+    50,
+    60,
+    69,
+    75,
+    100,
+    125,
+    150
+  ],
+  "representations": [
+    "ck4",
+    "ck4_p",
+    "ck4_msp",
+    "ck4p_msp",
+    "ckmer5_count_l2"
+  ],
+  "fold_coverage": 0.005,
+  "n_reads_rows": 111922,
+  "n_clean_ids": 55961,
+  "n_stability_rows": 35
+}

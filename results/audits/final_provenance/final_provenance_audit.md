@@ -50,6 +50,6 @@ This audit separates final evidence sources from exploratory or superseded resul
 
 ## Pattern support audit
 
-| pattern   | supported_by                                                                           | status   |
-|:----------|:---------------------------------------------------------------------------------------|:---------|
-| 0-1-2-3   | stage2_parameter_sensitivity; runs_parameter_sensitivity; stage3_spaced_pattern_sanity | ok       |
+| pattern   | supported_by                 | status   |
+|:----------|:-----------------------------|:---------|
+| 0-1-2-3   | stage3_spaced_pattern_sanity | ok       |

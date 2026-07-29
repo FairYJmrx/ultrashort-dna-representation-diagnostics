@@ -1,0 +1,57 @@
+{
+  "elapsed_seconds": 303.196,
+  "source_reads": "D:\\AI-NGS\\info\\release_code\\data\\real_slices\\close_relative_reads.csv",
+  "lengths": [
+    50,
+    51,
+    52,
+    53,
+    54,
+    55,
+    56,
+    57,
+    58,
+    59,
+    60,
+    61,
+    62,
+    63,
+    64,
+    65,
+    66,
+    67,
+    68,
+    69,
+    70,
+    71,
+    72,
+    73,
+    74,
+    75
+  ],
+  "anchor_lengths": [
+    50,
+    60,
+    75
+  ],
+  "conditions": [
+    "substitution_1pct",
+    "N_3pct",
+    "trim_5bp",
+    "substitution_1pct_N_3pct",
+    "local_mismatch_6bp",
+    "short_indel"
+  ],
+  "shared_templates": 420,
+  "triplets_per_length_mode": 180,
+  "local_modes": [
+    "center",
+    "left",
+    "right",
+    "jittered"
+  ],
+  "mutation_fraction": 0.08,
+  "cv_folds": 5,
+  "seed": 20260730,
+  "inference_scope": "descriptive shared-template boundary audit; excluded from the primary 24-cell inferential grid"
+}

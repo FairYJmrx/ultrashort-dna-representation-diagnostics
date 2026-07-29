@@ -227,25 +227,24 @@ Preferred command once a TeX runtime is available:
 
 If the project uses `biblatex`, use the OUP-supported biber workflow. If the OUP template uses BibTeX/natbib, use BibTeX.
 
-Current local environment note, updated 2026-07-16:
+Reference Windows environment note, updated 2026-07-30:
 
 - The Codex-managed TeX Live installer is not available on Windows; it supports macOS/Linux only.
-- MiKTeX 25.12 is installed under `C:/Users/24409/AppData/Local/Programs/MiKTeX/miktex/bin/x64`.
-- Strawberry Perl 5.42 is installed under `C:/Strawberry`.
-- The MiKTeX bin directory has been added to the user PATH.
-- For the current PowerShell session, prepend:
+- MiKTeX 25.12 and Strawberry Perl 5.42 were used for the verified Windows build.
+- Add the local MiKTeX and Perl binary directories to `PATH`; do not hard-code a user profile in repository scripts.
+- For a temporary PowerShell session, a portable pattern is:
 
 ```powershell
-$env:Path = "C:\Strawberry\perl\bin;C:\Strawberry\c\bin;C:\Strawberry\perl\site\bin;C:\Users\24409\AppData\Local\Programs\MiKTeX\miktex\bin\x64;$env:Path"
+$env:Path = "$env:PERL_BIN;$env:MIKTEX_BIN;$env:Path"
 ```
 
 - Smoke tests passed for:
   - `latexmk + pdflatex` minimal PDF generation;
   - `latexmk + BibTeX` citation/bibliography generation.
-- The OUP authoring-template smoke file `D:/AI-NGS/info/paper_latex/main.tex` compiles to `D:/AI-NGS/info/paper_latex/build/main.pdf`.
+- The OUP authoring-template entrypoint `main.tex` compiles to `build/main.pdf`.
 - The local preamble removes the generic OUP society-logo placeholder block without editing the installed `oup-authoring-template.cls`.
 - MiKTeX currently reports the non-fatal warning `So far, you have not checked for MiKTeX updates.` This should be cleared by running MiKTeX Console updates before final submission builds, but it does not block compilation.
-- Local status report: `D:/AI-NGS/info/paper_latex/qa/latex_toolchain_report.md`.
+- Local status report: `qa/latex_toolchain_report.md`.
 
 ## 7. PDF QA Workflow
 
@@ -254,12 +253,12 @@ After compilation, render the PDF pages to PNG for visual inspection.
 Current rendering command:
 
 ```powershell
-C:\Users\24409\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\python.exe .\scripts\render_pdf_pages.py .\build\main.pdf --out-dir .\qa --prefix oup_smoke_page
+python .\scripts\render_pdf_pages.py .\build\main.pdf --out-dir .\qa --prefix oup_smoke_page
 ```
 
 Current OUP smoke-test render:
 
-- `D:/AI-NGS/info/paper_latex/qa/oup_smoke_page_01.png`
+- `qa/oup_smoke_page_01.png`
 - Status: title page, abstract, figure inclusion and bibliography render successfully; no society-logo placeholder block remains after the local preamble patch.
 
 ### Layout checks

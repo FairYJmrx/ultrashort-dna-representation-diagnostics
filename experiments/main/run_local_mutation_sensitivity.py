@@ -28,6 +28,8 @@ sys.path.insert(0, str(PROJECT_ROOT))
 from src.stage2_features import build_feature_matrix  # noqa: E402
 
 
+RATIO_DENOMINATOR_TOLERANCE = 1e-8
+
 BASES = np.asarray(list("ACGT"))
 PROPERTY_SHIFT = {
     "A": "C",
@@ -206,6 +208,8 @@ def evaluate_delta_readout(
 
 
 def bootstrap_ci(values: np.ndarray, seed: int, n_bootstrap: int = 1000) -> tuple[float, float]:
+    values = np.asarray(values, dtype=float)
+    values = values[np.isfinite(values)]
     if values.size == 0:
         return float("nan"), float("nan")
     rng = np.random.default_rng(seed)
@@ -243,7 +247,9 @@ def run_experiment(
             clean, noise, local = split_feature_blocks(x, n_triplets)
             noise_cos, noise_l2 = pair_metrics(clean, noise)
             local_cos, local_l2 = pair_metrics(clean, local)
-            ratio = local_l2 / np.maximum(noise_l2, 1e-12)
+            ratio_valid = noise_l2 > RATIO_DENOMINATOR_TOLERANCE
+            ratio = np.full_like(local_l2, np.nan, dtype=float)
+            np.divide(local_l2, noise_l2, out=ratio, where=ratio_valid)
             delta = local_l2 - noise_l2
             for idx, sample_id in enumerate(sample_ids):
                 metric_rows.append(
@@ -258,6 +264,7 @@ def run_experiment(
                         "local_l2": float(local_l2[idx]),
                         "local_minus_noise_l2": float(delta[idx]),
                         "selective_sensitivity_ratio": float(ratio[idx]),
+                        "selective_sensitivity_ratio_valid": bool(ratio_valid[idx]),
                         "n_features": info.n_features,
                         "density": info.density,
                         "avg_nnz_per_read": info.avg_nnz_per_read,
@@ -294,7 +301,12 @@ def run_experiment(
                     "local_minus_noise_l2_mean": float(np.mean(delta)),
                     "local_minus_noise_l2_ci_low": delta_low,
                     "local_minus_noise_l2_ci_high": delta_high,
-                    "selective_sensitivity_ratio_mean": float(np.mean(ratio)),
+                    "selective_sensitivity_ratio_mean": (
+                        float(np.nanmean(ratio)) if np.any(ratio_valid) else float("nan")
+                    ),
+                    "selective_sensitivity_ratio_n_valid": int(np.sum(ratio_valid)),
+                    "selective_sensitivity_ratio_valid_fraction": float(np.mean(ratio_valid)),
+                    "selective_sensitivity_ratio_denominator_tolerance": RATIO_DENOMINATOR_TOLERANCE,
                     "selective_sensitivity_ratio_ci_low": ratio_low,
                     "selective_sensitivity_ratio_ci_high": ratio_high,
                     "noise_cosine_mean": float(np.mean(noise_cos)),
@@ -314,6 +326,7 @@ def write_summary(summary: pd.DataFrame, readout: pd.DataFrame, path: Path) -> N
         local_l2=("local_l2_mean", "mean"),
         local_minus_noise_l2=("local_minus_noise_l2_mean", "mean"),
         selective_sensitivity_ratio=("selective_sensitivity_ratio_mean", "mean"),
+        selective_sensitivity_ratio_valid_fraction=("selective_sensitivity_ratio_valid_fraction", "mean"),
         n_features=("n_features", "mean"),
     )
     focus = focus.sort_values(["selective_sensitivity_ratio", "local_minus_noise_l2"], ascending=False)
@@ -338,7 +351,7 @@ def write_summary(summary: pd.DataFrame, readout: pd.DataFrame, path: Path) -> N
         "",
         "## Interpretation",
         "",
-        "- `selective_sensitivity_ratio > 1` means the representation moved farther for local property-shift mutations than for equal-count random substitutions.",
+        "- `selective_sensitivity_ratio > 1` means the representation moved farther for local property-shift mutations than for equal-count random substitutions. The ratio is undefined when nuisance drift is at or below the declared numerical tolerance; use `selective_sensitivity_ratio_valid_fraction` to audit this boundary.",
         "- High macro-F1 in the delta-readout means a shallow model can distinguish local biochemical/positional change from random noise using representation deltas.",
         "- These metrics complement perturbation stability: they test selective sensitivity rather than invariance.",
     ]
@@ -411,4 +424,3 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
-

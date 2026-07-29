@@ -10,8 +10,9 @@ figures, audit summaries and manuscript artifacts.
 | `audits/` | Provenance and result-inventory checks. |
 | `manuscript/` | Manuscript assembly and historical document generation scripts. |
 
-The canonical figure entrypoint is
-`figures/generate_contract_v2_figures.py`, supplemented only by the dedicated
-S9 and S10 builders. `generate_paper_supplementary_figures.py` and the Word
+The canonical figure entrypoints are `figures/generate_contract_v2_figures.py`
+and `figures/generate_short_read_continuity_figures.py`, followed by
+`figures/sync_manuscript_figures.py`; dedicated S9, S10 and S12 builders remain
+part of the current figure path. `generate_paper_supplementary_figures.py` and the Word
 builders are retained for historical provenance and are not sources for the
 current numerical claims or LaTeX submission.

@@ -458,7 +458,7 @@ def plot_audit(outputs: dict[str, pd.DataFrame], out_dir: Path) -> None:
         "pdf.fonttype": 42,
         "ps.fonttype": 42,
     })
-    fig, axes = plt.subplots(2, 2, figsize=(7.2, 5.4), constrained_layout=True)
+    fig, axes = plt.subplots(2, 2, figsize=(7.2, 6.0), constrained_layout=True)
     palette = {"CK4": "#4C78A8", "CK4P-MSP": "#1B9E77", "CK4 + permuted P/MSP": "#E45756", "CK4 + Gaussian P/MSP": "#F2A541"}
 
     ax = axes[0, 0]
@@ -467,7 +467,7 @@ def plot_audit(outputs: dict[str, pd.DataFrame], out_dir: Path) -> None:
         stab = stab.sort_values("l2_delta_mean")
         ax.barh(stab["representation_label"], stab["l2_delta_mean"], color=[palette.get(v, "0.5") for v in stab["representation_label"]])
         ax.set_xlabel("Mean paired L2 drift")
-        ax.set_title("A. Stability under matched dimensions", loc="left", fontweight="bold")
+        ax.set_title("A. Matched-dimension stability", loc="left", fontweight="bold")
     else:
         ax.axis("off")
 
@@ -482,7 +482,7 @@ def plot_audit(outputs: dict[str, pd.DataFrame], out_dir: Path) -> None:
         )
         ax.set_xlabel("Grouped delta-readout macro-F1")
         ax.set_xlim(0.45, 1.01)
-        ax.set_title("B. Sequence-linked counterfactual readout", loc="left", fontweight="bold")
+        ax.set_title("B. Sequence-linked readout", loc="left", fontweight="bold")
     else:
         ax.axis("off")
 
@@ -493,7 +493,7 @@ def plot_audit(outputs: dict[str, pd.DataFrame], out_dir: Path) -> None:
         colors = ["#4C78A8", "#59A14F", "#B07AA1"][: len(block)]
         ax.barh(block["block"], block["l2_delta_mean"], color=colors)
         ax.set_xlabel("Mean within-block L2 drift")
-        ax.set_title("C. Drift decomposed by block", loc="left", fontweight="bold")
+        ax.set_title("C. Blockwise drift", loc="left", fontweight="bold")
     else:
         ax.axis("off")
 

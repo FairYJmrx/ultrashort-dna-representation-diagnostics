@@ -1,6 +1,6 @@
 # Reference Audit
 
-Scope: working manuscript sections `01`-`05` in `paper`, excluding continuity ledgers and submission checklists.
+Scope: working manuscript sections `01`-`05` in `info/paper`, excluding continuity ledgers and submission checklists.
 
 - Citation keys used in manuscript: 40
 - BibTeX entries available: 60

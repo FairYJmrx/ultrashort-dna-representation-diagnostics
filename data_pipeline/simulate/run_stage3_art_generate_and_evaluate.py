@@ -29,14 +29,11 @@ from experiments.main.run_stage2_representation_grid import (  # noqa: E402
 
 DEFAULT_REPRESENTATIONS = ",".join(
     [
+        "ck4",
+        "ck4_p",
+        "ck4_msp",
+        "ck4p_msp",
         "ckmer5_count_l2",
-        "ckmer7_count_l2",
-        "cspaced_count_l2",
-        "cspaced_property_l2",
-        "hybrid_ckmer5_csp",
-        "minhash_k5_s128",
-        "eiip_l2",
-        "eiip_summary_l2",
     ]
 )
 
@@ -208,8 +205,21 @@ def main() -> None:
     parser = argparse.ArgumentParser(description="Generate lightweight ART Illumina reads and evaluate representation stability.")
     parser.add_argument("--art-exe", default=str(PROJECT_ROOT / "tools" / "art" / "extracted_bp" / "Win64" / "art_illumina.exe"))
     parser.add_argument("--genome-manifest", default=str(PROJECT_ROOT / "data" / "real_slices" / "close_relative_genomes_manifest.csv"))
-    parser.add_argument("--output-dir", default=str(PROJECT_ROOT / "results" / "stage3" / "art_illumina"))
-    parser.add_argument("--lengths", default="69,75,100,125,150")
+    parser.add_argument(
+        "--data-root",
+        default=str(PROJECT_ROOT),
+        help="Root used to resolve relative genome_path entries in the manifest.",
+    )
+    parser.add_argument(
+        "--existing-fastq-dir",
+        default="",
+        help="Optional directory containing reusable ART .fq/.sam files.",
+    )
+    parser.add_argument(
+        "--output-dir",
+        default=str(PROJECT_ROOT / "results" / "stage3" / "contract_v2" / "art_current_contract"),
+    )
+    parser.add_argument("--lengths", default="50,60,69,75,100,125,150")
     parser.add_argument("--representations", default=DEFAULT_REPRESENTATIONS)
     parser.add_argument("--fold-coverage", type=float, default=0.005)
     parser.add_argument("--max-genomes", type=int, default=0)
@@ -220,6 +230,8 @@ def main() -> None:
     started = time.time()
     set_global_seed(args.seed)
     art_exe = Path(args.art_exe)
+    data_root = Path(args.data_root)
+    existing_fastq_dir = Path(args.existing_fastq_dir) if args.existing_fastq_dir else None
     output_dir = Path(args.output_dir)
     fastq_dir = output_dir / "fastq"
     output_dir.mkdir(parents=True, exist_ok=True)
@@ -234,7 +246,8 @@ def main() -> None:
     all_rows: list[pd.DataFrame] = []
     run_rows: list[dict[str, object]] = []
     for _, row in manifest.iterrows():
-        genome = PROJECT_ROOT / str(row["genome_path"])
+        genome_entry = Path(str(row["genome_path"]))
+        genome = genome_entry if genome_entry.is_absolute() else data_root / genome_entry
         if not genome.exists():
             continue
         label = str(row["label"])
@@ -245,10 +258,26 @@ def main() -> None:
             fq_path = Path(str(prefix) + ".fq")
             sam_path = Path(str(prefix) + ".sam")
             status = "existing"
+            source_fq_path = fq_path
+            source_sam_path = sam_path
+            if (
+                (not fq_path.exists() or not sam_path.exists())
+                and existing_fastq_dir is not None
+            ):
+                reusable_prefix = existing_fastq_dir / f"{label}_L{length}_ART_"
+                reusable_fq = Path(str(reusable_prefix) + ".fq")
+                reusable_sam = Path(str(reusable_prefix) + ".sam")
+                if reusable_fq.exists() and reusable_sam.exists():
+                    source_fq_path = reusable_fq
+                    source_sam_path = reusable_sam
+                    status = "reused_external"
             if not fq_path.exists() or not sam_path.exists():
-                run_art(art_exe, genome, prefix, length, args.fold_coverage, args.seed + length)
-                status = "generated"
-            df = normalize_art_output(genome, fq_path, sam_path, label, genus, species, length)
+                if status != "reused_external":
+                    run_art(art_exe, genome, prefix, length, args.fold_coverage, args.seed + length)
+                    source_fq_path = fq_path
+                    source_sam_path = sam_path
+                    status = "generated"
+            df = normalize_art_output(genome, source_fq_path, source_sam_path, label, genus, species, length)
             all_rows.append(df)
             run_rows.append(
                 {
@@ -257,8 +286,8 @@ def main() -> None:
                     "status": status,
                     "n_rows": int(len(df)),
                     "n_pairs": int(len(df) // 2),
-                    "fq_path": str(fq_path),
-                    "sam_path": str(sam_path),
+                    "fq_path": str(source_fq_path),
+                    "sam_path": str(source_sam_path),
                 }
             )
             pd.DataFrame(run_rows).to_csv(output_dir / "art_generation_manifest.csv", index=False, encoding="utf-8-sig")
@@ -297,6 +326,8 @@ def main() -> None:
                 "elapsed_seconds": time.time() - started,
                 "art_exe": str(art_exe),
                 "genome_manifest": args.genome_manifest,
+                "data_root": str(data_root),
+                "existing_fastq_dir": str(existing_fastq_dir) if existing_fastq_dir is not None else "",
                 "lengths": lengths,
                 "representations": reps,
                 "fold_coverage": args.fold_coverage,

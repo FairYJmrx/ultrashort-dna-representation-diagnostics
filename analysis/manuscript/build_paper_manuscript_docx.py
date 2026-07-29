@@ -26,7 +26,7 @@ FIG_RAW = PAPER / 'figures'
 TABLE = PAPER / 'tables'
 BIB = ROOT / 'references' / 'references.bib'
 
-TITLE = 'Layered representation diagnostics for ultra-short metagenomic reads'
+TITLE = 'Layered representation diagnostics for short metagenomic reads'
 
 FIGURES = {
     'Figure 1': ('nature_fig1_framework.jpg', 'Representation-diagnostic framework and read-length regime.'),
@@ -453,8 +453,9 @@ r.bold = True
 r.font.name = 'Times New Roman'
 r.font.size = Pt(16)
 
-doc.add_paragraph('Authors: TBD', style=None).alignment = WD_ALIGN_PARAGRAPH.CENTER
-doc.add_paragraph('Affiliations: TBD', style=None).alignment = WD_ALIGN_PARAGRAPH.CENTER
+doc.add_paragraph('Ruixiang Mei; Jianhua Huang*', style=None).alignment = WD_ALIGN_PARAGRAPH.CENTER
+doc.add_paragraph('School of Data Science, The Chinese University of Hong Kong, Shenzhen, Shenzhen 518172, Guangdong, China', style=None).alignment = WD_ALIGN_PARAGRAPH.CENTER
+doc.add_paragraph('*Correspondence: jhuang@cuhk.edu.cn; Ruixiang Mei ORCID: 0009-0003-2128-0726', style=None).alignment = WD_ALIGN_PARAGRAPH.CENTER
 
 doc.add_paragraph('Abstract', style='Heading 1')
 abstract = extract_english_draft(read_text('01_abstract.md'))

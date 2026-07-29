@@ -50,23 +50,19 @@ def _runtime_audit(
     representations: list[str],
     *,
     length: int,
-    n_reads: int,
+    read_counts: list[int],
     repeats: int,
+    large_batch_repeats: int,
     seed: int,
 ) -> pd.DataFrame:
     subset = reads[(reads["source_length"].eq(length)) & (reads["condition"].eq("clean"))]
     if subset.empty:
         raise ValueError(f"No clean reads were available at {length} bp.")
-    sequences = subset["sequence"].astype(str).tolist()
+    source_sequences = subset["sequence"].astype(str).tolist()
     rng = np.random.default_rng(seed)
-    if len(sequences) < n_reads:
-        indices = rng.choice(len(sequences), size=n_reads, replace=True)
-        sequences = [sequences[int(idx)] for idx in indices]
-    else:
-        sequences = sequences[:n_reads]
 
     rows: list[dict[str, object]] = []
-    warmup_sequences = sequences[: min(100, len(sequences))]
+    warmup_sequences = source_sequences[: min(100, len(source_sequences))]
     with threadpool_limits(limits=1):
         for representation in representations:
             build_feature_matrix(
@@ -76,37 +72,79 @@ def _runtime_audit(
                 train_indices=list(range(len(warmup_sequences))),
             )
 
-        tasks: list[tuple[int, str, int]] = []
-        for repeat in range(repeats):
-            order = list(representations)
-            rng.shuffle(order)
-            tasks.extend((repeat, representation, order_idx) for order_idx, representation in enumerate(order))
+        for n_reads in read_counts:
+            if len(source_sequences) < n_reads:
+                indices = rng.choice(len(source_sequences), size=n_reads, replace=True)
+                sequences = [source_sequences[int(idx)] for idx in indices]
+                sampling = "deterministic seeded resampling with replacement"
+            else:
+                sequences = source_sequences[:n_reads]
+                sampling = "first n clean reads"
+            batch_repeats = repeats if n_reads == min(read_counts) else large_batch_repeats
+            tasks: list[tuple[int, str, int]] = []
+            for repeat in range(batch_repeats):
+                order = list(representations)
+                rng.shuffle(order)
+                tasks.extend((repeat, representation, order_idx) for order_idx, representation in enumerate(order))
 
-        for repeat, representation, order_idx in tasks:
-            gc.collect()
-            started = time.perf_counter()
-            matrix, info = build_feature_matrix(
-                sequences,
-                representation,
-                length=length,
-                train_indices=list(range(len(sequences))),
-            )
-            elapsed = time.perf_counter() - started
-            rows.append(
-                {
-                    "representation": representation,
-                    "representation_label": DISPLAY_NAMES.get(representation, representation),
-                    "repeat": repeat + 1,
-                    "order_in_repeat": order_idx + 1,
-                    "length": length,
-                    "n_reads": len(sequences),
-                    "n_features": info.n_features,
-                    "elapsed_seconds": elapsed,
-                    "milliseconds_per_10000_reads": elapsed * 1000.0 * 10000.0 / len(sequences),
-                    "checksum": float(np.sum(matrix[: min(5, len(matrix))])),
-                }
-            )
+            for repeat, representation, order_idx in tasks:
+                gc.collect()
+                started = time.perf_counter()
+                matrix, info = build_feature_matrix(
+                    sequences,
+                    representation,
+                    length=length,
+                    train_indices=list(range(len(sequences))),
+                )
+                elapsed = time.perf_counter() - started
+                rows.append(
+                    {
+                        "representation": representation,
+                        "representation_label": DISPLAY_NAMES.get(representation, representation),
+                        "repeat": repeat + 1,
+                        "order_in_repeat": order_idx + 1,
+                        "length": length,
+                        "n_reads": len(sequences),
+                        "sampling": sampling,
+                        "n_features": info.n_features,
+                        "elapsed_seconds": elapsed,
+                        "seconds_per_read": elapsed / len(sequences),
+                        "milliseconds_per_10000_reads": elapsed * 1000.0 * 10000.0 / len(sequences),
+                        "checksum": float(np.sum(matrix[: min(5, len(matrix))])),
+                    }
+                )
     return pd.DataFrame(rows)
+
+
+def _write_runtime_metadata(
+    output_dir: Path,
+    *,
+    elapsed_seconds: float,
+    representations: list[str],
+    runtime_length: int,
+    runtime_read_counts: list[int],
+    runtime_repeats: int,
+    runtime_large_batch_repeats: int,
+    seed: int,
+) -> None:
+    (output_dir / "historical_descriptor_runtime_run.json").write_text(
+        json.dumps(
+            {
+                "elapsed_seconds": elapsed_seconds,
+                "representations": representations,
+                "runtime_length": runtime_length,
+                "runtime_read_counts": runtime_read_counts,
+                "runtime_repeats": runtime_repeats,
+                "runtime_large_batch_repeats": runtime_large_batch_repeats,
+                "runtime_protocol": "actual batches; warm-up; randomized order within repeat; garbage collection before timing; one numerical-library thread",
+                "platform": platform.platform(),
+                "python": platform.python_version(),
+                "seed": seed,
+            },
+            indent=2,
+        ),
+        encoding="utf-8",
+    )
 
 
 def _write_summary(
@@ -138,6 +176,10 @@ def _write_summary(
         local_summary.groupby("representation", as_index=False)
         .agg(
             selective_sensitivity_ratio=("selective_sensitivity_ratio_mean", "mean"),
+            selective_sensitivity_ratio_valid_fraction=(
+                "selective_sensitivity_ratio_valid_fraction",
+                "mean",
+            ),
             local_minus_noise_l2=("local_minus_noise_l2_mean", "mean"),
         )
     )
@@ -149,13 +191,16 @@ def _write_summary(
         .groupby("representation", as_index=False)
         .agg(grouped_local_change_macro_f1=("macro_f1", "mean"))
     )
+    primary_runtime_reads = int(runtime["n_reads"].min())
+    runtime_primary = runtime[runtime["n_reads"].eq(primary_runtime_reads)]
     runtime_summary = (
-        runtime.groupby(["representation", "representation_label"], as_index=False)
+        runtime_primary.groupby(["representation", "representation_label"], as_index=False)
         .agg(
             runtime_ms_per_10000=("milliseconds_per_10000_reads", "median"),
             runtime_q25=("milliseconds_per_10000_reads", lambda values: float(np.quantile(values, 0.25))),
             runtime_q75=("milliseconds_per_10000_reads", lambda values: float(np.quantile(values, 0.75))),
             runtime_n_features=("n_features", "first"),
+            runtime_n_reads=("n_reads", "first"),
         )
     )
     combined = stability_summary
@@ -207,8 +252,9 @@ def main() -> None:
     parser.add_argument("--max-per-class", type=int, default=60)
     parser.add_argument("--cv-folds", type=int, default=5)
     parser.add_argument("--runtime-length", type=int, default=75)
-    parser.add_argument("--runtime-reads", type=int, default=1000)
+    parser.add_argument("--runtime-read-counts", default="10000,100000")
     parser.add_argument("--runtime-repeats", type=int, default=5)
+    parser.add_argument("--runtime-large-batch-repeats", type=int, default=1)
     parser.add_argument(
         "--runtime-only",
         action="store_true",
@@ -225,6 +271,7 @@ def main() -> None:
     conditions = parse_csv_list(args.conditions)
     readout_conditions = parse_csv_list(args.readout_conditions)
     classifiers = parse_csv_list(args.classifiers)
+    runtime_read_counts = parse_int_list(args.runtime_read_counts)
 
     reads = pd.read_csv(args.reads_csv)
     reads["source_length"] = reads["source_length"].astype(int)
@@ -238,27 +285,21 @@ def main() -> None:
             reads,
             representations,
             length=args.runtime_length,
-            n_reads=args.runtime_reads,
+            read_counts=runtime_read_counts,
             repeats=args.runtime_repeats,
+            large_batch_repeats=args.runtime_large_batch_repeats,
             seed=args.seed,
         )
         runtime.to_csv(output_dir / "historical_descriptor_runtime.csv", index=False, encoding="utf-8-sig")
-        (output_dir / "historical_descriptor_runtime_run.json").write_text(
-            json.dumps(
-                {
-                    "elapsed_seconds": time.time() - started,
-                    "representations": representations,
-                    "runtime_length": args.runtime_length,
-                    "runtime_reads": args.runtime_reads,
-                    "runtime_repeats": args.runtime_repeats,
-                    "runtime_protocol": "warm-up; randomized order within repeat; garbage collection before timing; one numerical-library thread",
-                    "platform": platform.platform(),
-                    "python": platform.python_version(),
-                    "seed": args.seed,
-                },
-                indent=2,
-            ),
-            encoding="utf-8",
+        _write_runtime_metadata(
+            output_dir,
+            elapsed_seconds=time.time() - started,
+            representations=representations,
+            runtime_length=args.runtime_length,
+            runtime_read_counts=runtime_read_counts,
+            runtime_repeats=args.runtime_repeats,
+            runtime_large_batch_repeats=args.runtime_large_batch_repeats,
+            seed=args.seed,
         )
         existing = {
             "stability": output_dir / "historical_descriptor_stability.csv",
@@ -315,11 +356,23 @@ def main() -> None:
         reads,
         representations,
         length=args.runtime_length,
-        n_reads=args.runtime_reads,
+        read_counts=runtime_read_counts,
         repeats=args.runtime_repeats,
+        large_batch_repeats=args.runtime_large_batch_repeats,
         seed=args.seed,
     )
     runtime.to_csv(output_dir / "historical_descriptor_runtime.csv", index=False, encoding="utf-8-sig")
+    runtime_elapsed = time.time() - started
+    _write_runtime_metadata(
+        output_dir,
+        elapsed_seconds=runtime_elapsed,
+        representations=representations,
+        runtime_length=args.runtime_length,
+        runtime_read_counts=runtime_read_counts,
+        runtime_repeats=args.runtime_repeats,
+        runtime_large_batch_repeats=args.runtime_large_batch_repeats,
+        seed=args.seed,
+    )
 
     _write_summary(
         stability,
@@ -332,7 +385,7 @@ def main() -> None:
     (output_dir / "historical_descriptor_audit_run.json").write_text(
         json.dumps(
             {
-                "elapsed_seconds": time.time() - started,
+                "elapsed_seconds": runtime_elapsed,
                 "reads_csv": str(Path(args.reads_csv).resolve()),
                 "triplets_csv": str(Path(args.triplets_csv).resolve()),
                 "representations": representations,
@@ -344,9 +397,10 @@ def main() -> None:
                 "max_per_class": args.max_per_class,
                 "cv_folds": args.cv_folds,
                 "runtime_length": args.runtime_length,
-                "runtime_reads": args.runtime_reads,
+                "runtime_read_counts": runtime_read_counts,
                 "runtime_repeats": args.runtime_repeats,
-                "runtime_protocol": "warm-up; randomized order within repeat; garbage collection before timing; one numerical-library thread",
+                "runtime_large_batch_repeats": args.runtime_large_batch_repeats,
+                "runtime_protocol": "actual batches; warm-up; randomized order within repeat; garbage collection before timing; one numerical-library thread",
                 "platform": platform.platform(),
                 "python": platform.python_version(),
                 "seed": args.seed,
