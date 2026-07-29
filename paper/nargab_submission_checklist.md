@@ -6,8 +6,10 @@ the CK4P-MSP manuscript. It is a working checklist, not manuscript prose.
 ## Target Journal
 
 - Target: NAR Genomics and Bioinformatics.
-- Current manuscript route: Word/DOCX source with a submission-ready single PDF
-  generated from the Word file.
+- Canonical manuscript route: LaTeX source under `paper_latex/`, compiled with
+  the OUP authoring template into the submission PDF.
+- The Word/DOCX manuscript is retained as a synchronized convenience artifact,
+  not as the scientific source of truth.
 - Repository route: private GitHub review-access repository first; public DOI
   after public release.
 
@@ -71,11 +73,13 @@ the CK4P-MSP manuscript. It is a working checklist, not manuscript prose.
 - Check all first-use abbreviations in Abstract and main text:
   CK4P-MSP, CSP, MSP, MI, KSG, ART, CAMI, EIIP.
 
-## Word/PDF Submission Checks
+## LaTeX/PDF Submission Checks
 
-- Rebuild `paper/paper_manuscript.docx` from the split Markdown source.
-- Export a single PDF containing text, references, tables and figures for
-  initial submission.
+- Compile `paper_latex/main.tex` and `paper_latex/supplementary.tex` from a clean
+  build directory.
+- Retain `paper/paper_manuscript.docx` only as a synchronized editable copy.
+- Export a main PDF containing text, references, tables and figures, plus the
+  separately compiled Supplementary Data PDF.
 - Render-check the PDF pages for:
   - figure label overlap;
   - missing glyphs in equations;

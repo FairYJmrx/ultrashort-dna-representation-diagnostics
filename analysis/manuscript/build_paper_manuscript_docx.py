@@ -24,7 +24,7 @@ OUT = PAPER / 'paper_manuscript.docx'
 FIG = PAPER / 'figures_docx'
 FIG_RAW = PAPER / 'figures'
 TABLE = PAPER / 'tables'
-BIB = ROOT / 'references' / 'references.bib'
+BIB = ROOT / 'paper_latex' / 'references.bib'
 
 TITLE = 'Layered representation diagnostics for short metagenomic reads'
 
@@ -32,7 +32,7 @@ FIGURES = {
     'Figure 1': ('nature_fig1_framework.jpg', 'Representation-diagnostic framework and read-length regime.'),
     'Figure 2': ('nature_fig2_compact_stability.jpg', 'Compact stability under controlled perturbation.'),
     'Figure 3': ('nature_fig3_ck4p_msp_tradeoff.jpg', 'CK4P-MSP stability-readout-dimension trade-off.'),
-    'Figure 4': ('nature_fig4_external_probes.jpg', 'ART stability and CAMI coarse/fine readout probes.'),
+    'Figure 4': ('nature_fig4_external_probes.jpg', 'Current-contract ART stability and CAMI coarse/fine-label readout probes.'),
     'Figure 5': ('nature_fig5_full_position_upper_bound.jpg', 'Full-position diagnostic upper bound for positional information.'),
     'Figure 6': ('nature_fig6_local_mutation_sensitivity.jpg', 'Local mutation sensitivity and delta-readout.'),
     'Supplementary Figure S1': ('supp_fig_s1_baseline_audit.jpg', 'Baseline and mixed-metric audit.'),
@@ -45,6 +45,9 @@ FIGURES = {
     'Supplementary Figure S8': ('supp_fig_s8_redundancy_runtime_audit.jpg', 'P/MSP contribution, redundancy and runtime audit.'),
     'Supplementary Figure S9': ('supp_fig_s9_p_msp_relation_audit.jpg', 'P/MSP relation audit.'),
     'Supplementary Figure S10': ('supp_fig_s10_cami2_marine_probe.jpg', 'CAMI II marine anonymous-read stability probe.'),
+    'Supplementary Figure S11': ('supp_fig_s11_factorial_scaling.jpg', 'Mechanism-aligned factorial and property-scaling audits.'),
+    'Supplementary Figure S12': ('supp_fig_s12_historical_descriptor_audit.jpg', 'Historical handcrafted descriptor boundary audit.'),
+    'Supplementary Figure S13': ('supp_fig_s13_short_read_continuity.jpg', 'Shared-template continuity audit from 50 to 75 bp.'),
 }
 TABLES = {
     'Table 1': ('nature_table1_representation_families.csv', 'Representation families and diagnostic roles.'),
@@ -491,9 +494,6 @@ if citation_order:
         p.add_run(format_ref(key, n))
 else:
     doc.add_paragraph('References to be generated from the working bibliography before submission.')
-
-# Add a short draft note at end, not visible as submission claim.
-doc.add_paragraph('Draft note: Author names, affiliations, funding, repository DOI/accession, licence and final reference-manager formatting must be completed before submission.', style='Caption')
 
 # Accessibility alt text for images via docPr descr.
 for shape in doc.inline_shapes:
