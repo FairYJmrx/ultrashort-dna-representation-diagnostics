@@ -41,7 +41,7 @@
 \renewcommand{\thetable}{S\arabic{table}}
 \maketitle
 \section{Supplementary data overview}
-This supplementary file collects the visual audits and source-table preview that support the main representation-diagnostic manuscript. Figures S1--S3 evaluate baseline controls, empirical information proxies and sequencing-error-aware perturbations. Figures S4--S7 examine local mutation fraction, P-channel counterfactuals, MSP bin and weight sensitivity, and dimension-matched high-k compressed baselines. Figures S8--S10 summarize P/MSP contribution and relation audits and the CAMI II marine anonymous-read stability probe. Figure S11 reports the mechanism-aligned $2\times2$ local-change audit and property-scaling sensitivity. Figure S12 compares CK4P-MSP with representative historical handcrafted descriptors by drift, grouped local-change readability, dimension and common-protocol implementation time. Figure S13 reports the dense 50--75 bp continuity audit, and Figure S14 separates frozen-head representation geometry from downstream scaling and regularization. Tables S1--S8 provide the CAMI II preview, seven-group contrasts, MI inference, factorial contrasts, scaling sensitivity, complete feature definitions, public WGS assembly accessions and cross-target fixed-head results. Unless a caption explicitly defines an interval, bars, points and lines show analysis-cell means without error bars. Cell-bootstrap intervals summarize variation across prespecified matched length-by-condition or length-by-local-mode cells; because these cells reuse source template panels, they are not confidence intervals for independent biological cohorts.
+This supplementary file collects the visual audits and source-table previews that support the main representation-diagnostic manuscript. Figures S1--S3 evaluate baseline controls, empirical information proxies and sequencing-error-aware perturbations. Figures S4--S7 examine local mutation fraction, P-channel counterfactuals, MSP bin and weight sensitivity, and dimension-matched high-k compressed baselines. Figures S8--S10 summarize P/MSP contribution and relation audits and the CAMI II marine anonymous-read stability probe. Figure S11 reports the mechanism-aligned $2\times2$ local-change audit and property-scaling sensitivity. Figure S12 compares CK4P-MSP with representative historical handcrafted descriptors by drift, grouped local-change readability, dimension and common-protocol implementation time. Figure S13 reports the dense 50--75 bp continuity audit, and Figure S14 separates frozen-head representation geometry from downstream scaling and regularization. Tables S1--S9 provide the CAMI II preview, seven-group contrasts, MI inference, factorial contrasts, scaling sensitivity, complete feature definitions, public WGS assembly accessions, cross-target fixed-head results and CAMI target-task metadata. Unless a caption explicitly defines an interval, bars, points and lines show analysis-cell means without error bars. Cell-bootstrap intervals summarize variation across prespecified matched length-by-condition or length-by-local-mode cells; because these cells reuse source template panels, they are not confidence intervals for independent biological cohorts.
 \begin{figure*}[p]
 \centering
 {\Large\bfseries Supplementary Figures\par}
@@ -81,7 +81,7 @@ This supplementary file collects the visual audits and source-table preview that
 \includegraphics[width=0.95\textwidth]{figures/supplementary/supp_fig_s5_p_channel_counterfactual_audit.pdf}
 \caption{Sequence-linked P/MSP counterfactual and short-bin reliability audit. (A) Mean standardized drift across 20 WGS length-by-perturbation cells compares CK4P-MSP with CK4 and with row-permuted or marginally matched Gaussian P/MSP controls, all under the fixed block-normalization contract. (B) Mean logistic grouped delta-readout across 12 local-change cells (250 template triplets per cell) is higher for sequence-linked CK4P-MSP (0.979) than for CK4 (0.892), permuted P/MSP (0.879) or Gaussian P/MSP (0.886). (C) Cell-mean K, P and MSP blockwise drift separates their perturbation responses. Panels A--C do not show uncertainty intervals. (D) Worst-case binomial standard error is shown for 2-, 3-, 4- and 6-bin scales over 69--150 bp, based on the shortest bin at each scale. Lower drift and sampling error and higher readout are preferable on their respective panels.}
 \label{fig:suppfigures5}
-{\small\noindent\textbf{Alt text:} Multi-panel audit of P-channel counterfactual behavior, drift decomposition and short-bin sampling bounds.\par}
+{\small\noindent\textbf{Alt text:} Multi-panel audit of P-channel counterfactual behaviour, drift decomposition and short-bin sampling bounds.\par}
 \end{figure*}
 
 \begin{figure*}[p]
@@ -212,11 +212,22 @@ This supplementary file collects the visual audits and source-table preview that
 \caption{Public reference assemblies used to sample the controlled WGS read templates. Each species is represented by the listed NCBI assembly accession.}
 \label{tab:supps7}
 \input{tables/supplementary/table_s7_genome_accessions.tex}
-\vspace{1.2em}
+\end{table*}
+
+\begin{table*}[!tbp]
+\centering
 \scriptsize
 \caption{Six-target CAMI\_TOY\_low fixed-head summary at the prespecified contract-space $C=1$ probe. Clean F1 is averaged over the six 100-bp clean target tasks. Shifted F1 and retention are first averaged over eight non-baseline length-by-condition cells within each target and then over six targets. Minimum values are minima of the corresponding target-level means, not individual read-level observations. Each task used 1,200 target and 1,200 stratified background source groups with fivefold source-grouped cross-validation. The six tasks share a source pool and are not independent-community replicates.}
 \label{tab:supps8}
 \resizebox{\textwidth}{!}{\input{tables/supplementary/table_s8_cami_multitarget.tex}}
+\end{table*}
+
+\begin{table*}[!tbp]
+\centering
+\scriptsize
+\caption{Metadata for the six prespecified CAMI\_TOY\_low target definitions. Scientific names and ranks were retrieved from NCBI Taxonomy by TaxID. Selection rank reflects abundance among eligible labels after deterministic mate collapse and exclusion of sequences shorter than 100 bp. Each one-versus-background task used 1,200 target and 1,200 stratified background source groups. The tasks share one source pool, and a source read can contribute to the background class of more than one task.}
+\label{tab:supps9}
+\resizebox{\textwidth}{!}{\input{tables/supplementary/table_s9_cami_target_metadata.tex}}
 \end{table*}
 \clearpage
 \end{document}

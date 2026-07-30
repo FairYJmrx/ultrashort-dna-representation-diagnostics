@@ -44,10 +44,10 @@ Current status: revised to center the method mechanism rather than a broad metho
 
 Figure contract:
 
-- Figure 2A: CK4, CK4+P, CK4+MSP and CK4P-MSP show how P and MSP reduce standardized drift.
-- Figure 2B: the same nested series shows that MSP, not global P alone, carries most of the local-change readout gain.
-- Figure 2C: real CK4P-MSP is compared with CK4 plus Gaussian or permuted P/MSP controls, showing that the result is not only extra columns.
-- Message: CK4P-MSP is valuable because it is block-decomposable and property-mapped, not because it is a high-accuracy standalone classifier.
+- Figure 2A: all seven non-empty K/P/MSP combinations show the global-drift boundary; property-only summaries are smoothest, while CK4P-MSP reduces drift relative to CK4 and retains K.
+- Figure 2B: the same seven groups show that MSP-containing variants retain the strongest grouped local-change readout.
+- Figure 2C: K-containing variants preserve nearest-clean composition-linked retrieval, whereas property-only variants lose that axis.
+- Message: K, P and MSP contribute along different audit axes; the complete representation is a compact attributable trade-off, not a single-metric winner.
 
 ### Figure 4
 
@@ -55,10 +55,10 @@ Current status: revised to include CK4P-MSP directly and to separate stability f
 
 Figure contract:
 
-- Figure 4A: ART CK4P external stability for CK4, CK4+P, CK4P-MSP, CSP and CK5.
-- Figure 4B: CAMI_TOY coarse target/background readout with CK4P-MSP shown clearly and described as task-limited.
-- Figure 4C: CAMI II marine anonymous-read stability for CK4, CK4+P, CK4P-MSP, CSP and CK5.
-- Do not plot CAMI_TOY fine-label CK4P-MSP as a real score because the subset reports `not enough labels`.
+- Figure 4A: ART within-length drift ratios compare CK4, CK4+P, CK4+MSP, CK4P-MSP and CK5; this is simulator stability, not a monotonic length law.
+- Figure 4B: six source-grouped CAMI_TOY target tasks show shifted fixed-head macro-F1. Target points share one source pool and are descriptive task blocks.
+- Figure 4C: the same task definitions show retention relative to each method's own 100-bp clean baseline.
+- CAMI II marine anonymous-read stability remains in Supplementary Figure S10 because it has no reconstructed read-level taxonomic labels in this lightweight probe.
 
 ### Figure 6
 
@@ -87,7 +87,7 @@ Recommended optional experiment:
 
 ### Gap B: External CK4P-MSP fine-label readout
 
-Current CAMI_TOY fine-label subset is not valid for CK4P-MSP because it reports `not enough labels`.
+The current CAMI_TOY audit is a valid six-task coarse target-versus-background probe, but it is not a fine-label taxonomic benchmark.
 
 Possible experiment if needed:
 
@@ -113,11 +113,11 @@ Possible future experiment:
 - It is acceptable to say CK4P-MSP is a compact, interpretable, block-decomposable secondary representation/audit candidate.
 - The two-stage transformer/database-first scenario belongs in Future Work unless a specific experiment is added.
 
-## 7. Immediate figure actions
+## 7. Figure action status (2026-07-30)
 
-1. Regenerate Figure 2 as compact CK4P-MSP ablation.
-2. Regenerate Figure 4 with CK4P-MSP included using ART stability, CAMI coarse readout and CAMI II anonymous-read stability.
-3. Redesign Figure 6 so the visual lead is delta-readout versus dimension; distance ratio becomes a boundary/support panel.
-4. Update captions and Results text to match the revised figure logic.
-5. Rebuild LaTeX and visually inspect figure placement.
-6. Sync regenerated figures and source scripts to the release branch.
+1. [x] Figure 2 rebuilt as the seven-group K/P/MSP contribution audit.
+2. [x] Figure 4 rebuilt to separate ART simulator stability, CAMI shifted readout and relative retention.
+3. [x] Figure 6 rebuilt with grouped local-change readability as the lead panel and raw distance ratio as a boundary.
+4. [x] Captions and adjacent Results text aligned with the current figure contracts.
+5. [x] Main and Supplementary PDFs recompiled and visually inspected for overlap, clipping, internal whitespace and float placement.
+6. [ ] Sync the final manuscript assets and source files to the release branch after the current language-polish pass.
