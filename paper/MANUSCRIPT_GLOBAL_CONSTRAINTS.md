@@ -203,6 +203,8 @@ Prohibited without new evidence:
 11. Do not use truncated axes to exaggerate small differences without an explicit reason and visual cue.
 12. Main-figure colour assignments remain consistent for CK4, CK4+P, CK4+MSP, CK4P-MSP and external baselines across figures.
 13. Alt text states the visual conclusion and the main boundary; it does not repeat the caption verbatim.
+14. Quantitative main figures use the canonical method palette: CK4 `#5B677A`, CK4+P `#2F6BDE`, CK4+MSP `#009E73`, CK4P-MSP `#B83A62` and CK5 `#7456A4`. Conceptual channel colours in Figure 1 are semantic and must not be reused as conflicting quantitative method marks.
+15. Repeated observations, aggregate summaries and pair links use distinct visual grammar. In target-task panels, neutral circles denote task-level observations, method-coloured diamonds denote cross-target means and pale lines preserve pairing; all three symbols must be defined in a shared legend.
 
 ## 10. Current Main-Figure Roles
 

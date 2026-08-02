@@ -16,3 +16,7 @@ and `figures/generate_short_read_continuity_figures.py`, followed by
 part of the current figure path. `generate_paper_supplementary_figures.py` and the Word
 builders are retained for historical provenance and are not sources for the
 current numerical claims or LaTeX submission.
+
+Quantitative main-figure method colours and markers are defined centrally in
+`figures/figure_style.py`. Current figure builders must import that contract
+rather than defining a second method palette.

@@ -18,23 +18,17 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 
+try:
+    from .figure_style import METHOD_COLORS
+except ImportError:
+    from figure_style import METHOD_COLORS
+
 
 ROOT = Path(__file__).resolve().parents[2]
 RESULTS = ROOT / "results" / "stage3" / "contract_v2"
 DEFAULT_OUT = ROOT / "figures" / "contract_v2"
 
-COLORS = {
-    "CK4": "#5B677A",
-    "P": "#70A5D8",
-    "MSP": "#5DBA9B",
-    "CK4+P": "#2F6BDE",
-    "CK4+MSP": "#009E73",
-    "P+MSP": "#7C6EA8",
-    "CK4P-MSP": "#B83A62",
-    "CK5": "#9A7D4F",
-    "Hashed k=15": "#D17A22",
-    "Sparse RP k=15": "#7768AE",
-}
+COLORS = METHOD_COLORS
 ABLATION_ORDER = ["CK4", "P", "MSP", "CK4+P", "CK4+MSP", "P+MSP", "CK4P-MSP"]
 NESTED_ORDER = ["CK4", "CK4+P", "CK4+MSP", "CK4P-MSP"]
 
@@ -96,7 +90,7 @@ def figure_2(out: Path) -> None:
     panel_specs = [
         ("l2_delta_mean", "mean paired L2 drift", (0.0, 0.27), "A", "Global drift"),
         ("macro_f1_mean", "grouped macro-F1", (0.56, 1.025), "B", "Local-change readout"),
-        ("retrieval_top1_mean", "nearest-clean retrieval", (0.0, 1.06), "C", "Identity retrieval"),
+        ("retrieval_top1_mean", "nearest-clean retrieval", (0.0, 1.06), "C", "Composition-linked retrieval"),
     ]
     for ax, (column, xlabel, xlim, tag, title) in zip(axes, panel_specs):
         values = merged[column].to_numpy(dtype=float)

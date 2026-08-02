@@ -30,6 +30,7 @@ part of this repository; it is a separate single-file handoff artifact.
 - `analysis/audits/audit_result_inventory.py`
 - `analysis/figures/generate_short_read_continuity_figures.py`
 - `analysis/figures/generate_cami_fixed_head_figures.py`
+- `analysis/figures/figure_style.py`
 - `analysis/figures/sync_manuscript_figures.py`
 - `analysis/figures/__init__.py`
 - `analysis/figures/generate_local_mutation_sensitivity_assets.py`

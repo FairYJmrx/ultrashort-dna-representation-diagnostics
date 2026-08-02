@@ -12,6 +12,12 @@ import matplotlib as mpl
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
+from matplotlib.lines import Line2D
+
+try:
+    from .figure_style import METHOD_COLORS, METHOD_MARKERS, SUPPORT_COLORS
+except ImportError:
+    from figure_style import METHOD_COLORS, METHOD_MARKERS, SUPPORT_COLORS
 
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
@@ -21,17 +27,7 @@ OUTPUT_ROOT = PROJECT_ROOT / "figures" / "contract_v2"
 LATEX_MAIN = INFO_ROOT / "paper_latex" / "figures" / "main"
 LATEX_SUPP = INFO_ROOT / "paper_latex" / "figures" / "supplementary"
 
-COLORS = {
-    "CK4": "#4b5563",
-    "CK4+P": "#2563eb",
-    "CK4+MSP": "#0d9488",
-    "CK4P-MSP": "#16a34a",
-    "CK5": "#7c3aed",
-    "PseKNC": "#d97706",
-    "PseEIIP": "#db2777",
-    "NCP+ANF": "#0891b2",
-    "Hashed k=15": "#94a3b8",
-}
+COLORS = METHOD_COLORS
 
 
 def configure() -> None:
@@ -94,7 +90,7 @@ def main_figure() -> plt.Figure:
     fig, axes = plt.subplots(
         1,
         3,
-        figsize=(7.45, 3.55),
+        figsize=(7.45, 3.45),
         gridspec_kw={"width_ratios": [1.05, 1.12, 1.12]},
     )
     for label in ["CK5", "CK4", "CK4+P", "CK4+MSP", "CK4P-MSP"]:
@@ -103,19 +99,20 @@ def main_figure() -> plt.Figure:
             frame["length"],
             frame["drift_ratio"],
             color=COLORS[label],
-            marker="o",
-            markersize=3.2,
+            marker=METHOD_MARKERS[label],
+            markersize=3.6 if label == "CK4P-MSP" else 3.1,
             linewidth=1.8 if label == "CK4P-MSP" else 1.05,
+            linestyle="--" if label == "CK4" else "-",
             label=label,
             zorder=4 if label == "CK4P-MSP" else 2,
         )
-    axes[0].axhline(1.0, color="#9ca3af", linestyle="--", linewidth=0.7)
+    axes[0].axhline(1.0, color=SUPPORT_COLORS["neutral_mid"], linestyle="--", linewidth=0.7)
     axes[0].set_xticks([50, 75, 100, 125, 150])
     axes[0].set_ylim(0.5, 1.55)
     axes[0].set_xlabel("read length (bp)")
-    axes[0].set_ylabel("drift relative to CK4")
+    axes[0].set_ylabel("drift relative to CK4 (lower is better)")
     axes[0].set_title("A. ART stability", loc="left", weight="bold")
-    axes[0].grid(True, color="#e5e7eb", linewidth=0.5)
+    axes[0].grid(True, color=SUPPORT_COLORS["grid"], linewidth=0.5)
     axes[0].legend(frameon=False, loc="upper left", ncol=2, columnspacing=0.8, handletextpad=0.3)
 
     def target_panel(ax: plt.Axes, value: str, xlabel: str, title: str, xlim: tuple[float, float]) -> None:
@@ -124,9 +121,9 @@ def main_figure() -> plt.Figure:
             ax.plot(
                 frame[value],
                 np.arange(len(frame)),
-                color="#d1d5db",
-                linewidth=0.55,
-                alpha=0.75,
+                color=SUPPORT_COLORS["neutral_line"],
+                linewidth=0.60,
+                alpha=0.70,
                 zorder=1,
             )
         for y_index, label in enumerate(display):
@@ -134,10 +131,10 @@ def main_figure() -> plt.Figure:
             ax.scatter(
                 values,
                 np.full(len(values), y_index),
-                s=17,
-                facecolor=COLORS[label],
+                s=16,
+                facecolor=SUPPORT_COLORS["neutral_point"],
                 edgecolor="white",
-                linewidth=0.35,
+                linewidth=0.30,
                 alpha=0.72,
                 zorder=2,
             )
@@ -145,10 +142,10 @@ def main_figure() -> plt.Figure:
                 np.mean(values),
                 y_index,
                 marker="D",
-                s=38 if label == "CK4P-MSP" else 28,
+                s=48 if label == "CK4P-MSP" else 34,
                 facecolor=COLORS[label],
-                edgecolor="#111827",
-                linewidth=0.55,
+                edgecolor=SUPPORT_COLORS["ink"],
+                linewidth=1.0 if label == "CK4P-MSP" else 0.65,
                 zorder=4,
             )
         ax.set_yticks(np.arange(len(display)))
@@ -156,45 +153,71 @@ def main_figure() -> plt.Figure:
         ax.set_xlim(*xlim)
         ax.set_xlabel(xlabel)
         ax.set_title(title, loc="left", weight="bold")
-        ax.grid(axis="x", color="#e5e7eb", linewidth=0.5)
+        ax.axhline(1.5, color=SUPPORT_COLORS["neutral_line"], linewidth=0.75, zorder=0)
+        ax.grid(axis="x", color=SUPPORT_COLORS["grid"], linewidth=0.5)
 
     target_panel(
         axes[1],
         "mean_shifted_macro_f1",
-        "fixed-head macro-F1",
-        "B. Shifted label readout",
+        "fixed-head macro-F1 (higher is better)",
+        "B. Fixed-head label readout",
         (0.64, 0.91),
     )
     target_panel(
         axes[2],
         "mean_retention",
-        "F1 retention ratio",
-        "C. Relative retention",
+        "F1 retention / 100-bp clean (higher is better)",
+        "C. Relative F1 retention",
         (0.91, 1.005),
     )
-    axes[1].text(
-        0.02,
-        -0.17,
-        "circles: target tasks; diamonds: means",
-        transform=axes[1].transAxes,
+    task_handles = [
+        Line2D(
+            [0],
+            [0],
+            color="none",
+            marker="o",
+            markerfacecolor=SUPPORT_COLORS["neutral_point"],
+            markeredgecolor="white",
+            linewidth=0,
+            markersize=4.2,
+            label="target task (n=6)",
+        ),
+        Line2D(
+            [0],
+            [0],
+            color="none",
+            marker="D",
+            markerfacecolor="white",
+            markeredgecolor=SUPPORT_COLORS["ink"],
+            linewidth=0,
+            markersize=5.0,
+            label="cross-target mean (method colour)",
+        ),
+        Line2D(
+            [0],
+            [0],
+            color=SUPPORT_COLORS["neutral_line"],
+            linewidth=0.9,
+            label="same target across methods",
+        ),
+    ]
+    fig.legend(
+        handles=task_handles,
+        frameon=False,
+        loc="upper center",
+        bbox_to_anchor=(0.72, 0.88),
+        ncol=3,
+        columnspacing=1.0,
+        handletextpad=0.45,
         fontsize=6.1,
-        color="#4b5563",
-    )
-    axes[2].text(
-        0.02,
-        -0.17,
-        "relative to each method's 100-bp clean baseline",
-        transform=axes[2].transAxes,
-        fontsize=6.1,
-        color="#4b5563",
     )
     fig.suptitle(
         "External probes separate representation stability from fixed-head label retention",
-        y=1.015,
+        y=0.995,
         fontsize=9.3,
         weight="bold",
     )
-    fig.tight_layout(rect=(0, 0.05, 1, 0.98), w_pad=1.8)
+    fig.tight_layout(rect=(0, 0.01, 1, 0.83), w_pad=1.8)
     return fig
 
 

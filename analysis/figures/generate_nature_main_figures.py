@@ -13,6 +13,11 @@ import numpy as np
 import pandas as pd
 from matplotlib.patches import FancyArrowPatch, FancyBboxPatch
 
+try:
+    from .figure_style import METHOD_COLORS
+except ImportError:
+    from figure_style import METHOD_COLORS
+
 
 def _find_project_root(start: Path) -> Path:
     for candidate in [start.parent, *start.parents]:
@@ -299,10 +304,10 @@ def figure5_full_position() -> plt.Figure:
         return "k-mer composition"
 
     family_colors = {
-        "compact MSP": COLORS["msp"],
+        "compact MSP": METHOD_COLORS["CK4P-MSP"],
         "position + property": "#fca5a5",
         "position token": "#c4b5fd",
-        "k-mer composition": COLORS["identity"],
+        "k-mer composition": METHOD_COLORS["CK4"],
     }
     plot["family"] = plot["representation_label"].map(family)
     colors = plot["family"].map(family_colors).tolist()
