@@ -26,14 +26,22 @@
 \journaltitle{NAR Genomics and Bioinformatics}
 \pubyear{2026}
 \copyrightyear{2026}
+% The compiled supplementary PDF is fixed at 14 pages; set the range before
+% the OUP title page is shipped so the opening header is accurate.
+\lastpage{14}
 \makeatletter
 \def\ps@headings{\let\@oddfoot\@empty\let\@evenfoot\@empty\def\@oddhead{\vbox{\hbox to \textwidth{\fontsize{8bp}{10bp}\selectfont\itshape\@journaltitle, \@pubyear\hfill\bfseries\thepage}\vspace{5pt}\rule{\textwidth}{1pt}}}\def\@evenhead{\vbox{\hbox to \textwidth{\fontsize{8bp}{10bp}\selectfont\bfseries\thepage\hfill\itshape\@journaltitle, \@pubyear}\vspace{5pt}\rule{\textwidth}{1pt}}}}
 \makeatother
 \pagestyle{headings}
 \title[Supplementary Data]{Supplementary Data for Layered representation diagnostics for short metagenomic reads}
 \author[1]{Ruixiang Mei\,\ORCID{0009-0003-2128-0726}}
-\author[1]{Jianhua Huang}
 \address[1]{School of Data Science, The Chinese University of Hong Kong, Shenzhen, Shenzhen 518172, Guangdong, China}
+\corresp{*Correspondence: Ruixiang Mei, \url{121090416@link.cuhk.edu.cn}}
+\hypersetup{
+  pdftitle={Supplementary Data for Layered representation diagnostics for short metagenomic reads},
+  pdfauthor={Ruixiang Mei},
+  pdfsubject={Supplementary audits for short-read representation diagnostics}
+}
 \abstract{Supplementary figures and source tables supporting the representation-diagnostic analyses, including baseline, estimator, perturbation, parameter, redundancy and runtime audits.}
 \keywords{supplementary data, metagenomics, representation diagnostics}
 \begin{document}
@@ -41,6 +49,7 @@
 \renewcommand{\thetable}{S\arabic{table}}
 \maketitle
 \section{Supplementary data overview}
+The canonical 4-mer, property and multi-scale property-pooling representation (CK4P-MSP) contains a canonical 4-mer composition block (K), a global property block (P) and multi-scale property pooling (MSP).
 This supplementary file collects the visual audits and source-table previews that support the main representation-diagnostic manuscript. Figures S1--S3 evaluate baseline controls, empirical information proxies and sequencing-error-aware perturbations. Figures S4--S7 examine local mutation fraction, P-channel counterfactuals, MSP bin and weight sensitivity, and dimension-matched high-k compressed baselines. Figures S8--S10 summarize P/MSP contribution and relation audits and the CAMI II marine anonymous-read stability probe. Figure S11 reports the mechanism-aligned $2\times2$ local-change audit and property-scaling sensitivity. Figure S12 compares CK4P-MSP with representative historical handcrafted descriptors by drift, grouped local-change readability, dimension and common-protocol implementation time. Figure S13 reports the dense 50--75 bp continuity audit, and Figure S14 separates frozen-head representation geometry from downstream scaling and regularization. Tables S1--S9 provide the CAMI II preview, seven-group contrasts, MI inference, factorial contrasts, scaling sensitivity, complete feature definitions, public WGS assembly accessions, cross-target fixed-head results and CAMI target-task metadata. Unless a caption explicitly defines an interval, bars, points and lines show analysis-cell means without error bars. Cell-bootstrap intervals summarize variation across prespecified matched length-by-condition or length-by-local-mode cells; because these cells reuse source template panels, they are not confidence intervals for independent biological cohorts.
 \begin{figure*}[p]
 \centering
@@ -79,7 +88,7 @@ This supplementary file collects the visual audits and source-table previews tha
 \begin{figure*}[p]
 \centering
 \includegraphics[width=0.95\textwidth]{figures/supplementary/supp_fig_s5_p_channel_counterfactual_audit.pdf}
-\caption{Sequence-linked P/MSP counterfactual and short-bin reliability audit. (A) Mean standardized drift across 20 WGS length-by-perturbation cells compares CK4P-MSP with CK4 and with row-permuted or marginally matched Gaussian P/MSP controls, all under the fixed block-normalization contract. (B) Mean logistic grouped delta-readout across 12 local-change cells (250 template triplets per cell) is higher for sequence-linked CK4P-MSP (0.979) than for CK4 (0.892), permuted P/MSP (0.879) or Gaussian P/MSP (0.886). (C) Cell-mean K, P and MSP blockwise drift separates their perturbation responses. Panels A--C do not show uncertainty intervals. (D) Worst-case binomial standard error is shown for 2-, 3-, 4- and 6-bin scales over 69--150 bp, based on the shortest bin at each scale. Lower drift and sampling error and higher readout are preferable on their respective panels.}
+\caption{Sequence-linked P/MSP counterfactual and short-bin reliability audit. (A) Mean standardized drift across 20 WGS length-by-perturbation cells compares CK4P-MSP with CK4 and with row-permuted or marginally matched Gaussian P/MSP controls, all under the fixed block-normalization contract. (B) Mean logistic grouped delta-readout across 12 local-change cells (250 template triplets per cell) is higher for sequence-linked CK4P-MSP (0.979) than for CK4 (0.892), permuted P/MSP (0.879) or Gaussian P/MSP (0.886). (C) Cell-mean K, P and MSP blockwise drift separates their perturbation responses. Panels A--C do not show uncertainty intervals. (D) Worst-case binomial standard error is shown for 2-, 3-, 4- and 6-bin scales over the tested WGS anchor lengths, based on the shortest bin at each scale. Lower drift and sampling error and higher readout are preferable on their respective panels.}
 \label{fig:suppfigures5}
 {\small\noindent\textbf{Alt text:} Multi-panel audit of P-channel counterfactual behaviour, drift decomposition and short-bin sampling bounds.\par}
 \end{figure*}
@@ -87,9 +96,9 @@ This supplementary file collects the visual audits and source-table previews tha
 \begin{figure*}[p]
 \centering
 \includegraphics[width=0.95\textwidth]{figures/supplementary/supp_fig_s6_msp_bin_gamma_sensitivity.pdf}
-\caption{MSP binset and weight-sensitivity audit. (A) Points are mean drift without uncertainty intervals over the prespecified WGS perturbations at 69 and 75 bp for the complete 2+3+4+6 binset and $\gamma\in\{0,0.25,0.5,1,2\}$; lower is preferable. (B) Lines are mean grouped delta-readout macro-F1 over four local modes at every integer length from 50 to 75 bp, using 180 template triplets per length-by-mode cell at $\gamma=1$ for cumulative binsets 2, 2+3, 2+3+4 and 2+3+4+6; higher is preferable. All derivatives of one template were retained in the same fold during fivefold grouped cross-validation. No uncertainty intervals are shown. The audit tests sensitivity rather than selecting an optimal binset or weight.}
+\caption{MSP binset and weight-sensitivity audit. (A) Points are mean drift without uncertainty intervals over the prespecified WGS perturbations at 75 and 100 bp for the complete 2+3+4+6 binset and $\gamma\in\{0,0.25,0.5,1,2\}$; lower is preferable. (B) Lines are mean grouped delta-readout macro-F1 over four local modes at every integer length from 50 to 75 bp, using 180 template triplets per length-by-mode cell at $\gamma=1$ for cumulative binsets 2, 2+3, 2+3+4 and 2+3+4+6; higher is preferable. All derivatives of one template were retained in the same fold during fivefold grouped cross-validation. No uncertainty intervals are shown. The audit tests sensitivity rather than selecting an optimal binset or weight.}
 \label{fig:suppfigures6}
-{\small\noindent\textbf{Alt text:} Line plots show gamma-weight sensitivity at 69 and 75 bp and MSP binset continuity across every length from 50 to 75 bp.\par}
+{\small\noindent\textbf{Alt text:} Line plots show gamma-weight sensitivity at 75 and 100 bp and MSP binset continuity across every length from 50 to 75 bp.\par}
 \end{figure*}
 
 \begin{figure*}[p]
@@ -143,7 +152,7 @@ This supplementary file collects the visual audits and source-table previews tha
 \begin{figure*}[!tbp]
 \centering
 \includegraphics[width=0.95\textwidth]{figures/supplementary/supp_fig_s13_short_read_continuity.pdf}
-\caption{Shared-template continuity audit across every integer length from 50 to 75 bp. (A) Mean paired standardized L2 drift over six controlled perturbations for CK4, CK4+P, CK4+MSP and CK4P-MSP; lower is preferable. Each point summarizes 420 shared source templates that were prefix-truncated from the same 150-bp windows. (B) Mean grouped local-versus-nuisance delta-readout macro-F1 over four local modes with 180 template triplets per length-by-mode cell and fivefold template-grouped cross-validation; higher is preferable. (C) Conditional block-specific increments: P-associated drift reduction is CK4+MSP minus CK4P-MSP, whereas the MSP-associated readability increment is CK4P-MSP minus CK4+P. Positive values indicate improvement on the stated metric. Lines show descriptive analysis-cell means without uncertainty intervals, and the dotted line marks the 69-bp local-context point. The dense sweep isolates lower-range length sensitivity; it does not constitute a continuous 50--150 bp scan or a population-level length-response estimate.}
+\caption{Shared-template continuity audit across every integer length from 50 to 75 bp. (A) Mean paired standardized L2 drift over six controlled perturbations for CK4, CK4+P, CK4+MSP and CK4P-MSP; lower is preferable. Each point summarizes 420 shared source templates that were prefix-truncated from the same 150-bp windows. (B) Mean grouped local-versus-nuisance delta-readout macro-F1 over four local modes with 180 template triplets per length-by-mode cell and fivefold template-grouped cross-validation; higher is preferable. (C) Conditional block-specific increments: P-associated drift reduction is CK4+MSP minus CK4P-MSP, whereas the MSP-associated readability increment is CK4P-MSP minus CK4+P. Positive values indicate improvement on the stated metric. Lines show descriptive analysis-cell means without uncertainty intervals. The dense sweep isolates lower-range length sensitivity; it does not constitute a continuous 50--150 bp scan or a population-level length-response estimate.}
 \label{fig:suppfigures13}
 {\small\noindent\textbf{Alt text:} Three line panels show smooth drift reduction, high grouped local-change readout and positive metric-specific P and MSP increments from 50 to 75 bp.\par}
 \end{figure*}
@@ -151,7 +160,7 @@ This supplementary file collects the visual audits and source-table previews tha
 \begin{figure*}[!tbp]
 \centering
 \includegraphics[width=0.95\textwidth]{figures/supplementary/supp_fig_s14_fixed_head_sensitivity.pdf}
-\caption{Frozen-head preprocessing and regularization sensitivity. (A) Macro-F1 for CK4P-MSP in the prespecified single CAMI target task. Contract-space probes use the declared row/block-normalized representation directly; train z-score probes apply coordinate-wise means and variances fitted only on the 100-bp clean training fold. Each point aggregates 2,486 held-out source groups through fivefold source-grouped cross-validation. (B) Mean absolute logistic-logit shifts of the seven most affected P coordinates under 100-bp, 3\% N masking, averaged over five folds. The log axis contrasts contract-space contributions with amplification after train-fit z-scoring. (C) Mean shifted macro-F1 across six CAMI target tasks and eight non-baseline length-by-condition cells per target at $C=0.1$, 1 and 10. The classifier was otherwise unchanged and was never refitted on shifted conditions. $C=1$ was prespecified; the other values are sensitivity analyses rather than selected alternatives. These panels show that low representation drift does not guarantee invariance to learned downstream preprocessing.}
+\caption{Frozen-head preprocessing and regularization sensitivity. (A) Macro-F1 for CK4P-MSP in the prespecified single CAMI target task. Contract-space probes use the declared row/block-normalized representation directly; train z-score probes apply coordinate-wise means and variances fitted only on the 100-bp clean training fold. Each point aggregates 2,486 held-out source groups through fivefold source-grouped cross-validation. (B) Mean absolute logistic-logit shifts of the seven most affected P coordinates under 100-bp, 3\% N masking, averaged over five folds. Green bars denote contract-space contributions and red bars denote amplification after train-fit z-scoring; the horizontal axis is logarithmic. (C) Mean shifted macro-F1 across six CAMI target tasks and eight non-baseline length-by-condition cells per target at $C=0.1$, 1 and 10. The classifier was otherwise unchanged and was never refitted on shifted conditions. $C=1$ was prespecified; the other values are sensitivity analyses rather than selected alternatives. These panels show that low representation drift does not guarantee invariance to learned downstream preprocessing.}
 \label{fig:suppfigures14}
 {\small\noindent\textbf{Alt text:} A line panel shows N-mask-specific degradation after train-fit z-scoring, a log-scale bar panel identifies amplified low-variance biochemical coordinates, and a final line panel shows regularization-dependent fixed-head readout.\par}
 \end{figure*}
@@ -161,7 +170,7 @@ This supplementary file collects the visual audits and source-table previews tha
 {\Large\bfseries Supplementary Tables\par}
 \vspace{0.8em}
 \scriptsize
-\caption{Preview of the CAMI II marine subset source table. The full CSV is retained in the data package.}
+\caption{Preview of the current CAMI II marine anonymous-read source table. The 12 rows show the four prespecified compact representations at 69, 75 and 100 bp under 3\% N masking; each row summarizes 4,000 clean/perturbed pairs. The complete length-by-perturbation CSV is retained in the data package.}
 \label{tab:supps10}
 \input{tables/supplementary/table_s10_preview.tex}
 \end{table*}

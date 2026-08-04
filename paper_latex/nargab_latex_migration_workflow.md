@@ -14,21 +14,19 @@ This document records the completed migration into an OUP/NAR-compatible LaTeX s
 
 Confirmed:
 
-- First author: Ruixiang Mei.
-- First author ORCID: https://orcid.org/0009-0003-2128-0726.
-- Corresponding author: Jianhua Huang.
-- Corresponding-author email: jhuang@cuhk.edu.cn.
-- Current affiliation placeholder: The Chinese University of Hong Kong, Shenzhen, Shenzhen, Guangdong, China.
-- Conflict of interest: The authors declare no competing interests.
+- Sole and corresponding author: Ruixiang Mei.
+- ORCID: https://orcid.org/0009-0003-2128-0726.
+- Current corresponding email: 121090416@link.cuhk.edu.cn; confirm long-term access before submission.
+- Current affiliation: School of Data Science, The Chinese University of Hong Kong, Shenzhen, Shenzhen 518172, Guangdong, China; confirm the official institutional wording before submission.
+- Conflict of interest: The author declares no competing interests.
+- Funding: no specific grant from a public, commercial or not-for-profit funding body.
 
 Still to confirm before final submission:
 
-- More specific affiliation line, including department/school/unit and postal code if required.
-- Jianhua Huang ORCID, if available.
-- Funding statement and any grant numbers.
-- Final institutional wording for Ethics/Data Governance.
-- Acknowledgements, if any.
-- Whether to retain restricted local read-length provenance or rely only on the published mNGS read-length background source.
+- Exact official affiliation wording and postal code.
+- Long-term accessibility of the current institutional email.
+- Final AI-use disclosure wording and placement.
+- [x] Use only the published mNGS read-length background source; unpublished local read-length provenance is not retained.
 
 ## 3. Source Materials to Extract
 

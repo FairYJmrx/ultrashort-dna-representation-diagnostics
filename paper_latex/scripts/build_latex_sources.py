@@ -447,14 +447,13 @@ def main_tex() -> str:
 \makeatother
 \pagestyle{headings}
 
-\title[Layered representation diagnostics for ultra-short metagenomic reads]{Layered representation diagnostics for ultra-short metagenomic reads}
+\title[Layered representation diagnostics for short metagenomic reads]{Layered representation diagnostics for short metagenomic reads}
 
-\author[1]{Ruixiang Mei}
-\author[1]{Jianhua Huang}
+\author[1]{Ruixiang Mei\,\ORCID{0009-0003-2128-0726}}
 
 \address[1]{School of Data Science, The Chinese University of Hong Kong, Shenzhen, Shenzhen 518172, Guangdong, China}
 
-\corresp{*Correspondence: Jianhua Huang, \url{jhuang@cuhk.edu.cn}}
+\corresp{*Correspondence: Ruixiang Mei, \url{121090416@link.cuhk.edu.cn}}
 
 \abstract{\input{sections/abstract}}
 
@@ -496,10 +495,10 @@ def supplementary_tex() -> str:
              r"\def\ps@headings{\let\@oddfoot\@empty\let\@evenfoot\@empty\def\@oddhead{\vbox{\hbox to \textwidth{\fontsize{8bp}{10bp}\selectfont\itshape\@journaltitle, \@pubyear\hfill\bfseries\thepage}\vspace{5pt}\rule{\textwidth}{1pt}}}\def\@evenhead{\vbox{\hbox to \textwidth{\fontsize{8bp}{10bp}\selectfont\bfseries\thepage\hfill\itshape\@journaltitle, \@pubyear}\vspace{5pt}\rule{\textwidth}{1pt}}}}",
              r"\makeatother",
              r"\pagestyle{headings}",
-             r"\title[Supplementary Data]{Supplementary Data for Layered representation diagnostics for ultra-short metagenomic reads}",
-             r"\author[1]{Ruixiang Mei}",
-             r"\author[1]{Jianhua Huang}",
+             r"\title[Supplementary Data]{Supplementary Data for Layered representation diagnostics for short metagenomic reads}",
+             r"\author[1]{Ruixiang Mei\,\ORCID{0009-0003-2128-0726}}",
              r"\address[1]{School of Data Science, The Chinese University of Hong Kong, Shenzhen, Shenzhen 518172, Guangdong, China}",
+             r"\corresp{*Correspondence: Ruixiang Mei, \url{121090416@link.cuhk.edu.cn}}",
              r"\abstract{Supplementary figures and source-table preview supporting the representation-diagnostic analyses.}",
              r"\keywords{supplementary data, metagenomics, representation diagnostics}",
              r"\begin{document}",
