@@ -14,19 +14,16 @@ scripts and outputs.
 | `src/` | Compatibility wrappers for older scripts that import `src.*`. New code should import `methods.*`. |
 | `data_pipeline/` | Maintained public download, preprocessing and simulation implementations. |
 | `experiments/` | Maintained main experiments and method-hardening audits. |
-| `analysis/` | Maintained figures, tables, provenance audits and manuscript assembly. |
+| `analysis/` | Maintained figure, table and provenance-audit implementations. |
 | `scripts/` | Backwards-compatible command wrappers; not a second implementation tree. |
-| `legacy/` | Isolated historical packaging utilities; excluded from the scientific reproduction path. |
 | `data/` | Lightweight release data and public benchmark subsets. |
 | `results/` | Generated result tables, summaries, run manifests and audit outputs. |
 | `figures/` | Central copy of final main and supplementary figure bitmaps. |
 | `paper_latex/` | Canonical submission manuscript source, figures, tables and supplementary file. |
-| `paper/` | Historical pre-LaTeX writing notes retained for provenance; not a numerical or wording source of truth. |
-| `manuscript/` | Historical final/stage manuscript artifacts retained for provenance. |
 | `docs/` | Method contract, repository structure, provenance maps and manuscript-script mapping. |
 | `configs/` | Experiment matrices and release-default method settings. |
-| `references/` | Working bibliography. |
 | `smoke_tests/` | Lightweight import and repository checks. |
+| `tools/` | One-command reproduction and release-preflight utilities. |
 
 See `docs/repository_structure.md` and `docs/code_layout.md` for the longer
 map and source-of-truth rules. Submission wording and numbers are governed by
@@ -39,31 +36,36 @@ broader `methods/stage2_features.py` feature-construction layer.
 
 ## 2. Environment Setup
 
-The release was developed on Windows with Python 3. Recommended setup:
+The release was developed with Python 3.13 and is tested for release with
+Python 3.11 or later. The pinned environment is intentionally limited to the
+packages used by the maintained reproduction path:
 
 ```powershell
 python -m venv .venv
 .\.venv\Scripts\python.exe -m pip install --upgrade pip
-.\.venv\Scripts\python.exe -m pip install -r requirements.txt
+.\.venv\Scripts\python.exe -m pip install -r requirements-lock.txt
 ```
 
-Run a quick import smoke test:
+`requirements.txt` lists the direct release dependencies; the lock file also
+pins transitive packages used in the clean-environment verification.
+
+Run the complete smoke suite:
 
 ```powershell
-.\.venv\Scripts\python.exe smoke_tests\test_imports.py
-.\.venv\Scripts\python.exe smoke_tests\test_method_contract.py
-.\.venv\Scripts\python.exe smoke_tests\test_historical_descriptors.py
-.\.venv\Scripts\python.exe smoke_tests\test_repository_layout.py
-.\.venv\Scripts\python.exe smoke_tests\test_contract_artifacts.py
+.\.venv\Scripts\python.exe -m pytest smoke_tests -q
+.\.venv\Scripts\python.exe tools\release_preflight.py
+.\.venv\Scripts\python.exe tools\reproduce_release.py --mode quick
 ```
 
-The second check verifies that the public method API and explicit `ck4p_msp`
+The method-contract check verifies that the public method API and explicit `ck4p_msp`
 experiment entrypoint produce the same 222-dimensional default representation.
 When a manually distributed `ck4p_msp_standalone.py` is placed at the repository
 root, it is checked against the same contract as an optional extra.
 
 ART-based reruns require a local ART executable. The release keeps ART outputs
 and summaries, but does not include full FASTQ/SAM intermediates.
+PyTorch is optional and is used only to seed optional legacy neural branches;
+it is not required by CK4P-MSP or the maintained manuscript evidence path.
 
 ## 3. Method Contract
 
@@ -89,6 +91,19 @@ See `docs/method_contract.md` and `configs/release_defaults.yaml` for the
 formal method contract and default settings.
 
 ## 4. Reproduction Path
+
+For a single entrypoint, use:
+
+```powershell
+.\.venv\Scripts\python.exe tools\reproduce_release.py --mode quick
+.\.venv\Scripts\python.exe tools\reproduce_release.py --mode full
+```
+
+`quick` validates imports, the public method contract, repository structure and
+regeneration of one canonical table and figure. `full` runs the maintained
+contract-v2 experiment and analysis commands that do not require excluded raw
+archives or a separately installed ART executable. See the command log written
+under `results/_repro_check/`.
 
 The old `scripts/` commands remain valid for historical reproduction. New
 manuscript-facing experiments use the explicit `ck4p_msp` representation name;
@@ -216,7 +231,7 @@ Included:
 
 Excluded:
 
-- Historical smoke outputs, local environments and render intermediates.
+- Historical manuscript drafts, smoke outputs, local environments and render intermediates.
 - Full CAMI archives, ART FASTQ/SAM intermediates and large paired-read
   fragments.
 - Restricted clinical sequencing reads. Only representative length conditions

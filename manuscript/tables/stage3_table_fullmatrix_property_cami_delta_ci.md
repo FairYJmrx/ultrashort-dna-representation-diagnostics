@@ -1,6 +1,0 @@
-| contrast                        |   n_paired_cells | delta macro_f1 (95% CI)   | delta accuracy (95% CI)   | interpretation                                                                  |
-|:--------------------------------|-----------------:|:--------------------------|:--------------------------|:--------------------------------------------------------------------------------|
-| property_channels - one_hot     |                8 | 0.048 [0.006, 0.085]      | 0.049 [0.007, 0.090]      | per-position biochemical property channels versus per-position base identity    |
-| base_property - one_hot         |                8 | 0.008 [-0.031, 0.049]     | 0.007 [-0.028, 0.049]     | adding property channels to one-hot positional identity                         |
-| rope_property - rope_onehot     |                8 | -0.030 [-0.079, 0.014]    | -0.028 [-0.076, 0.014]    | property semantics under the same RoPE-like positional transform                |
-| kmer_property - ckmer5_count_l2 |                8 | -0.085 [-0.134, -0.031]   | -0.090 [-0.146, -0.035]   | position-resolved k-mer property sequence versus compact canonical k-mer counts |

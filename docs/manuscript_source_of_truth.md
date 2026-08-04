@@ -4,10 +4,8 @@ The canonical submission manuscript is the LaTeX project in `paper_latex/`.
 Its numerical claims must be traceable to `results/stage3/contract_v2/` through
 `docs/contract_v2_evidence_map.md`.
 
-The `paper/` and `manuscript/` directories contain historical Markdown, Word
-and figure artifacts retained for provenance. They are not current wording,
-numerical or figure sources and must not be used to regenerate submission
-claims.
+Historical Markdown and Word drafts are intentionally excluded from the public
+release. They are not current wording, numerical or figure sources.
 
 Submission-facing files are:
 

@@ -11,6 +11,7 @@ __pycache__/
 *.tiff
 results/runs/
 results/_smoke*/
+results/_repro_check/
 results/stage3/figures/
 manuscript/figures/nature_fig*
 paper_latex/qa/*
@@ -37,3 +38,4 @@ data/stage3/cami/remote_prefix_cache/
 paper_latex/build_*/
 paper_latex/tmp/
 paper_latex/*.synctex.gz
+.coverage

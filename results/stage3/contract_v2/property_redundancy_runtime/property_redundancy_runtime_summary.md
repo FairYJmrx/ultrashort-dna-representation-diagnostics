@@ -5,7 +5,7 @@ This lightweight audit addresses two reviewer-risk questions: whether global P a
 ## Run metadata
 |   elapsed_seconds | input                                                                                                      | lengths            |   n_sampled_reads |   max_per_length |   runtime_repeats | peak_allocation_method                                       |   max_cca_components |
 |------------------:|:-----------------------------------------------------------------------------------------------------------|:-------------------|------------------:|-----------------:|------------------:|:-------------------------------------------------------------|---------------------:|
-|            38.571 | D:\AI-NGS\info\release_code\results\stage3\contract_v2\compact_baselines\stage3_compact_baseline_reads.csv | [69, 75, 100, 150] |              1600 |              400 |                 5 | Python tracemalloc; excludes native-only allocator retention |                    5 |
+|            38.571 | results/stage3/contract_v2/compact_baselines/stage3_compact_baseline_reads.csv | [69, 75, 100, 150] |              1600 |              400 |                 5 | Python tracemalloc; excludes native-only allocator retention |                    5 |
 
 ## P/MSP redundancy summary
 |   length |   n_reads |   p_dim |   msp_dim |   p_rank |   msp_rank |   pc1_corr_abs |   cca1_abs |   cca_mean_abs |   row_cosine_median_abs |   row_cosine_p95_abs |

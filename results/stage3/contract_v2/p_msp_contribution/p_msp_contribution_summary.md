@@ -8,7 +8,7 @@ Interpretation boundary: this audit does not assume that K, P and MSP are orthog
 
 |   elapsed_seconds | reads                                                                                                      | triplets                                                                                                      | lengths            | conditions                                                                                                   |   max_pairs |   max_triplets |   cv_folds |     seed |
 |------------------:|:-----------------------------------------------------------------------------------------------------------|:--------------------------------------------------------------------------------------------------------------|:-------------------|:-------------------------------------------------------------------------------------------------------------|------------:|---------------:|-----------:|---------:|
-|            98.175 | D:\AI-NGS\info\release_code\results\stage3\contract_v2\compact_baselines\stage3_compact_baseline_reads.csv | D:\AI-NGS\info\release_code\results\stage3\contract_v2\local_mutation_sensitivity\local_mutation_triplets.csv | [69, 75, 100, 150] | ['substitution_1pct', 'N_3pct', 'trim_5bp', 'substitution_1pct_N_3pct', 'local_mismatch_6bp', 'short_indel'] |         500 |            400 |          5 | 20260625 |
+|            98.175 | results/stage3/contract_v2/compact_baselines/stage3_compact_baseline_reads.csv | results/stage3/contract_v2/local_mutation_sensitivity/local_mutation_triplets.csv | [69, 75, 100, 150] | ['substitution_1pct', 'N_3pct', 'trim_5bp', 'substitution_1pct_N_3pct', 'local_mismatch_6bp', 'short_indel'] |         500 |            400 |          5 | 20260625 |
 
 ## Stability summary
 

@@ -17,14 +17,13 @@ into separate implementations.
 | `analysis/tables/` | Summary table and confidence-interval generation. | Data simulation. |
 | `analysis/figures/` | Main and supplementary figure generation. | Primary experiment execution. |
 | `analysis/audits/` | Provenance and result-inventory validation. | Scientific result mutation. |
-| `analysis/manuscript/` | Historical Word assembly helpers. | Main experiment logic. |
 
 ## Compatibility Policy
 
 `scripts/` contains thin backwards-compatible imports only. New commands,
 documentation and manuscript-to-script mappings must point to one of the
-maintained directories above. `legacy/` holds superseded release-packaging
-machinery and is excluded from the scientific reproduction path.
+maintained directories above. Historical Word builders and superseded release
+packaging are excluded from the public package.
 
 ## Method Rule
 

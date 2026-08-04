@@ -1,6 +1,6 @@
 # Stage-3 ART Illumina Completed Summary
 
-- ART executable: `D:\AI-NGS\信息学\tools\art\extracted_bp\Win64\art_illumina.exe`
+- ART executable: `tools/art/extracted_bp/Win64/art_illumina.exe`
 - Fold coverage: `0.005`
 - Generated paired rows: `75592`
 - Generated clean/error pairs: `37796`
