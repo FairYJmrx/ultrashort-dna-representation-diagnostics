@@ -1,0 +1,13 @@
+representation,representation_label,repeat,n_reads,n_features,seconds
+ck4p_msp,CK4P-MSP,1,10000,222,0.7340236000018194
+ck4p_msp,CK4P-MSP,2,10000,222,0.8615584999788553
+candidate_pkm_replace,PKM replace (222D),1,10000,222,1.980244699981995
+candidate_pkm_replace,PKM replace (222D),2,10000,222,1.9506223000353202
+candidate_cpkm_replace,CPKM replace (222D),1,10000,222,15.292775699985214
+candidate_cpkm_replace,CPKM replace (222D),2,10000,222,15.750486199976876
+candidate_pkm_augment,PKM augmentation screen (297D),1,10000,297,2.369895300013013
+candidate_pkm_augment,PKM augmentation screen (297D),2,10000,297,2.1936443999875337
+candidate_cpkm_augment,CPKM augmentation screen (297D),1,10000,297,15.508090600022115
+candidate_cpkm_augment,CPKM augmentation screen (297D),2,10000,297,15.383391699986532
+candidate_dual_augment,PKM-CPKM upper screen (372D),1,10000,372,16.681926099932753
+candidate_dual_augment,PKM-CPKM upper screen (372D),2,10000,372,17.535367000033148

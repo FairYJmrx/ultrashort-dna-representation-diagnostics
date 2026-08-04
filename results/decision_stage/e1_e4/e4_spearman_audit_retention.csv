@@ -1,0 +1,17 @@
+﻿scope,representation,metric,n_pairs,spearman_rho,p_value
+representation,ck4,l2_delta_mean,6,-0.028571428571428574,0.9571545189504373
+representation,ck4,paired_cosine_mean,6,0.3714285714285715,0.46847813411078715
+representation,ck4,retrieval_top1,6,-0.39279220242478635,0.4411128091213043
+representation,ck4,margin_positive_rate,6,-0.39279220242478635,0.4411128091213043
+representation,ck4_p,l2_delta_mean,6,-0.48571428571428577,0.3287230320699709
+representation,ck4_p,paired_cosine_mean,6,0.7142857142857143,0.1107871720116617
+representation,ck4_p,retrieval_top1,6,-0.13093073414159545,0.8047261622231061
+representation,ck4_p,margin_positive_rate,6,-0.13093073414159545,0.8047261622231061
+representation,ck4p_msp,l2_delta_mean,6,-0.3714285714285715,0.46847813411078715
+representation,ck4p_msp,paired_cosine_mean,6,0.6571428571428573,0.15617492711370237
+representation,ck4p_msp,retrieval_top1,6,-0.39279220242478635,0.4411128091213043
+representation,ck4p_msp,margin_positive_rate,6,-0.39279220242478635,0.4411128091213043
+pooled,all_common_methods,l2_delta_mean,18,-0.5170278637770898,0.02800614736378717
+pooled,all_common_methods,paired_cosine_mean,18,0.564499484004128,0.014663613053810923
+pooled,all_common_methods,retrieval_top1,18,-0.30169798114443086,0.2237160326628957
+pooled,all_common_methods,margin_positive_rate,18,-0.30169798114443086,0.2237160326628957

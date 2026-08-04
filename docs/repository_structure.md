@@ -15,7 +15,7 @@ This release is organized around four reproducibility questions:
 | `src/` | Backward-compatible import wrappers for historical scripts. |
 | `data_pipeline/` | Organized entrypoints for data download, preprocessing and simulation. |
 | `experiments/` | Maintained implementations for main experiments and reviewer-response audits. |
-| `analysis/` | Maintained implementations for figures, tables and provenance audits. |
+| `analysis/` | Maintained implementations for figures, tables, audits and manuscript generation. |
 | `data/` | Lightweight release data and public benchmark subsets. |
 | `results/` | Generated result tables, summaries and audit outputs. |
 | `figures/` | Central copy of final main and supplementary figure bitmaps. |
@@ -24,7 +24,7 @@ This release is organized around four reproducibility questions:
 | `configs/` | Experiment matrices and current release defaults. |
 | `scripts/` | Backwards-compatible wrappers for historical commands. |
 | `smoke_tests/` | Lightweight import, method-contract and structure checks. |
-| `tools/` | Reproduction orchestration and public-release preflight checks. |
+| `tools/` | Release preflight, manifest and one-command reproduction helpers. |
 
 ## Script Compatibility
 
@@ -37,8 +37,8 @@ representation name `ck4p_msp`; historical feature-name strings are not method
 aliases. See `docs/code_layout.md` for detailed rules.
 
 The canonical manuscript contract is documented in
-`docs/manuscript_source_of_truth.md`. Historical Word and Markdown drafts are
-excluded from the release so that the LaTeX project is unambiguous.
+`docs/manuscript_source_of_truth.md`. In particular, historical Word and
+Markdown artifacts are not eligible sources for current numerical claims.
 
 This means historical commands continue to work, while new users can start from
 the organized entrypoints.

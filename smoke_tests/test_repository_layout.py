@@ -30,6 +30,7 @@ REQUIRED_DIRECTORIES = (
 
 REPRESENTATIVE_MODULES = (
     "methods.ck4p_msp",
+    "methods.experimental_positional_kmer",
     "data_pipeline.preprocess.make_close_relative_reads",
     "experiments.main.run_stage3_compact_baselines",
     "experiments.audits.run_high_k_compressed_baselines",
@@ -58,6 +59,10 @@ def main() -> None:
     contract_results = ROOT / "results" / "stage3" / "contract_v2"
     assert contract_results.is_dir(), "Missing contract_v2 result namespace."
     print("ok: repository layout and source-of-truth rules")
+
+
+def test_repository_layout_smoke() -> None:
+    main()
 
 
 if __name__ == "__main__":

@@ -1,7 +1,7 @@
 {
-  "elapsed_seconds": 132.649,
-  "stability_lengths": "69,75",
-  "local_lengths": "69,100,150",
+  "elapsed_seconds": 41.404,
+  "stability_lengths": "75,100",
+  "local_lengths": "100,150",
   "gammas": "0,0.25,0.5,1,2",
   "max_pairs": 250,
   "max_triplets": 250,

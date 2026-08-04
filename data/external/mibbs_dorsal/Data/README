@@ -1,0 +1,13 @@
+06/15/2015
+
+This directory contains the core sequence data necessary for generation of results for Clifford/Adami paper: "Discovery and information-theoretic characterization of transcription factor binding sites that act cooperatively".
+
+Author: Jacob Clifford <jacobc@msu.edu>
+--------------------------------------------------------------------------
+DATA
+
+CoreDorsalsites.fa: fasta file of all known Dorsal sites from Drosophila Melanogaster, based on redFLY database entries (where the primary author is appended to the 'name' of the binding site) and binding sites from figure 2 of the paper: Crocker J, Tamori Y and Erives A 2008 PLoS Biol.
+
+CoreDorsalOrthologsites.fa: fasta file of aligned 'known' Dorsal sites based on the CoreDorsalsites.fa that were extracted (manually) from MUSCLE MSA alignments of the mel CRM that contained core Dorsal known site/s with 11 orthologous Drosophila CRMs (see our paper for details).  Our simulations used this file under the name 'cbe.fa', for CB (ComBined) data of (E)xtended sequences, where extended denotes the few flanking bases that are extracted from the sequence editor from SEAVIEW from 'block' alingned sites from the CRM alignments.
+
+CRMs.fa:  fasta file of all CRMs that contain the 'known' Dorsal sites.  These CRMs are originally from the paper: Papatsenko D, Goltsev Y and LevineM2009 Nucleic Acids Res.  Our simulations used this file under the name 'NEEandREPseq.txt'.

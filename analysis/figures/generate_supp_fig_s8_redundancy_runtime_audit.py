@@ -7,6 +7,11 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 
+try:
+    from .figure_style import METHOD_COLORS
+except ImportError:
+    from figure_style import METHOD_COLORS
+
 
 def _find_project_root(start: Path) -> Path:
     for candidate in [start.parent, *start.parents]:
@@ -41,10 +46,10 @@ mpl.rcParams.update(
 )
 
 COLORS = {
-    "CK4": "#6C757D",
-    "CK4+P": "#4D908E",
-    "CK4+MSP": "#577590",
-    "CK4P-MSP": "#1B9E77",
+    "CK4": METHOD_COLORS["CK4"],
+    "CK4+P": METHOD_COLORS["CK4+P"],
+    "CK4+MSP": METHOD_COLORS["CK4+MSP"],
+    "CK4P-MSP": METHOD_COLORS["CK4P-MSP"],
     "highk": "#B56576",
     "warning": "#D97706",
     "light": "#E9ECEF",
@@ -137,7 +142,7 @@ def main() -> None:
         ax.tick_params(length=2.5, width=0.7)
 
     fig.suptitle(
-        "Supplementary Figure S8 | P/MSP contribution and relation audit",
+        "P/MSP contribution and relation audit",
         x=0.01,
         y=1.02,
         ha="left",

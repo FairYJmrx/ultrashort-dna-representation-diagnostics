@@ -5,7 +5,8 @@ Its numerical claims must be traceable to `results/stage3/contract_v2/` through
 `docs/contract_v2_evidence_map.md`.
 
 Historical Markdown and Word drafts are intentionally excluded from the public
-release. They are not current wording, numerical or figure sources.
+snapshot. They are not current wording, numerical or figure sources and must
+not be used to regenerate submission claims.
 
 Submission-facing files are:
 

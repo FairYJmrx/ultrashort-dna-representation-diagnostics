@@ -153,7 +153,7 @@ def figure_3(out: Path) -> None:
     axes[2].minorticks_off()
     clean_axes(axes[2])
     panel_label(axes[2], "C", "Drift versus dimension")
-    fig.suptitle("CK4P-MSP improves compact perturbation stability", y=0.985, fontsize=10.1, fontweight="bold")
+    fig.suptitle("CK4P-MSP defines a compact stability trade-off", y=0.985, fontsize=10.1, fontweight="bold")
     fig.subplots_adjust(left=0.075, right=0.995, bottom=0.20, top=0.78, wspace=0.34)
     save(fig, out, "figure_3_contract_v2_stability")
 

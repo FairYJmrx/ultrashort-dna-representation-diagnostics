@@ -1,0 +1,9 @@
+{
+  "reads": "D:\\AI-NGS\\info\\release_code\\results\\stage3\\contract_v2\\art_current_contract\\art_paired_reads.csv",
+  "n_reads": 5000,
+  "length_counts": {
+    "50": 5000
+  },
+  "candidate_weight": 0.25,
+  "interpretation": "Input-order sensitivity audit; not a claim that the full representation is reverse-complement invariant."
+}

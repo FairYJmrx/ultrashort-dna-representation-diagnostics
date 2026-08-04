@@ -39,6 +39,8 @@ FIGURE_MAP = {
     "supplementary/supp_fig_s11_factorial_scaling": CONTRACT / "supplementary_figure_s11_factorial_scaling",
     "supplementary/supp_fig_s12_historical_descriptor_audit": CONTRACT / "supplementary_figure_s12_historical_descriptor_audit",
     "supplementary/supp_fig_s13_short_read_continuity": CONTRACT / "supplementary_figure_s13_short_read_continuity",
+    "supplementary/supp_fig_s14_fixed_head_sensitivity": CONTRACT / "supplementary_figure_s14_fixed_head_sensitivity",
+    "supplementary/supp_fig_s15_pkm_pareto_audit": CONTRACT / "supplementary_figure_s15_pkm_pareto_audit",
 }
 
 STALE_STEMS = [

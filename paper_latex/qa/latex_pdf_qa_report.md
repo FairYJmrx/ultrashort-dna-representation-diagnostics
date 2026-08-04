@@ -1,11 +1,11 @@
 # LaTeX and PDF QA Report
 
-Date: 2026-08-04
+Date: 2026-08-05
 
 ## Build status
 
 - Main manuscript: 19 pages, compiled from `main.tex` with the OUP authoring template.
-- Supplementary Data: 14 pages, compiled from `supplementary.tex` with Figures S1-S14 and the current supplementary tables.
+- Supplementary Data: 15 pages, compiled from `supplementary.tex` with Figures S1-S15 and Supplementary Tables S1-S9.
 - Cover letter: 1 page, compiled from `cover_letter.tex`.
 - Main and supplementary compilation completed with exit code 0. No undefined citations, undefined references, missing figures or `Float too large` errors were reported.
 - The repeated 261.76535 pt output-routine warning is emitted by the OUP crop/output layer. Rendered pages were inspected and showed no content-level clipping or horizontal overflow.
@@ -17,23 +17,25 @@ Date: 2026-08-04
 - PseKNC, PseEIIP, PCA/SVD, high-k compressed vectors, MinHash/Jaccard controls and full-position probes remain visible as boundaries rather than being hidden when they win a particular axis.
 - The main figures preserve the intended division of labor: K supports composition-linked retrieval, P mainly reduces global perturbation drift, and MSP improves grouped local-change readability.
 - The current public-release source contains the AI-assisted-tools disclosure, sole-author metadata and no Huang Jianhua author entry.
-- Data and code statements point to the versioned GitHub repository and the frozen Zenodo archive (DOI `10.5281/zenodo.21792508`).
+- CK4P-MSP remains the sole main method. CK4P-MSP-PKM is consistently identified as a fixed-weight, 297-dimensional supplementary Pareto extension rather than a replacement or universally improved model.
+- Data and code statements point to the versioned GitHub repository and the stable Zenodo concept DOI `10.5281/zenodo.21792340`.
 
 ## Visual QA
 
-- All six main figures and Supplementary Figures S1-S14 render without clipping, blank panels, legend-data occlusion or overlapping axis labels.
+- All six main figures and Supplementary Figures S1-S15 render without clipping, blank panels, legend-data occlusion or overlapping axis labels.
 - Figure 2, Figure 4 and Figure 6 show CK4P-MSP explicitly and preserve the method's fixed colour across panels.
+- Supplementary Figure S15 presents the CK4P-MSP-PKM benefit-cost profile in one bounded four-panel audit: structured readout gains are shown together with drift, dimension, runtime and reverse-complement sensitivity costs.
 - Main-text figures remain adjacent to their evidence sections; no full figure-only page was introduced.
 - The final bibliography page contains normal tail whitespace because the reference list ends before the page bottom; this is not a float or content-placement defect.
 - Supplementary table pages contain intentional tail whitespace where complete tables are kept together at readable size.
 
 ## Reproducibility
 
-- A fresh Python 3.13 environment installed `requirements-lock.txt` and passed the five-test smoke suite and release preflight.
+- The release snapshot passes the ten-test smoke suite, Python bytecode compilation and repository preflight. The method-contract test additionally fixes the manuscript-facing CK4P-MSP-PKM key and rejects the retired selected-point alias.
 - The maintained full contract-v2 path completed compact baselines, grouped local mutation, all seven K/P/MSP combinations, high-k compression, kNN-MI robustness and short-read continuity audits with return code 0.
 - A second clean run produced bytewise-identical kNN-MI and seven-block/binset outputs. Stale frozen summaries were refreshed where the current implementation added valid-observation fields or updated estimator values.
 - The observed full-path wall time was approximately 39.5 minutes on the verification host. This is a host-specific reproduction time, not a method benchmark.
 
 ## Release status
 
-GitHub Release `v1.0.0` is public and archived at Zenodo under DOI `10.5281/zenodo.21792508`. The DOI has been added to the manuscript, `CITATION.cff`, cover letter and repository documentation. The archived tag remains immutable; DOI metadata are maintained on the `release` branch as a post-archive metadata update.
+The synchronized snapshot is prepared for GitHub Release `v1.1.0`. The manuscript, `CITATION.cff`, cover letter and repository documentation use the stable Zenodo concept DOI `10.5281/zenodo.21792340`, which resolves across archived versions without creating a version-DOI dependency loop. The final release commit, CI result and version DOI are recorded after the tag is published.

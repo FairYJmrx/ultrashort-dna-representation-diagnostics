@@ -289,6 +289,15 @@ def supplementary_figure() -> plt.Figure:
     axes[1].set_xlabel("mean absolute logit shift")
     axes[1].set_title("B. N-mask coordinate effect", loc="left", weight="bold")
     axes[1].grid(axis="x", color="#e5e7eb", linewidth=0.5)
+    axes[1].legend(
+        frameon=False,
+        loc="upper center",
+        bbox_to_anchor=(0.5, -0.24),
+        ncol=2,
+        columnspacing=0.7,
+        handletextpad=0.35,
+        fontsize=5.8,
+    )
 
     selected = ["CK4", "CK4P-MSP", "CK5", "PseKNC", "PseEIIP"]
     sensitivity = sensitivity[sensitivity["representation_label"].isin(selected)]

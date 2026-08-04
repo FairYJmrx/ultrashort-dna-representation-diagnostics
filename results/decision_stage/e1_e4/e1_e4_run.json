@@ -1,0 +1,262 @@
+{
+  "elapsed_seconds": 0.094,
+  "e1": {
+    "n_lengths": 29,
+    "lengths": [
+      50,
+      51,
+      52,
+      53,
+      54,
+      55,
+      56,
+      57,
+      58,
+      59,
+      60,
+      61,
+      62,
+      63,
+      64,
+      65,
+      66,
+      67,
+      68,
+      69,
+      70,
+      71,
+      72,
+      73,
+      74,
+      75,
+      100,
+      125,
+      150
+    ],
+    "short_max": 75,
+    "main_representation_key": "ck4p_msp",
+    "readout_length_scope": [
+      50,
+      51,
+      52,
+      53,
+      54,
+      55,
+      56,
+      57,
+      58,
+      59,
+      60,
+      61,
+      62,
+      63,
+      64,
+      65,
+      66,
+      67,
+      68,
+      69,
+      70,
+      71,
+      72,
+      73,
+      74,
+      75
+    ],
+    "stability_length_scope": [
+      50,
+      51,
+      52,
+      53,
+      54,
+      55,
+      56,
+      57,
+      58,
+      59,
+      60,
+      61,
+      62,
+      63,
+      64,
+      65,
+      66,
+      67,
+      68,
+      69,
+      70,
+      71,
+      72,
+      73,
+      74,
+      75,
+      100,
+      125,
+      150
+    ],
+    "regime_summary": [
+      {
+        "length_regime": "long_>_75bp",
+        "n_lengths": 3,
+        "drift_gain_mean": 0.08084904423973703,
+        "cosine_gain_mean": 0.015553968504301094,
+        "retrieval_gain_mean": 0.0,
+        "readout_gain_mean": NaN
+      },
+      {
+        "length_regime": "short_<=_75bp",
+        "n_lengths": 26,
+        "drift_gain_mean": 0.10644981988526327,
+        "cosine_gain_mean": 0.029341163225354686,
+        "retrieval_gain_mean": 0.0,
+        "readout_gain_mean": 0.02426511185649014
+      }
+    ]
+  },
+  "e4": {
+    "n_pairs": 18,
+    "representations": [
+      "ck4",
+      "ck4_p",
+      "ck4p_msp"
+    ],
+    "conditions": [
+      "N_3pct",
+      "substitution_1pct"
+    ],
+    "correlations": [
+      {
+        "scope": "representation",
+        "representation": "ck4",
+        "metric": "l2_delta_mean",
+        "n_pairs": 6,
+        "spearman_rho": -0.028571428571428574,
+        "p_value": 0.9571545189504373
+      },
+      {
+        "scope": "representation",
+        "representation": "ck4",
+        "metric": "paired_cosine_mean",
+        "n_pairs": 6,
+        "spearman_rho": 0.3714285714285715,
+        "p_value": 0.46847813411078715
+      },
+      {
+        "scope": "representation",
+        "representation": "ck4",
+        "metric": "retrieval_top1",
+        "n_pairs": 6,
+        "spearman_rho": -0.39279220242478635,
+        "p_value": 0.4411128091213043
+      },
+      {
+        "scope": "representation",
+        "representation": "ck4",
+        "metric": "margin_positive_rate",
+        "n_pairs": 6,
+        "spearman_rho": -0.39279220242478635,
+        "p_value": 0.4411128091213043
+      },
+      {
+        "scope": "representation",
+        "representation": "ck4_p",
+        "metric": "l2_delta_mean",
+        "n_pairs": 6,
+        "spearman_rho": -0.48571428571428577,
+        "p_value": 0.3287230320699709
+      },
+      {
+        "scope": "representation",
+        "representation": "ck4_p",
+        "metric": "paired_cosine_mean",
+        "n_pairs": 6,
+        "spearman_rho": 0.7142857142857143,
+        "p_value": 0.1107871720116617
+      },
+      {
+        "scope": "representation",
+        "representation": "ck4_p",
+        "metric": "retrieval_top1",
+        "n_pairs": 6,
+        "spearman_rho": -0.13093073414159545,
+        "p_value": 0.8047261622231061
+      },
+      {
+        "scope": "representation",
+        "representation": "ck4_p",
+        "metric": "margin_positive_rate",
+        "n_pairs": 6,
+        "spearman_rho": -0.13093073414159545,
+        "p_value": 0.8047261622231061
+      },
+      {
+        "scope": "representation",
+        "representation": "ck4p_msp",
+        "metric": "l2_delta_mean",
+        "n_pairs": 6,
+        "spearman_rho": -0.3714285714285715,
+        "p_value": 0.46847813411078715
+      },
+      {
+        "scope": "representation",
+        "representation": "ck4p_msp",
+        "metric": "paired_cosine_mean",
+        "n_pairs": 6,
+        "spearman_rho": 0.6571428571428573,
+        "p_value": 0.15617492711370237
+      },
+      {
+        "scope": "representation",
+        "representation": "ck4p_msp",
+        "metric": "retrieval_top1",
+        "n_pairs": 6,
+        "spearman_rho": -0.39279220242478635,
+        "p_value": 0.4411128091213043
+      },
+      {
+        "scope": "representation",
+        "representation": "ck4p_msp",
+        "metric": "margin_positive_rate",
+        "n_pairs": 6,
+        "spearman_rho": -0.39279220242478635,
+        "p_value": 0.4411128091213043
+      },
+      {
+        "scope": "pooled",
+        "representation": "all_common_methods",
+        "metric": "l2_delta_mean",
+        "n_pairs": 18,
+        "spearman_rho": -0.5170278637770898,
+        "p_value": 0.02800614736378717
+      },
+      {
+        "scope": "pooled",
+        "representation": "all_common_methods",
+        "metric": "paired_cosine_mean",
+        "n_pairs": 18,
+        "spearman_rho": 0.564499484004128,
+        "p_value": 0.014663613053810923
+      },
+      {
+        "scope": "pooled",
+        "representation": "all_common_methods",
+        "metric": "retrieval_top1",
+        "n_pairs": 18,
+        "spearman_rho": -0.30169798114443086,
+        "p_value": 0.2237160326628957
+      },
+      {
+        "scope": "pooled",
+        "representation": "all_common_methods",
+        "metric": "margin_positive_rate",
+        "n_pairs": 18,
+        "spearman_rho": -0.30169798114443086,
+        "p_value": 0.2237160326628957
+      }
+    ]
+  },
+  "interpretation": {
+    "e1": "short-read framing is strengthened only if CK4P-MSP gains show a reproducible short-versus-long interaction",
+    "e4": "strong association supports criterion-related audit validity; weak association keeps the protocol descriptive"
+  }
+}

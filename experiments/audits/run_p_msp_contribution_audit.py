@@ -37,7 +37,7 @@ REP_BLOCKS = {
     "ck4_p": ("K", "P"),
     "ck4_msp": ("K", "M"),
     "p_msp": ("P", "M"),
-    "ck4_p_msp": ("K", "P", "M"),
+    "ck4p_msp": ("K", "P", "M"),
 }
 
 REP_LABELS = {
@@ -47,7 +47,7 @@ REP_LABELS = {
     "ck4_p": "CK4+P",
     "ck4_msp": "CK4+MSP",
     "p_msp": "P+MSP",
-    "ck4_p_msp": "CK4P-MSP",
+    "ck4p_msp": "CK4P-MSP",
 }
 
 
@@ -56,6 +56,8 @@ CONDITIONAL_CONTRASTS = {
     "P | CK4+MSP": "ck4_msp",
     "MSP | CK4+P": "ck4_p",
 }
+
+RATIO_DENOMINATOR_TOLERANCE = 1e-8
 
 
 def safe_norm(x: np.ndarray) -> np.ndarray:
@@ -114,7 +116,7 @@ def conditional_contrast_row(
     evidence_layer: str,
     seed: int,
 ) -> dict[str, object]:
-    full = "ck4_p_msp"
+    full = "ck4p_msp"
     subset = df[df["representation"].isin([full, comparator])].copy()
     pivot = subset.pivot_table(index=keys, columns="representation", values=metric, aggfunc="mean")
     if full not in pivot.columns or comparator not in pivot.columns:
@@ -318,6 +320,9 @@ def local_delta_audit(
             local_x = x[2 * n : 3 * n]
             noise_l2 = np.linalg.norm(clean_x - noise_x, axis=1)
             local_l2 = np.linalg.norm(clean_x - local_x, axis=1)
+            ratio_valid = noise_l2 > RATIO_DENOMINATOR_TOLERANCE
+            ratio = np.full_like(local_l2, np.nan, dtype=np.float64)
+            ratio[ratio_valid] = local_l2[ratio_valid] / noise_l2[ratio_valid]
             for idx, sample_id in enumerate(sample_ids):
                 pair_rows.append(
                     {
@@ -329,7 +334,8 @@ def local_delta_audit(
                         "noise_l2": float(noise_l2[idx]),
                         "local_l2": float(local_l2[idx]),
                         "local_minus_noise_l2": float(local_l2[idx] - noise_l2[idx]),
-                        "selective_sensitivity_ratio": float(local_l2[idx] / max(noise_l2[idx], 1e-12)),
+                        "selective_sensitivity_ratio": float(ratio[idx]),
+                        "selective_sensitivity_ratio_valid": bool(ratio_valid[idx]),
                         "n_features": int(x.shape[1]),
                     }
                 )
@@ -398,6 +404,8 @@ def summarize(
             local_l2_mean=("local_l2", "mean"),
             local_minus_noise_l2_mean=("local_minus_noise_l2", "mean"),
             selective_sensitivity_ratio_mean=("selective_sensitivity_ratio", "mean"),
+            selective_sensitivity_ratio_n_valid=("selective_sensitivity_ratio", "count"),
+            selective_sensitivity_ratio_valid_fraction=("selective_sensitivity_ratio_valid", "mean"),
         )
         .sort_values("local_minus_noise_l2_mean", ascending=False)
     )

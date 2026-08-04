@@ -1,5 +1,5 @@
-﻿representation,representation_label,classifier,n_cells,n_features,macro_f1_mean,macro_f1_std_mean,accuracy_mean
-ck4_p_msp,CK4P-MSP,logistic,12,222.0,0.978630385373886,0.008992777621473972,0.9786666666666667
+representation,representation_label,classifier,n_cells,n_features,macro_f1_mean,macro_f1_std_mean,accuracy_mean
+ck4p_msp,CK4P-MSP,logistic,12,222.0,0.978630385373886,0.008992777621473972,0.9786666666666667
 ck4_msp,CK4+MSP,logistic,12,211.0,0.9779744055640748,0.010192048090149888,0.9780000000000001
 p_msp,P+MSP,logistic,12,86.0,0.9704137018661654,0.012477679640927976,0.9704999999999999
 msp,MSP,logistic,12,75.0,0.9651862175133727,0.013291843996568893,0.9653333333333333

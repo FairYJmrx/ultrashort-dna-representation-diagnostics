@@ -1,6 +1,6 @@
 # Short DNA Read Representation Diagnostics
 
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.21792508.svg)](https://doi.org/10.5281/zenodo.21792508)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.21792340.svg)](https://doi.org/10.5281/zenodo.21792340)
 [![release-smoke](https://github.com/FairYJmrx/ultrashort-dna-representation-diagnostics/actions/workflows/smoke.yml/badge.svg?branch=release)](https://github.com/FairYJmrx/ultrashort-dna-representation-diagnostics/actions/workflows/smoke.yml)
 
 This repository is the reproducible release for the manuscript on
@@ -9,8 +9,9 @@ as a methods repository: method definitions are centralized, data preparation
 and experiments have separate entrypoints, and manuscript claims are mapped to
 scripts and outputs.
 
-The frozen `v1.0.0` software release is archived at Zenodo under
-[DOI 10.5281/zenodo.21792508](https://doi.org/10.5281/zenodo.21792508).
+The frozen submission snapshot is GitHub Release `v1.1.0`. Zenodo links all
+archived versions under the stable concept DOI
+[10.5281/zenodo.21792340](https://doi.org/10.5281/zenodo.21792340).
 
 ## 1. Repository Map
 
@@ -20,7 +21,7 @@ The frozen `v1.0.0` software release is archived at Zenodo under
 | `src/` | Compatibility wrappers for older scripts that import `src.*`. New code should import `methods.*`. |
 | `data_pipeline/` | Maintained public download, preprocessing and simulation implementations. |
 | `experiments/` | Maintained main experiments and method-hardening audits. |
-| `analysis/` | Maintained figure, table and provenance-audit implementations. |
+| `analysis/` | Maintained figures, tables, provenance audits and manuscript assembly. |
 | `scripts/` | Backwards-compatible command wrappers; not a second implementation tree. |
 | `data/` | Lightweight release data and public benchmark subsets. |
 | `results/` | Generated result tables, summaries, run manifests and audit outputs. |
@@ -40,11 +41,16 @@ The manuscript-facing API for the main method is
 drift helpers directly; older experiment scripts remain available through the
 broader `methods/stage2_features.py` feature-construction layer.
 
+The optional supplementary extension is `CK4P-MSP-PKM`, implemented by
+`build_ck4p_msp_pkm()` in `methods/experimental_positional_kmer.py`. It appends
+a 75-dimensional positional k-mer moment block at the fixed weight
+`delta=0.25`, producing 297 features. It is an exploratory Pareto extension,
+not a replacement or alias for the stable main method.
+
 ## 2. Environment Setup
 
 The release was developed with Python 3.13 and is tested for release with
-Python 3.11 or later. The pinned environment is intentionally limited to the
-packages used by the maintained reproduction path:
+Python 3.11 or later. Install the pinned clean-environment dependencies:
 
 ```powershell
 python -m venv .venv
@@ -52,10 +58,7 @@ python -m venv .venv
 .\.venv\Scripts\python.exe -m pip install -r requirements-lock.txt
 ```
 
-`requirements.txt` lists the direct release dependencies; the lock file also
-pins transitive packages used in the clean-environment verification.
-
-Run the complete smoke suite:
+Run the complete smoke and preflight checks:
 
 ```powershell
 .\.venv\Scripts\python.exe -m pytest smoke_tests -q
@@ -82,6 +85,8 @@ The main method is CK4P-MSP:
 - MSP: multi-scale positional property pooling over relative-position bins.
 - CK4P-MSP: block-normalized CK4, P and MSP with default weights
   `alpha=beta=gamma=1`.
+- CK4P-MSP-PKM: supplementary 297-dimensional extension with a hashed
+  positional k-mer moment block and fixed `delta=0.25`.
 
 The mixed L2 metric is standardized representation drift, not a natural
 biophysical distance. MI/KSG analyses are estimator-dependent empirical audits,
@@ -96,6 +101,11 @@ stronger grouped local-change readability and explicit K/P/MSP attribution.
 See `docs/method_contract.md` and `configs/release_defaults.yaml` for the
 formal method contract and default settings.
 
+`configs/ck4p_msp_pkm_supplementary.yaml` records the extension contract and
+its claim boundaries. The display name never includes the selected numeric
+weight; machine-readable manuscript assets use `ck4p_msp_pkm_w025` where a
+stable key is required.
+
 ## 4. Reproduction Path
 
 For a single entrypoint, use:
@@ -107,9 +117,8 @@ For a single entrypoint, use:
 
 `quick` validates imports, the public method contract, repository structure and
 regeneration of one canonical table and figure. `full` runs the maintained
-contract-v2 experiment and analysis commands that do not require excluded raw
-archives or a separately installed ART executable. See the command log written
-under `results/_repro_check/`.
+contract-v2 commands that do not require excluded raw archives or a separately
+installed ART executable. See the command log under `results/_repro_check/`.
 
 The old `scripts/` commands remain valid for historical reproduction. New
 manuscript-facing experiments use the explicit `ck4p_msp` representation name;
@@ -140,6 +149,9 @@ where local perturbation variants share a source template.
 .\.venv\Scripts\python.exe experiments\audits\run_cami_fixed_head_coordinate_audit.py --result-dir results\stage3\contract_v2\cami_fixed_head_transfer
 .\.venv\Scripts\python.exe experiments\audits\run_cami_multitarget_fixed_head_transfer.py --output-dir results\stage3\contract_v2\cami_multitarget_fixed_head --c-values 1
 .\.venv\Scripts\python.exe experiments\audits\run_cami_multitarget_fixed_head_transfer.py --output-dir results\stage3\contract_v2\cami_multitarget_c_sensitivity --representations ck4,ck4p_msp,ck5,pseknc_k3_l3,pseeiip --c-values 0.1,1,10
+.\.venv\Scripts\python.exe experiments\audits\run_positional_kmer_weight_sweep.py --output-dir results\stage3\candidate_positional_kmer_weight_sweep
+.\.venv\Scripts\python.exe experiments\audits\run_positional_kmer_strand_audit.py --output-dir results\stage3\candidate_positional_kmer_strand_audit
+.\.venv\Scripts\python.exe experiments\audits\run_positional_kmer_historical_comparison.py --output-dir results\stage3\candidate_positional_kmer_historical_comparison
 .\.venv\Scripts\python.exe data_pipeline\simulate\run_cami2_marine_lightweight_probe.py --output-dir results\stage3\contract_v2\cami2_marine_stability
 .\.venv\Scripts\python.exe data_pipeline\simulate\run_stage3_art_generate_and_evaluate.py
 .\.venv\Scripts\python.exe data_pipeline\simulate\summarize_stage3_art_quality.py
@@ -216,6 +228,7 @@ CK4P-MSP contract.
 .\.venv\Scripts\python.exe analysis\figures\generate_supp_fig_s12_historical_descriptor_audit.py
 .\.venv\Scripts\python.exe analysis\figures\generate_short_read_continuity_figures.py
 .\.venv\Scripts\python.exe analysis\figures\generate_cami_fixed_head_figures.py
+.\.venv\Scripts\python.exe analysis\figures\generate_supp_fig_s15_pkm_pareto_audit.py
 .\.venv\Scripts\python.exe analysis\figures\sync_manuscript_figures.py
 .\.venv\Scripts\python.exe analysis\tables\generate_contract_v2_tables.py
 .\.venv\Scripts\python.exe analysis\audits\audit_result_inventory.py
@@ -237,7 +250,7 @@ Included:
 
 Excluded:
 
-- Historical manuscript drafts, smoke outputs, local environments and render intermediates.
+- Historical smoke outputs, local environments and render intermediates.
 - Full CAMI archives, ART FASTQ/SAM intermediates and large paired-read
   fragments.
 - Restricted clinical sequencing reads. Only representative length conditions

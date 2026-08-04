@@ -16,6 +16,7 @@ METHOD_COLORS = {
     "CK4+MSP": "#009E73",
     "P+MSP": "#7C6EA8",
     "CK4P-MSP": "#B83A62",
+    "CK4P-MSP-PKM": "#7A2748",
     "CK5": "#7456A4",
     "Hashed k=15": "#D17A22",
     "Sparse RP k=15": "#7768AE",
@@ -30,6 +31,7 @@ METHOD_MARKERS = {
     "CK4+P": "s",
     "CK4+MSP": "^",
     "CK4P-MSP": "D",
+    "CK4P-MSP-PKM": "X",
     "CK5": "P",
 }
 

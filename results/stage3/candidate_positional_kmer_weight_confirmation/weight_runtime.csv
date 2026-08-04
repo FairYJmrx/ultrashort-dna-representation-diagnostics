@@ -1,0 +1,7 @@
+﻿route,method,repeat,n_reads,n_features,seconds
+main,ck4p_msp,1,10000,222,0.7257031999761239
+pkm,candidate_pkm_augment,1,10000,297,1.3685363000258803
+cpkm,candidate_cpkm_augment,1,10000,297,17.475207299925387
+cpkm,candidate_cpkm_augment,2,10000,297,16.830533999949694
+pkm,candidate_pkm_augment,2,10000,297,1.5210337999742478
+main,ck4p_msp,2,10000,222,0.8402184000005946

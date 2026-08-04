@@ -1,0 +1,30 @@
+# Supplementary extension contract. CK4P-MSP remains the stable main method.
+display_name: CK4P-MSP-PKM
+machine_key: ck4p_msp_pkm_w025
+status: exploratory_supplementary_extension
+
+base_representation: CK4P-MSP
+blocks:
+  K: CK4
+  P: global_property_summary
+  M: multi_scale_positional_property_pooling
+  Z: hashed_positional_kmer_moments
+
+pkm:
+  k: 4
+  output_dimension: 75
+  position_basis_order: 3
+  hash_seed: 20260805
+
+weights:
+  alpha_K: 1.0
+  beta_P: 1.0
+  gamma_MSP: 1.0
+  delta_PKM: 0.25
+
+assembled_dimension: 297
+claim_boundary:
+  - Pareto extension for stronger positional readability, not a replacement for CK4P-MSP.
+  - The fixed delta was selected from a prespecified exploratory grid and is not a universal optimum.
+  - The extension is input-order-sensitive and is not reverse-complement invariant as a whole.
+  - Results are bounded to the reported controlled and lightweight external audits.

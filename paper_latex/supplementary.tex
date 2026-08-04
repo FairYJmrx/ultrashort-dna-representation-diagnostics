@@ -5,6 +5,8 @@
 \usepackage{etoolbox}
 \usepackage{placeins}
 \usepackage{float}
+\usepackage{amsmath}
+\usepackage{amssymb}
 \setcitestyle{numbers,square,comma}
 \def\societylogo{}
 \makeatletter
@@ -26,9 +28,9 @@
 \journaltitle{NAR Genomics and Bioinformatics}
 \pubyear{2026}
 \copyrightyear{2026}
-% The compiled supplementary PDF is fixed at 14 pages; set the range before
-% the OUP title page is shipped so the opening header is accurate.
-\lastpage{14}
+% Updated after the final compile-and-render pass so the opening page range
+% matches the archived supplementary PDF.
+\lastpage{15}
 \makeatletter
 \def\ps@headings{\let\@oddfoot\@empty\let\@evenfoot\@empty\def\@oddhead{\vbox{\hbox to \textwidth{\fontsize{8bp}{10bp}\selectfont\itshape\@journaltitle, \@pubyear\hfill\bfseries\thepage}\vspace{5pt}\rule{\textwidth}{1pt}}}\def\@evenhead{\vbox{\hbox to \textwidth{\fontsize{8bp}{10bp}\selectfont\bfseries\thepage\hfill\itshape\@journaltitle, \@pubyear}\vspace{5pt}\rule{\textwidth}{1pt}}}}
 \makeatother
@@ -49,8 +51,44 @@
 \renewcommand{\thetable}{S\arabic{table}}
 \maketitle
 \section{Supplementary data overview}
-The canonical 4-mer, property and multi-scale property-pooling representation (CK4P-MSP) contains a canonical 4-mer composition block (K), a global property block (P) and multi-scale property pooling (MSP).
-This supplementary file collects the visual audits and source-table previews that support the main representation-diagnostic manuscript. Figures S1--S3 evaluate baseline controls, empirical information proxies and sequencing-error-aware perturbations. Figures S4--S7 examine local mutation fraction, P-channel counterfactuals, MSP bin and weight sensitivity, and dimension-matched high-k compressed baselines. Figures S8--S10 summarize P/MSP contribution and relation audits and the CAMI II marine anonymous-read stability probe. Figure S11 reports the mechanism-aligned $2\times2$ local-change audit and property-scaling sensitivity. Figure S12 compares CK4P-MSP with representative historical handcrafted descriptors by drift, grouped local-change readability, dimension and common-protocol implementation time. Figure S13 reports the dense 50--75 bp continuity audit, and Figure S14 separates frozen-head representation geometry from downstream scaling and regularization. Tables S1--S9 provide the CAMI II preview, seven-group contrasts, MI inference, factorial contrasts, scaling sensitivity, complete feature definitions, public WGS assembly accessions, cross-target fixed-head results and CAMI target-task metadata. Unless a caption explicitly defines an interval, bars, points and lines show analysis-cell means without error bars. Cell-bootstrap intervals summarize variation across prespecified matched length-by-condition or length-by-local-mode cells; because these cells reuse source template panels, they are not confidence intervals for independent biological cohorts.
+The canonical 4-mer, property and multi-scale property-pooling representation (CK4P-MSP) comprises a canonical 4-mer composition block (K), a global property block (P) and multi-scale property pooling (MSP). Figures S1--S7 report reduction, information-estimator, perturbation, counterfactual, parameter and dimension-matched baseline audits. Figures S8--S14 cover P/MSP relations, external stability, mechanism, historical descriptors, read-length continuity and fixed-head transfer. Figure S15 reports the supplementary CK4P-MSP-PKM positional-readability Pareto audit. Tables S1--S9 provide the corresponding dataset previews, contrasts, estimator checks, feature definitions, accessions and target metadata. Unless otherwise stated, plots show analysis-cell means without error bars. Cell-bootstrap intervals summarize prespecified matched cells that reuse source template panels and therefore do not represent independent biological cohorts.
+
+\section{Supplementary Methods: positional k-mer moment extension}
+
+CK4P-MSP-PKM was evaluated after the CK4P-MSP main contract had been frozen. For a read with $T=L-k+1$ valid $k$-mer windows, the centre of window $t$ was assigned a normalized relative coordinate $u_t\in[-1,1]$. Let $c_t$ denote the reverse-complement canonical 4-mer at that window and let
+\[
+\mathbf{b}(u_t)
+=
+\left[
+u_t,\;
+\frac{3u_t^2-1}{2},\;
+\frac{5u_t^3-3u_t}{2}
+\right]
+\]
+be the first three non-constant Legendre-style position basis functions. The uncompressed positional k-mer moment array was
+\[
+R_i(c,q)
+=
+\sum_{t=1}^{T}
+\mathbb{1}(c_t=c)\,b_q(u_t),
+\]
+where $c$ indexes the 136 canonical 4-mers and $q\in\{1,2,3\}$. A deterministic signed hash with seed 20260805 mapped the 408 token-moment coordinates to a 75-dimensional vector, which was row-normalized to give $\hat{\mathbf{Z}}_i$. Invalid windows containing ambiguous bases contributed zero to the moment array.
+
+The supplementary extension retained the normalized CK4P-MSP blocks and appended PKM as
+\[
+\mathbf{x}^{\mathrm{PKM}}_i
+=
+\frac{1}{\sqrt{3+\delta^2}}
+\left[
+\hat{\mathbf{K}}_i\,;\,
+\hat{\mathbf{P}}_i\,;\,
+\hat{\mathbf{M}}_i\,;\,
+\delta\hat{\mathbf{Z}}_i
+\right].
+\]
+The fixed grid $\delta\in\{0.1,0.25,0.5,0.75,1\}$ was declared before the exploratory sweep. The $\delta=0.25$ point met the prespecified screen for motif-position gain, bounded WGS/ART drift change, retained nearest-clean retrieval, local-change readout, CAMI fixed-head retention and less than twofold reference extraction time. It is therefore named CK4P-MSP-PKM in manuscript-facing material. This is a Pareto sensitivity result, not a universal optimum or a second main method.
+
+The sweep reused the WGS, local-change, public Dorsal motif-position, ART and CAMI resources defined in the main Methods. The motif-position probe comprised 1,125 windows from 32 cis-regulatory modules, and all windows from one module were retained in the same cross-validation fold. A seed-20260819 resampling check reused these resources and is not an independent external replication. Runtime used two actual 10,000-read batches, and the direction audit used 5,000 clean/reverse-complement pairs. Because odd position moments reverse sign, CK4P-MSP-PKM is input-order-sensitive; only its CK4 block is canonicalized. Historical descriptors were compared under the same sampled protocol to establish non-dominance rather than a universal ranking.
 \begin{figure*}[p]
 \centering
 {\Large\bfseries Supplementary Figures\par}
@@ -163,6 +201,14 @@ This supplementary file collects the visual audits and source-table previews tha
 \caption{Frozen-head preprocessing and regularization sensitivity. (A) Macro-F1 for CK4P-MSP in the prespecified single CAMI target task. Contract-space probes use the declared row/block-normalized representation directly; train z-score probes apply coordinate-wise means and variances fitted only on the 100-bp clean training fold. Each point aggregates 2,486 held-out source groups through fivefold source-grouped cross-validation. (B) Mean absolute logistic-logit shifts of the seven most affected P coordinates under 100-bp, 3\% N masking, averaged over five folds. Green bars denote contract-space contributions and red bars denote amplification after train-fit z-scoring; the horizontal axis is logarithmic. (C) Mean shifted macro-F1 across six CAMI target tasks and eight non-baseline length-by-condition cells per target at $C=0.1$, 1 and 10. The classifier was otherwise unchanged and was never refitted on shifted conditions. $C=1$ was prespecified; the other values are sensitivity analyses rather than selected alternatives. These panels show that low representation drift does not guarantee invariance to learned downstream preprocessing.}
 \label{fig:suppfigures14}
 {\small\noindent\textbf{Alt text:} A line panel shows N-mask-specific degradation after train-fit z-scoring, a log-scale bar panel identifies amplified low-variance biochemical coordinates, and a final line panel shows regularization-dependent fixed-head readout.\par}
+\end{figure*}
+
+\begin{figure*}[!tbp]
+\centering
+\includegraphics[width=0.97\textwidth]{figures/supplementary/supp_fig_s15_pkm_pareto_audit.pdf}
+\caption{Exploratory CK4P-MSP-PKM positional-readability Pareto audit. (A) The prespecified PKM weight path compares mean WGS standardized drift across 24 length-by-perturbation cells with motif-position macro-F1; lower drift and higher readout are preferable. (B) The same path compares mean ART drift across seven read lengths with template-grouped local-change macro-F1; lower drift and higher readout are preferable. Diamonds mark CK4P-MSP, crosses mark the selected CK4P-MSP-PKM point at $\delta=0.25$, and open circles mark the new-seed resampling check. The resampling check reuses the benchmark resources and is not an independent external replication. (C) Dumbbells compare the two methods on motif-position macro-F1, grouped local-change macro-F1 and CAMI fixed-head retention. (D) Bars report the CK4P-MSP-PKM-to-CK4P-MSP ratios for feature dimension, median reference extraction time over two actual 10,000-read batches, and mean reverse-complement-pair drift over 5,000 pairs; values above one indicate added cost or direction sensitivity. CK4P-MSP-PKM increased the two structured readouts but also increased drift, dimension, runtime and input-direction sensitivity. It is a supplementary Pareto extension, not a generally superior replacement for CK4P-MSP.}
+\label{fig:suppfigures15}
+{\small\noindent\textbf{Alt text:} Four panels show the fixed PKM weight trade-off, selected structured-readout gains and the corresponding dimension, runtime and reverse-complement direction-sensitivity costs relative to CK4P-MSP.\par}
 \end{figure*}
 
 \begin{table*}[p]

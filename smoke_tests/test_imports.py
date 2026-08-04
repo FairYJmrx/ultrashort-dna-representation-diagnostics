@@ -17,6 +17,7 @@ sys.path.insert(0, str(ROOT))
 
 MODULES = [
     "methods.ck4p_msp",
+    "methods.experimental_positional_kmer",
     "methods.historical_descriptors",
     "methods.sequence_utils",
     "methods.stage2_features",
@@ -40,6 +41,10 @@ def main() -> None:
     expected = expected_dimensions()["total"]
     assert matrix.shape == (2, expected), f"Unexpected CK4P-MSP shape: {matrix.shape}"
     print(f"ok: CK4P-MSP shape {matrix.shape}")
+
+
+def test_import_smoke() -> None:
+    main()
 
 
 if __name__ == "__main__":

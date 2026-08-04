@@ -5,7 +5,7 @@ inspection.
 
 | Subfolder | Contents |
 |---|---|
-| `main/` | Review-ready main-figure bitmaps synchronized from `paper_latex/figures/main/`. |
-| `supplementary/` | Review-ready supplementary bitmaps synchronized from `paper_latex/figures/supplementary/`. |
+| `main/` | Main paper figures copied from `paper/figures_docx/`. |
+| `supplementary/` | Supplementary paper figures copied from `paper/figures_docx/`. |
 
-Submission PDFs and editable exports remain under `paper_latex/figures/`.
+Editable/vector source exports remain in `paper/figures/` when available.

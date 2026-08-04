@@ -53,6 +53,8 @@ WEIGHTS = [
     BlockWeight("property_dominant", 1.0, 2.0, 2.0),
 ]
 
+RATIO_DENOMINATOR_TOLERANCE = 1e-8
+
 
 def weighted_block_features(
     sequences: list[str],
@@ -190,7 +192,9 @@ def local_mutation_audit(triplets: pd.DataFrame, seed: int) -> tuple[pd.DataFram
             local_norm = normalize(local, norm="l2", axis=1)
             noise_l2 = np.linalg.norm(clean_norm - noise_norm, axis=1)
             local_l2 = np.linalg.norm(clean_norm - local_norm, axis=1)
-            ratio = local_l2 / np.maximum(noise_l2, 1e-12)
+            ratio_valid = noise_l2 > RATIO_DENOMINATOR_TOLERANCE
+            ratio = np.full_like(local_l2, np.nan, dtype=np.float64)
+            ratio[ratio_valid] = local_l2[ratio_valid] / noise_l2[ratio_valid]
             for idx, sample_id in enumerate(sample_ids):
                 metric_rows.append(
                     {
@@ -203,6 +207,7 @@ def local_mutation_audit(triplets: pd.DataFrame, seed: int) -> tuple[pd.DataFram
                         "local_l2": float(local_l2[idx]),
                         "local_minus_noise_l2": float(local_l2[idx] - noise_l2[idx]),
                         "selective_sensitivity_ratio": float(ratio[idx]),
+                        "selective_sensitivity_ratio_valid": bool(ratio_valid[idx]),
                         "n_features": int(x.shape[1]),
                     }
                 )
@@ -215,8 +220,17 @@ def local_mutation_audit(triplets: pd.DataFrame, seed: int) -> tuple[pd.DataFram
                     "noise_l2_mean": float(np.mean(noise_l2)),
                     "local_l2_mean": float(np.mean(local_l2)),
                     "local_minus_noise_l2_mean": float(np.mean(local_l2 - noise_l2)),
-                    "selective_sensitivity_ratio_mean": float(np.mean(local_l2) / max(float(np.mean(noise_l2)), 1e-12)),
-                    "selective_sensitivity_ratio_per_sample_mean": float(np.mean(ratio)),
+                    "selective_sensitivity_ratio_mean": (
+                        float(np.mean(local_l2) / np.mean(noise_l2))
+                        if float(np.mean(noise_l2)) > RATIO_DENOMINATOR_TOLERANCE
+                        else float("nan")
+                    ),
+                    "selective_sensitivity_ratio_per_sample_mean": (
+                        float(np.nanmean(ratio)) if np.any(ratio_valid) else float("nan")
+                    ),
+                    "selective_sensitivity_ratio_n_valid": int(np.sum(ratio_valid)),
+                    "selective_sensitivity_ratio_valid_fraction": float(np.mean(ratio_valid)),
+                    "selective_sensitivity_ratio_denominator_tolerance": RATIO_DENOMINATOR_TOLERANCE,
                     "n_features": int(x.shape[1]),
                     "n_triplets": int(n_triplets),
                 }

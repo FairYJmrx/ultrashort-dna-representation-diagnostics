@@ -1,0 +1,26 @@
+{
+  "elapsed_seconds": 26.26861023902893,
+  "site_fasta": "D:\\AI-NGS\\info\\release_code\\data\\external\\mibbs_dorsal\\Data\\CoreDorsalOrthologsites.fa",
+  "crm_fasta": "D:\\AI-NGS\\info\\release_code\\data\\external\\mibbs_dorsal\\Data\\CRMs.fa",
+  "lengths": [
+    50,
+    75,
+    100,
+    150
+  ],
+  "windows_per_bin": 3,
+  "cv_folds": 5,
+  "null_repeats": 5,
+  "seed": 1205,
+  "representations": [
+    "ck4",
+    "ckmer5_count_l2",
+    "p",
+    "msp",
+    "p_msp",
+    "ck4p_msp"
+  ],
+  "n_samples": 1125,
+  "n_groups": 32,
+  "source": "Clifford and Adami Dryad dataset 10.5061/dryad.8b203"
+}

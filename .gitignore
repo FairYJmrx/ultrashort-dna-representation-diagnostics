@@ -1,5 +1,7 @@
 .venv/
 __pycache__/
+.pytest_cache/
+.deepeval/
 *.pyc
 *.part
 *.sam
@@ -36,6 +38,7 @@ results/stage3/contract_v2/art_current_contract/art_paired_reads.csv
 results/stage3/contract_v2/art_current_contract/fastq/
 data/stage3/cami/remote_prefix_cache/
 paper_latex/build_*/
+paper_latex/build/
 paper_latex/tmp/
 paper_latex/*.synctex.gz
 .coverage

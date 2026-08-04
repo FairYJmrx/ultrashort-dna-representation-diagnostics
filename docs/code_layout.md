@@ -23,7 +23,7 @@ into separate implementations.
 `scripts/` contains thin backwards-compatible imports only. New commands,
 documentation and manuscript-to-script mappings must point to one of the
 maintained directories above. Historical Word builders and superseded release
-packaging are excluded from the public package.
+packaging are intentionally excluded from this public snapshot.
 
 ## Method Rule
 

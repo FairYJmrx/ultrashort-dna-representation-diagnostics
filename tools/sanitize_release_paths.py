@@ -107,6 +107,7 @@ def sanitize_inventory() -> None:
         "D:/AI-NGS/info/release_code/",
         "D:/AI-NGS/info/",
         "D:/AI-NGS/信息学/",
+        "D:/AI-NGS/信息学/",
     )
     for row in rows:
         for field, value in list(row.items()):

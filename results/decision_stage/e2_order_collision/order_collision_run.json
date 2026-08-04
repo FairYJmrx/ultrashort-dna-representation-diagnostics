@@ -1,0 +1,21 @@
+{
+  "elapsed_seconds": 69.719,
+  "source_reads": "D:\\AI-NGS\\info\\release_code\\data\\real_slices\\close_relative_reads.csv",
+  "lengths": [
+    69,
+    75,
+    100,
+    150
+  ],
+  "max_per_length": 400,
+  "n_pairs": 1600,
+  "n_pairs_by_length": {
+    "69": 400,
+    "75": 400,
+    "100": 400,
+    "150": 400
+  },
+  "generation": "randomized Eulerian trails preserving the canonical contiguous 4-mer multiset",
+  "negative_result_rule": "lack of separation beyond controls downgrades MSP order-resolution claims",
+  "seed": 20260804
+}

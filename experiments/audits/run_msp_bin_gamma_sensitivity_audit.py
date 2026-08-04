@@ -171,7 +171,8 @@ def plot(outputs: dict[str, pd.DataFrame], out_dir: Path) -> None:
     colors = {"2": "#4C78A8", "2_3": "#59A14F", "2_3_4": "#F2A541", "2_3_4_6": "#E45756"}
     stab = outputs.get("stability_summary", pd.DataFrame())
     read = outputs.get("delta_readout_summary", pd.DataFrame())
-    for ax, length in zip(axes[:2], [69, 75]):
+    display_lengths = sorted(stab["length"].dropna().astype(int).unique().tolist())[:2]
+    for ax, length in zip(axes[:2], display_lengths):
         sub = stab[stab["length"].eq(length)] if not stab.empty else pd.DataFrame()
         if sub.empty:
             ax.axis("off")
@@ -185,7 +186,7 @@ def plot(outputs: dict[str, pd.DataFrame], out_dir: Path) -> None:
         ax.grid(axis="y", color="0.9", linewidth=0.5)
     ax = axes[2]
     if not read.empty:
-        sub = read[read["length"].isin([69, 100, 150])]
+        sub = read[read["length"].isin(sorted(read["length"].dropna().astype(int).unique().tolist()))]
         pivot = sub.groupby(["binset", "gamma"], as_index=False)["macro_f1_mean"].mean()
         for binset, g in pivot.groupby("binset"):
             g = g.sort_values("gamma")
@@ -230,8 +231,8 @@ def main() -> None:
     parser.add_argument("--reads-csv", default=str(PROJECT_ROOT / "results" / "stage3" / "contract_v2" / "compact_baselines" / "stage3_compact_baseline_reads.csv"))
     parser.add_argument("--triplets-csv", default=str(PROJECT_ROOT / "results" / "stage3" / "contract_v2" / "local_mutation_sensitivity" / "local_mutation_triplets.csv"))
     parser.add_argument("--output-dir", default=str(PROJECT_ROOT / "results" / "stage3" / "contract_v2" / "msp_bin_gamma_sensitivity"))
-    parser.add_argument("--stability-lengths", default="69,75")
-    parser.add_argument("--local-lengths", default="69,100,150")
+    parser.add_argument("--stability-lengths", default="75,100")
+    parser.add_argument("--local-lengths", default="100,150")
     parser.add_argument("--conditions", default="substitution_1pct,N_3pct,substitution_1pct_N_3pct,local_mismatch_6bp,short_indel")
     parser.add_argument("--gammas", default="0,0.25,0.5,1,2")
     parser.add_argument("--max-pairs", type=int, default=250)

@@ -16,6 +16,11 @@ import numpy as np
 import pandas as pd
 from scipy.stats import wilcoxon
 
+try:
+    from .figure_style import METHOD_COLORS
+except ImportError:
+    from figure_style import METHOD_COLORS
+
 
 def _find_project_root(start: Path) -> Path:
     for candidate in [start.parent, *start.parents]:
@@ -37,11 +42,11 @@ LABELS = {
     "pseeiip": "PseEIIP",
 }
 COLORS = {
-    "ck4": "#6C757D",
-    "ck4p_msp": "#16865C",
-    "pseknc_k3_l3": "#3977A8",
-    "ncp_anf": "#C97A91",
-    "pseeiip": "#D78B35",
+    "ck4": METHOD_COLORS["CK4"],
+    "ck4p_msp": METHOD_COLORS["CK4P-MSP"],
+    "pseknc_k3_l3": METHOD_COLORS["PseKNC"],
+    "ncp_anf": METHOD_COLORS["NCP+ANF"],
+    "pseeiip": METHOD_COLORS["PseEIIP"],
 }
 
 mpl.rcParams.update(

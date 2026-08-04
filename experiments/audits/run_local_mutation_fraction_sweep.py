@@ -23,6 +23,9 @@ sys.path.insert(0, str(PROJECT_ROOT))
 from experiments.main.run_local_mutation_sensitivity import make_triplets, parse_csv_list, parse_int_list, run_experiment  # noqa: E402
 
 
+RATIO_DENOMINATOR_TOLERANCE = 1e-8
+
+
 def write_summary(summary: pd.DataFrame, readout: pd.DataFrame, out_dir: Path) -> None:
     distance = (
         summary.groupby(["mutation_fraction", "representation"], as_index=False)
@@ -35,7 +38,10 @@ def write_summary(summary: pd.DataFrame, readout: pd.DataFrame, out_dir: Path) -
         )
         .sort_values(["mutation_fraction", "representation"])
     )
-    distance["selective_sensitivity_ratio"] = distance["local_l2"] / distance["noise_l2"].clip(lower=1e-12)
+    distance["selective_sensitivity_ratio"] = distance["local_l2"] / distance["noise_l2"].where(
+        distance["noise_l2"] > RATIO_DENOMINATOR_TOLERANCE
+    )
+    distance["selective_sensitivity_ratio_denominator_tolerance"] = RATIO_DENOMINATOR_TOLERANCE
     delta_readout = (
         readout[readout["split"].astype(str).str.contains("grouped_cv")]
         .groupby(["mutation_fraction", "representation", "classifier"], as_index=False)

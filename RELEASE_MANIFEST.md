@@ -3,7 +3,7 @@
 This manifest is generated from the release worktree by
 `python tools/generate_release_manifest.py`.
 
-Tracked release files: **626**
+Tracked release files: **714**
 
 ## Source-of-truth directories
 
@@ -19,6 +19,7 @@ and ART FASTQ/SAM intermediates are excluded.
 
 ## Files
 
+- `.gitattributes`
 - `.github/workflows/smoke.yml`
 - `.gitignore`
 - `CITATION.cff`
@@ -28,6 +29,7 @@ and ART FASTQ/SAM intermediates are excluded.
 - `analysis/audits/__init__.py`
 - `analysis/audits/audit_final_provenance.py`
 - `analysis/audits/audit_result_inventory.py`
+- `analysis/audits/run_decision_stage_audits.py`
 - `analysis/figures/__init__.py`
 - `analysis/figures/figure_style.py`
 - `analysis/figures/generate_cami_fixed_head_figures.py`
@@ -39,6 +41,7 @@ and ART FASTQ/SAM intermediates are excluded.
 - `analysis/figures/generate_stage3_manuscript_assets_v2.py`
 - `analysis/figures/generate_supp_fig_s10_cami2_marine_probe.py`
 - `analysis/figures/generate_supp_fig_s12_historical_descriptor_audit.py`
+- `analysis/figures/generate_supp_fig_s15_pkm_pareto_audit.py`
 - `analysis/figures/generate_supp_fig_s7_method_hardening_audit.py`
 - `analysis/figures/generate_supp_fig_s8_redundancy_runtime_audit.py`
 - `analysis/figures/generate_supp_fig_s9_p_msp_relation_audit.py`
@@ -48,9 +51,16 @@ and ART FASTQ/SAM intermediates are excluded.
 - `analysis/tables/generate_fullmatrix_property_contribution_ci.py`
 - `analysis/tables/generate_nature_main_tables.py`
 - `analysis/tables/generate_stage3_bootstrap_ci.py`
+- `configs/ck4p_msp_pkm_supplementary.yaml`
 - `configs/experiment_matrix.yaml`
 - `configs/release_defaults.yaml`
 - `data/README.md`
+- `data/external/mibbs_dorsal/Data/CRMs.fa`
+- `data/external/mibbs_dorsal/Data/CoreDorsalOrthologsites.fa`
+- `data/external/mibbs_dorsal/Data/CoreDorsalsites.fa`
+- `data/external/mibbs_dorsal/Data/README`
+- `data/external/mibbs_dorsal/README.md`
+- `data/external/mibbs_dorsal/sequenceData.tar.gz`
 - `data/real_slices/close_relative_genomes_manifest.csv`
 - `data/real_slices/close_relative_genomes_manifest_preview.csv`
 - `data/real_slices/close_relative_reads.csv`
@@ -96,6 +106,7 @@ and ART FASTQ/SAM intermediates are excluded.
 - `docs/clean_environment_reproduction.md`
 - `docs/code_layout.md`
 - `docs/contract_v2_evidence_map.md`
+- `docs/final_release_provenance_map.md`
 - `docs/manuscript_script_mapping.md`
 - `docs/manuscript_source_of_truth.md`
 - `docs/method_contract.md`
@@ -107,6 +118,7 @@ and ART FASTQ/SAM intermediates are excluded.
 - `experiments/audits/run_cami_fixed_head_transfer.py`
 - `experiments/audits/run_cami_multitarget_fixed_head_transfer.py`
 - `experiments/audits/run_dimension_reduction_baselines.py`
+- `experiments/audits/run_external_motif_position_probe.py`
 - `experiments/audits/run_high_k_compressed_baselines.py`
 - `experiments/audits/run_historical_descriptor_audit.py`
 - `experiments/audits/run_knn_mi_robustness_audit.py`
@@ -115,9 +127,15 @@ and ART FASTQ/SAM intermediates are excluded.
 - `experiments/audits/run_mi_audit.py`
 - `experiments/audits/run_mixed_metric_audit.py`
 - `experiments/audits/run_msp_bin_gamma_sensitivity_audit.py`
+- `experiments/audits/run_natural_local_factorial_audit.py`
+- `experiments/audits/run_order_collision_audit.py`
 - `experiments/audits/run_p_channel_counterfactual_audit.py`
 - `experiments/audits/run_p_msp_contribution_audit.py`
 - `experiments/audits/run_parameter_sensitivity.py`
+- `experiments/audits/run_positional_kmer_candidate_audit.py`
+- `experiments/audits/run_positional_kmer_historical_comparison.py`
+- `experiments/audits/run_positional_kmer_strand_audit.py`
+- `experiments/audits/run_positional_kmer_weight_sweep.py`
 - `experiments/audits/run_property_redundancy_and_runtime_audit.py`
 - `experiments/audits/run_property_scaling_audit.py`
 - `experiments/audits/run_short_read_length_continuity_audit.py`
@@ -167,6 +185,9 @@ and ART FASTQ/SAM intermediates are excluded.
 - `figures/contract_v2/supplementary_figure_s14_fixed_head_sensitivity.pdf`
 - `figures/contract_v2/supplementary_figure_s14_fixed_head_sensitivity.png`
 - `figures/contract_v2/supplementary_figure_s14_fixed_head_sensitivity.svg`
+- `figures/contract_v2/supplementary_figure_s15_pkm_pareto_audit.pdf`
+- `figures/contract_v2/supplementary_figure_s15_pkm_pareto_audit.png`
+- `figures/contract_v2/supplementary_figure_s15_pkm_pareto_audit.svg`
 - `figures/contract_v2/supplementary_figure_s1_baseline_audit.pdf`
 - `figures/contract_v2/supplementary_figure_s1_baseline_audit.png`
 - `figures/contract_v2/supplementary_figure_s1_baseline_audit.svg`
@@ -214,6 +235,7 @@ and ART FASTQ/SAM intermediates are excluded.
 - `methods/base_encodings.py`
 - `methods/ck4p_msp.py`
 - `methods/evaluation.py`
+- `methods/experimental_positional_kmer.py`
 - `methods/historical_descriptors.py`
 - `methods/ml_eval.py`
 - `methods/position_encodings.py`
@@ -225,7 +247,6 @@ and ART FASTQ/SAM intermediates are excluded.
 - `methods/token_audit.py`
 - `methods/toy_data.py`
 - `paper_latex/README.md`
-- `paper_latex/build/main.pdf`
 - `paper_latex/cover_letter.pdf`
 - `paper_latex/cover_letter.tex`
 - `paper_latex/figures/main/nature_fig1_framework.pdf`
@@ -246,6 +267,7 @@ and ART FASTQ/SAM intermediates are excluded.
 - `paper_latex/figures/supplementary/supp_fig_s12_historical_descriptor_audit.png`
 - `paper_latex/figures/supplementary/supp_fig_s13_short_read_continuity.pdf`
 - `paper_latex/figures/supplementary/supp_fig_s14_fixed_head_sensitivity.pdf`
+- `paper_latex/figures/supplementary/supp_fig_s15_pkm_pareto_audit.pdf`
 - `paper_latex/figures/supplementary/supp_fig_s1_baseline_audit.pdf`
 - `paper_latex/figures/supplementary/supp_fig_s2_mi_audit.pdf`
 - `paper_latex/figures/supplementary/supp_fig_s3_error_aware_art.pdf`
@@ -304,6 +326,23 @@ and ART FASTQ/SAM intermediates are excluded.
 - `results/audits/result_inventory/parameter_grid_comparison.csv`
 - `results/audits/result_inventory/result_directory_inventory.csv`
 - `results/audits/result_inventory/run_json_configuration_inventory.csv`
+- `results/decision_stage/e1_e4/e1_e4_run.json`
+- `results/decision_stage/e1_e4/e1_e4_summary.md`
+- `results/decision_stage/e1_e4/e1_length_interaction_by_length.csv`
+- `results/decision_stage/e1_e4/e1_length_interaction_regime_summary.csv`
+- `results/decision_stage/e1_e4/e4_audit_retention_pairs.csv`
+- `results/decision_stage/e1_e4/e4_spearman_audit_retention.csv`
+- `results/decision_stage/e2_order_collision/order_collision_metrics.csv`
+- `results/decision_stage/e2_order_collision/order_collision_pairs.csv`
+- `results/decision_stage/e2_order_collision/order_collision_run.json`
+- `results/decision_stage/e2_order_collision/order_collision_summary.csv`
+- `results/decision_stage/e2_order_collision/order_collision_summary.md`
+- `results/decision_stage/e3_natural_local_factorial/natural_local_factorial_metrics.csv`
+- `results/decision_stage/e3_natural_local_factorial/natural_local_factorial_readout.csv`
+- `results/decision_stage/e3_natural_local_factorial/natural_local_factorial_reads.csv`
+- `results/decision_stage/e3_natural_local_factorial/natural_local_factorial_run.json`
+- `results/decision_stage/e3_natural_local_factorial/natural_local_factorial_summary.csv`
+- `results/decision_stage/e3_natural_local_factorial/natural_local_factorial_summary.md`
 - `results/stage2/arg_snp_boundary/arg_snp_boundary_run.json`
 - `results/stage2/arg_snp_boundary/arg_snp_boundary_summary.md`
 - `results/stage2/arg_snp_boundary/arg_snp_readout.csv`
@@ -366,6 +405,45 @@ and ART FASTQ/SAM intermediates are excluded.
 - `results/stage3/cami_remote_tar_manifest.csv`
 - `results/stage3/cami_subset_expanded_metadata.json`
 - `results/stage3/cami_subset_metadata.json`
+- `results/stage3/candidate_positional_kmer/candidate_art_stability.csv`
+- `results/stage3/candidate_positional_kmer/candidate_cami_fixed_head.csv`
+- `results/stage3/candidate_positional_kmer/candidate_decision_table.csv`
+- `results/stage3/candidate_positional_kmer/candidate_local_readout.csv`
+- `results/stage3/candidate_positional_kmer/candidate_motif_position.csv`
+- `results/stage3/candidate_positional_kmer/candidate_run.json`
+- `results/stage3/candidate_positional_kmer/candidate_runtime.csv`
+- `results/stage3/candidate_positional_kmer/candidate_wgs_stability.csv`
+- `results/stage3/candidate_positional_kmer/positional_kmer_candidate_summary.md`
+- `results/stage3/candidate_positional_kmer_historical_comparison/historical_art_stability.csv`
+- `results/stage3/candidate_positional_kmer_historical_comparison/historical_cami_fixed_head.csv`
+- `results/stage3/candidate_positional_kmer_historical_comparison/historical_comparison_run.json`
+- `results/stage3/candidate_positional_kmer_historical_comparison/historical_comparison_summary.csv`
+- `results/stage3/candidate_positional_kmer_historical_comparison/historical_comparison_summary.md`
+- `results/stage3/candidate_positional_kmer_historical_comparison/historical_local_readout.csv`
+- `results/stage3/candidate_positional_kmer_historical_comparison/historical_motif_position.csv`
+- `results/stage3/candidate_positional_kmer_historical_comparison/historical_wgs_stability.csv`
+- `results/stage3/candidate_positional_kmer_strand_audit/strand_audit.csv`
+- `results/stage3/candidate_positional_kmer_strand_audit/strand_audit_run.json`
+- `results/stage3/candidate_positional_kmer_weight_confirmation/positional_kmer_weight_sweep_summary.md`
+- `results/stage3/candidate_positional_kmer_weight_confirmation/weight_art_stability.csv`
+- `results/stage3/candidate_positional_kmer_weight_confirmation/weight_cami_fixed_head.csv`
+- `results/stage3/candidate_positional_kmer_weight_confirmation/weight_decision_table.csv`
+- `results/stage3/candidate_positional_kmer_weight_confirmation/weight_local_readout.csv`
+- `results/stage3/candidate_positional_kmer_weight_confirmation/weight_motif_position.csv`
+- `results/stage3/candidate_positional_kmer_weight_confirmation/weight_run.json`
+- `results/stage3/candidate_positional_kmer_weight_confirmation/weight_runtime.csv`
+- `results/stage3/candidate_positional_kmer_weight_confirmation/weight_wgs_stability.csv`
+- `results/stage3/candidate_positional_kmer_weight_sweep/ck4p_msp_pkm_selected_profile.csv`
+- `results/stage3/candidate_positional_kmer_weight_sweep/positional_kmer_weight_sweep_summary.md`
+- `results/stage3/candidate_positional_kmer_weight_sweep/supplementary_figure_s15_source.csv`
+- `results/stage3/candidate_positional_kmer_weight_sweep/weight_art_stability.csv`
+- `results/stage3/candidate_positional_kmer_weight_sweep/weight_cami_fixed_head.csv`
+- `results/stage3/candidate_positional_kmer_weight_sweep/weight_decision_table.csv`
+- `results/stage3/candidate_positional_kmer_weight_sweep/weight_local_readout.csv`
+- `results/stage3/candidate_positional_kmer_weight_sweep/weight_motif_position.csv`
+- `results/stage3/candidate_positional_kmer_weight_sweep/weight_run.json`
+- `results/stage3/candidate_positional_kmer_weight_sweep/weight_runtime.csv`
+- `results/stage3/candidate_positional_kmer_weight_sweep/weight_wgs_stability.csv`
 - `results/stage3/compact_baselines/compact_baseline_interpretation.md`
 - `results/stage3/compact_baselines/compact_baseline_readout.csv`
 - `results/stage3/compact_baselines/compact_baseline_stability.csv`
@@ -552,6 +630,16 @@ and ART FASTQ/SAM intermediates are excluded.
 - `results/stage3/contract_v2/short_read_length_continuity/short_read_length_continuity_summary.md`
 - `results/stage3/contract_v2/short_read_length_continuity/short_read_length_grid.csv.gz`
 - `results/stage3/contract_v2/short_read_length_continuity/short_read_local_triplets.csv.gz`
+- `results/stage3/external_motif_position_probe/external_motif_position_probe.pdf`
+- `results/stage3/external_motif_position_probe/external_motif_position_probe.png`
+- `results/stage3/external_motif_position_probe/external_motif_position_probe.svg`
+- `results/stage3/external_motif_position_probe/external_motif_position_probe_metrics.csv`
+- `results/stage3/external_motif_position_probe/external_motif_position_probe_null_metrics.csv`
+- `results/stage3/external_motif_position_probe/external_motif_position_probe_null_summary.csv`
+- `results/stage3/external_motif_position_probe/external_motif_position_probe_reads.csv`
+- `results/stage3/external_motif_position_probe/external_motif_position_probe_run.json`
+- `results/stage3/external_motif_position_probe/external_motif_position_probe_summary.csv`
+- `results/stage3/external_motif_position_probe/external_motif_position_probe_summary.md`
 - `results/stage3/fullmatrix_property_contribution_ci/fullmatrix_property_art_ci.csv`
 - `results/stage3/fullmatrix_property_contribution_ci/fullmatrix_property_art_delta_ci.csv`
 - `results/stage3/fullmatrix_property_contribution_ci/fullmatrix_property_cami_ci.csv`

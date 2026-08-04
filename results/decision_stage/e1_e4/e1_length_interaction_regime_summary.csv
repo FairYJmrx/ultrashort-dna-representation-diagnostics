@@ -1,0 +1,3 @@
+﻿length_regime,n_lengths,drift_gain_mean,cosine_gain_mean,retrieval_gain_mean,readout_gain_mean
+long_>_75bp,3,0.08084904423973703,0.015553968504301094,0.0,
+short_<=_75bp,26,0.10644981988526327,0.029341163225354686,0.0,0.02426511185649014

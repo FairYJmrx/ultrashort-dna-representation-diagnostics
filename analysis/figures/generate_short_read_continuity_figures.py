@@ -145,7 +145,7 @@ def supplementary_s6() -> None:
     bin_labels = {"2": "2", "2_3": "2+3", "2_3_4": "2+3+4", "2_3_4_6": "2+3+4+6"}
     bin_colors = {"2": "#5B677A", "2_3": "#2F6BDE", "2_3_4": "#009E73", "2_3_4_6": "#B83A62"}
     fig, axes = plt.subplots(1, 2, figsize=(7.15, 3.0), gridspec_kw={"width_ratios": [0.9, 1.4]})
-    for length, color in [(69, "#B83A62"), (75, "#2F6BDE")]:
+    for length, color in [(75, "#B83A62"), (100, "#2F6BDE")]:
         part = stability[(stability["length"].eq(length)) & (stability["binset"].eq("2_3_4_6"))].sort_values("gamma")
         axes[0].plot(part["gamma"], part["l2_delta_mean"], marker="o", linewidth=1.4, color=color, label=f"{length} bp")
     axes[0].axvline(1.0, color="#343A40", linestyle="--", linewidth=0.8, label="default $\\gamma=1$")
@@ -165,7 +165,7 @@ def supplementary_s6() -> None:
     clean_axes(axes[1])
     panel_label(axes[1], "B", "Binset continuity at $\\gamma=1$")
     axes[1].legend(frameon=False, ncol=2, loc="upper center", bbox_to_anchor=(0.5, -0.23))
-    fig.suptitle("Static MSP remains usable across the controlled 50 to 75 bp boundary", y=0.99, fontsize=10.0, fontweight="bold")
+    fig.suptitle("Static MSP sensitivity across representative WGS conditions and the 50 to 75 bp sweep", y=0.99, fontsize=9.7, fontweight="bold")
     fig.subplots_adjust(left=0.09, right=0.99, bottom=0.25, top=0.78, wspace=0.31)
     save(fig, "supplementary_figure_s6_msp_sensitivity")
 
@@ -174,7 +174,7 @@ def supplementary_s13() -> None:
     base = RESULTS / "short_read_length_continuity"
     stability = pd.read_csv(base / "length_continuity_stability_summary.csv")
     readout = pd.read_csv(base / "length_continuity_delta_readout_summary.csv")
-    labels = {"ck4": "CK4", "ck4_p": "CK4+P", "ck4_msp": "CK4+MSP", "ck4_p_msp": "CK4P-MSP"}
+    labels = {"ck4": "CK4", "ck4_p": "CK4+P", "ck4_msp": "CK4+MSP", "ck4p_msp": "CK4P-MSP"}
     order = ["CK4", "CK4+P", "CK4+MSP", "CK4P-MSP"]
     stability["display"] = stability["representation"].map(labels)
     readout["display"] = readout["representation"].map(labels)
@@ -187,7 +187,6 @@ def supplementary_s13() -> None:
         part = readout[readout["display"].eq(representation)].sort_values("length")
         axes[1].plot(part["length"], part["macro_f1_mean"], marker="o", markersize=2.5, linewidth=1.7 if representation == "CK4P-MSP" else 1.0, color=COLORS[representation], label=representation)
     for ax in axes[:2]:
-        ax.axvline(69, color="#7C6EA8", linestyle=":", linewidth=0.8)
         ax.set_xticks([50, 55, 60, 65, 70, 75])
         ax.set_xlabel("read length (bp)")
         clean_axes(ax)
@@ -205,7 +204,6 @@ def supplementary_s13() -> None:
     axes[2].plot(p_gain.index, p_gain, color=COLORS["CK4+P"], linewidth=1.5, marker="o", markersize=2.7, label="P: drift reduction | K+MSP")
     axes[2].plot(msp_gain.index, msp_gain, color=COLORS["CK4+MSP"], linewidth=1.5, marker="o", markersize=2.7, label="MSP: F1 increment | K+P")
     axes[2].axhline(0, color="#343A40", linewidth=0.7)
-    axes[2].axvline(69, color="#7C6EA8", linestyle=":", linewidth=0.8, label="69-bp local context")
     axes[2].set_xticks([50, 55, 60, 65, 70, 75])
     axes[2].set_xlabel("read length (bp)")
     axes[2].set_ylabel("conditional increment")

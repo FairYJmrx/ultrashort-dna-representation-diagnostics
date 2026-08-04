@@ -114,11 +114,11 @@ def table_data_layers() -> pd.DataFrame:
             "claim boundary": "platform-like consistency check",
         },
         {
-            "data layer": "CAMI_TOY_low probes",
-            "scale": "104,166-row initial subset and 216,000-row expanded subset; 30 labels; lengths 69,75,100 bp",
-            "diagnostic question": "Is information readable in an external metagenomic readout?",
-            "primary metrics": "macro-F1, accuracy",
-            "claim boundary": "lightweight readout, not clinical classification",
+            "data layer": "CAMI_TOY_low fixed-head probes",
+            "scale": "16,342 eligible source groups; 6 binary target tasks; 2,400 groups and 21,600 task rows per target; lengths 69,75,100 bp",
+            "diagnostic question": "Is coarse label information retained under length and perturbation shifts without refitting?",
+            "primary metrics": "fixed-head macro-F1, retention, MCC, AUROC/AUPRC",
+            "claim boundary": "source-grouped coarse-label transfer; not fine taxonomic classification",
         },
         {
             "data layer": "CAMI II marine anonymous-read probe",
@@ -282,12 +282,11 @@ def boundary_summary_table() -> pd.DataFrame:
 
 
 def main() -> None:
-    write_md_csv(table_representation_families(), "nature_table1_representation_families")
-    write_md_csv(table_data_layers(), "nature_table2_data_layers")
-    write_md_csv(compact_main_method_table(), "nature_table3_compact_main_method")
-    write_md_csv(local_mutation_table(), "nature_table4_local_mutation_sensitivity")
-    write_md_csv(boundary_summary_table(), "nature_table5_boundary_summary")
-    print("Wrote Nature-style main manuscript tables")
+    raise RuntimeError(
+        "This legacy generator targets the pre-contract-v2 result layout and "
+        "is retained only for provenance. Use "
+        "analysis/tables/generate_contract_v2_tables.py instead."
+    )
 
 
 if __name__ == "__main__":

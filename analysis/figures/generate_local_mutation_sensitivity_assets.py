@@ -27,7 +27,7 @@ LABELS = {
     "ckmer4_count_l2": "CK4 count",
     "ckmer4_property_l2": "CK4+P global",
     "ckmer4_property_multiscale_mean_l2": "CK4P-MSP",
-    "ckmer4_property_multiscale_l2": "CK4P-MSP + std",
+    "ckmer4_property_multiscale_l2": "CK4P-MSP-SD control",
     "ckmer5_count_l2": "CK5 count",
     "property_channels": "position property channels",
     "one_hot": "position one-hot",

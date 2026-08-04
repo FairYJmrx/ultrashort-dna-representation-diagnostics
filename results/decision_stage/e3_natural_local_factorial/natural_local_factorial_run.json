@@ -1,0 +1,18 @@
+{
+  "elapsed_seconds": 86.701,
+  "source_reads": "D:\\AI-NGS\\info\\release_code\\data\\real_slices\\close_relative_reads.csv",
+  "lengths": [
+    69,
+    75,
+    100,
+    150
+  ],
+  "max_per_length": 250,
+  "mutation_fraction": 0.03,
+  "cv_folds": 5,
+  "n_templates": 1000,
+  "paired_unit": "natural WGS-derived source template",
+  "readout_split": "StratifiedGroupKFold; all variants of one source template stay in one fold",
+  "negative_result_rule": "loss of the synthetic local-readout pattern on natural templates narrows the claim to a mechanism-aligned probe",
+  "seed": 20260804
+}

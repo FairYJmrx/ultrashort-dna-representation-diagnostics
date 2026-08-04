@@ -157,7 +157,7 @@ def main() -> None:
         ax2.text(xpos, value + 0.06, f"{int(value)}/3", ha="center", va="bottom", fontsize=7)
 
     fig.suptitle(
-        "Supplementary Figure S10 | CAMI II marine subset probe\n"
+        "CAMI II marine anonymous-read stability probe\n"
         f"n={meta['n_clean_reads']:,} reads; {meta['n_probe_rows']:,} length/condition rows; unlabeled perturbation-stability probe",
         x=0.02,
         ha="left",

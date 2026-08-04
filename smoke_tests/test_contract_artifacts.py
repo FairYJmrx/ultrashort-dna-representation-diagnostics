@@ -30,5 +30,9 @@ def main() -> None:
     print("ok: canonical contract table and figure regenerate from included results")
 
 
+def test_contract_artifact_smoke() -> None:
+    main()
+
+
 if __name__ == "__main__":
     main()

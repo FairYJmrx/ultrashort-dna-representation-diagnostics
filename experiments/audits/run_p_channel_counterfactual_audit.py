@@ -459,7 +459,7 @@ def plot_audit(outputs: dict[str, pd.DataFrame], out_dir: Path) -> None:
         "ps.fonttype": 42,
     })
     fig, axes = plt.subplots(2, 2, figsize=(7.2, 6.0), constrained_layout=True)
-    palette = {"CK4": "#4C78A8", "CK4P-MSP": "#1B9E77", "CK4 + permuted P/MSP": "#E45756", "CK4 + Gaussian P/MSP": "#F2A541"}
+    palette = {"CK4": "#5B677A", "CK4P-MSP": "#B83A62", "CK4 + permuted P/MSP": "#E45756", "CK4 + Gaussian P/MSP": "#F2A541"}
 
     ax = axes[0, 0]
     stab = outputs.get("stability_summary", pd.DataFrame())
@@ -491,7 +491,8 @@ def plot_audit(outputs: dict[str, pd.DataFrame], out_dir: Path) -> None:
     if not block.empty:
         block = block.sort_values("l2_delta_mean")
         colors = ["#4C78A8", "#59A14F", "#B07AA1"][: len(block)]
-        ax.barh(block["block"], block["l2_delta_mean"], color=colors)
+        display_blocks = block["block"].replace({"identity_CK4": "composition_CK4"})
+        ax.barh(display_blocks, block["l2_delta_mean"], color=colors)
         ax.set_xlabel("Mean within-block L2 drift")
         ax.set_title("C. Blockwise drift", loc="left", fontweight="bold")
     else:

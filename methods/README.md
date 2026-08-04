@@ -11,6 +11,7 @@ historical scripts. New code should import from `methods.*`.
 | Module | Role |
 |---|---|
 | `ck4p_msp.py` | Public manuscript-facing CK4P-MSP API: CK4, P, MSP, weighted block concatenation and standardized drift helpers. |
+| `experimental_positional_kmer.py` | Supplementary CK4P-MSP-PKM extension plus retained positional k-mer candidate screens. The fixed public extension helper is `build_ck4p_msp_pkm`; generic screen keys are provenance identifiers. |
 | `historical_descriptors.py` | Direct PseKNC, NCP+ANF and PseEIIP controls used in the historical handcrafted-descriptor audit. |
 | `sequence_utils.py` | DNA sequence helpers, reverse complement, k-mer tokenization and perturbation utilities. |
 | `base_encodings.py` | Global biochemical scalar encodings, including hydrogen-bond class, GC, purine and EIIP-related signals. |
@@ -45,3 +46,19 @@ The default full-vocabulary path uses integer canonical k-mer encoding and
 batched property pooling. These are implementation optimizations only: the
 public dimensions, mappings, block normalization and numerical output remain
 identical to the standalone reference within floating-point tolerance.
+
+## Supplementary Extension API
+
+Use the fixed helper when reproducing Supplementary Figure S15:
+
+```python
+from methods.experimental_positional_kmer import build_ck4p_msp_pkm
+
+matrix = build_ck4p_msp_pkm(["ACGTACGTACGT", "TGCATGCATGCA"])
+print(matrix.shape)  # (2, 297)
+```
+
+`CK4P-MSP-PKM` appends a 75-dimensional positional k-mer moment block with
+`delta=0.25`. It is an exploratory Pareto extension. The stable main method
+remains CK4P-MSP, and the extension is not reverse-complement invariant as a
+whole because odd positional moments retain input direction.

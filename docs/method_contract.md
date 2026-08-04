@@ -40,6 +40,7 @@ read-level taxonomic labels were not reconstructed for that lightweight probe.
 | CK4+MSP | Concatenated CK4 and MSP under block normalization. | Tests positional property contribution. |
 | P+MSP | Concatenated P and MSP under block normalization. | Tests the property channels without the CK4 composition block. |
 | CK4P-MSP | Concatenated CK4, P and MSP under block normalization. | Main compact mixed representation. |
+| CK4P-MSP-PKM | CK4P-MSP plus a 75-dimensional hashed positional canonical k-mer moment block at fixed `delta=0.25` (297 dimensions total). | Exploratory supplementary position-readability extension and Pareto boundary. |
 | Full-position matrices | Per-position identity or property matrices. | Diagnostic positional upper bound. |
 | CSP | Canonical spaced-property control. | Spaced-seed boundary comparator. |
 | High-k compressed controls | k=15 signals compressed by MinHash, hashing trick or sparse random projection. | Compactness-constrained high-specificity audit. |
@@ -50,6 +51,13 @@ The public method API is `methods/ck4p_msp.py`; its explicit experiment name is
 `ck4p_msp`. Historical `ckmer*_property_*` strings are retained only for
 archived compatibility analyses. They are not aliases for CK4P-MSP and must
 not be relabelled as the manuscript main method.
+
+The machine-readable name `ck4p_msp` and the manuscript label `CK4P-MSP` are
+the only approved names for the main representation. Historical underscore-
+separated variants are prohibited in active code, results, figure inputs and
+manuscript maps; they may remain only inside excluded provenance archives. The valid ablation
+keys `ck4_p`, `ck4_msp` and `p_msp` refer to distinct partial block combinations.
+The release smoke test scans active text files for the prohibited spelling.
 
 Each block is internally L2-normalized before weighted concatenation. The
 default weights are:
@@ -62,6 +70,24 @@ default weights are:
 
 The reported mixed-space L2 metric is standardized representation drift. It is not
 a natural biophysical distance between commensurate physical units.
+
+## Supplementary CK4P-MSP-PKM Extension
+
+`CK4P-MSP-PKM` is the only approved display name for the supplementary PKM
+extension. The selected numeric weight is not part of the display name.
+Machine-readable manuscript assets use `ck4p_msp_pkm_w025`; historical screen
+identifiers are excluded from active code, results and figure inputs.
+
+The extension appends a signed-hashed 75-dimensional block of canonical 4-mer
+position moments to the CK4P-MSP blocks. Its fixed assembly weights are
+`alpha=beta=gamma=1` and `delta=0.25`. The extension was evaluated after the
+main CK4P-MSP contract was frozen. It is reported as a Pareto sensitivity
+analysis because it increases positional and local-change readout while also
+increasing dimension, extraction time, perturbation drift and input-direction
+sensitivity. It is not a universally optimized or generally superior method.
+
+The machine-readable extension configuration is
+`configs/ck4p_msp_pkm_supplementary.yaml`.
 
 ## MSP Default Bins
 
@@ -96,3 +122,7 @@ block to improve every metric.
 
 Pipeline-facing triage, false-hit reduction and classifier-output auditing are
 future work unless explicitly evaluated.
+
+CK4P-MSP-PKM must not be described as reverse-complement invariant as a whole.
+Only its CK4 block is reverse-complement canonicalized; odd positional moments
+retain input direction.

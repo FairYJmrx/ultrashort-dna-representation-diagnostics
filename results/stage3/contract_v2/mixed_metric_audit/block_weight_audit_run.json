@@ -1,5 +1,5 @@
 {
-  "elapsed_seconds": 158.8885657787323,
+  "elapsed_seconds": 21.431163787841797,
   "input": "D:\\AI-NGS\\info\\release_code\\results\\stage3\\contract_v2\\compact_baselines\\stage3_compact_baseline_reads.csv",
   "triplets": "D:\\AI-NGS\\info\\release_code\\results\\stage3\\contract_v2\\local_mutation_sensitivity\\local_mutation_triplets.csv",
   "lengths": [

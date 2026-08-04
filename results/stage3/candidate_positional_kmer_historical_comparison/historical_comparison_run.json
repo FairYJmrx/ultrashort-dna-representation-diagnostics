@@ -1,0 +1,33 @@
+{
+  "elapsed_seconds": 79.856,
+  "representations": [
+    "ck4",
+    "ck5",
+    "ck4p_msp",
+    "ck4p_msp_pkm_w025",
+    "pseknc_k3_l3",
+    "pseeiip",
+    "ncp_anf"
+  ],
+  "lengths": [
+    69,
+    75,
+    100,
+    150
+  ],
+  "conditions": [
+    "substitution_1pct",
+    "N_3pct",
+    "trim_5bp",
+    "substitution_1pct_N_3pct",
+    "local_mismatch_6bp",
+    "short_indel"
+  ],
+  "max_pairs": 200,
+  "max_triplets": 250,
+  "max_art_pairs_per_length": 500,
+  "max_cami_sources_per_class": 200,
+  "local_probe_scaling": "none (contract-space primary)",
+  "cv_folds": 5,
+  "seed": 20260823
+}

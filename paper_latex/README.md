@@ -18,18 +18,20 @@ Supplementary Data.
 
 The sources use the Oxford University Press authoring class distributed with
 the NAR Genomics and Bioinformatics LaTeX template. With that class available
-to the local TeX installation, run from this directory:
+to the local TeX installation, run from the repository root:
 
 ```powershell
-latexmk -pdf -interaction=nonstopmode -halt-on-error main.tex
-latexmk -pdf -interaction=nonstopmode -halt-on-error supplementary.tex
+powershell -NoProfile -ExecutionPolicy Bypass -File paper_latex\scripts\build_latex.ps1
 ```
+
+The script resolves the LaTeX directory independently of the caller's current
+working directory, compiles the main manuscript, Supplementary Data and cover
+letter, and refreshes the three checked-in review PDFs.
 
 Build caches and SyncTeX files are intentionally excluded from the release.
 The checked-in PDFs are review renderings; the `.tex`, `.bib`, table and figure
 files remain the editable submission sources.
 
-`scripts/build_latex_sources.py` is retained only to document the original
-Markdown-to-LaTeX migration. It is not the manuscript build command and exits
-without changing files unless `--overwrite` is supplied explicitly. Routine
-editing must be performed in the checked-in LaTeX sources above.
+Routine editing must be performed in the checked-in LaTeX sources above;
+historical Markdown-to-Word migration helpers are intentionally excluded from
+this release.

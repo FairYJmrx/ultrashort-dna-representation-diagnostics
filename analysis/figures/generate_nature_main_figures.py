@@ -48,7 +48,7 @@ REP_LABELS = {
     "ckmer4_count_l2": "CK4",
     "ckmer4_property_l2": "CK4+P",
     "ckmer4_property_multiscale_mean_l2": "CK4P-MSP",
-    "ckmer4_property_multiscale_l2": "CK4P-MSP + std",
+    "ckmer4_property_multiscale_l2": "CK4P-MSP-SD control",
     "ckmer5_count_l2": "CK5",
     "ckmer7_count_l2": "CK7",
     "cspaced_count_l2": "spaced count",
@@ -139,10 +139,19 @@ def figure1_framework() -> plt.Figure:
         ax.add_patch(FancyArrowPatch(start, end, arrowstyle="-|>", mutation_scale=11, color=color, linewidth=1.05))
 
     box(0.04, 0.39, 0.18, 0.23, "short reads", "trimmed reads\nN masks\nstrand ambiguity\nlocal errors", "#f3f4f6", "#6b7280")
-    box(0.30, 0.69, 0.24, 0.21, "identity", "CK4 / CK5\nalignment\ndatabase indices", "#e5e7eb", COLORS["identity"])
-    box(0.30, 0.41, 0.24, 0.21, "biochemical", "P summaries\nCK4+P\nperturbation stability", "#dbeafe", COLORS["property"])
-    box(0.30, 0.13, 0.24, 0.21, "position", "CK4P-MSP\nfull-position upper bound\nlocal sensitivity", "#dcfce7", COLORS["msp"])
-    box(0.68, 0.55, 0.24, 0.23, "diagnostic readouts", "paired stability\nmacro-F1 probes\nselective sensitivity", "#fef3c7", "#d97706")
+    box(
+        0.30,
+        0.69,
+        0.24,
+        0.21,
+        "sequence evidence",
+        "K: CK4 / CK5 composition\nmatching / alignment\ndatabase context",
+        "#e5e7eb",
+        COLORS["identity"],
+    )
+    box(0.30, 0.41, 0.24, 0.21, "biochemical", "P: global summaries\nproperty response\nperturbation stability", "#dbeafe", COLORS["property"])
+    box(0.30, 0.13, 0.24, 0.21, "coarse position", "MSP: pooled layout\nfull-position upper bound\nlocal-change audit", "#dcfce7", COLORS["msp"])
+    box(0.68, 0.55, 0.24, 0.23, "diagnostic readouts", "CK4P-MSP profile\npaired stability\nreadout / retrieval", "#fef3c7", "#d97706")
     box(0.68, 0.20, 0.24, 0.21, "boundaries", "spaced-seed transfer\ncontext visibility\nARG/SNP limits", "#ede9fe", COLORS["boundary"])
     for start, end, color in [
         ((0.22, 0.505), (0.30, 0.795), COLORS["identity"]),

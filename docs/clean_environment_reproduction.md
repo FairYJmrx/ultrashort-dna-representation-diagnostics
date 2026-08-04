@@ -24,7 +24,7 @@ python -m venv $envDir
 
 ## Outcome
 
-- Quick path: 5/5 smoke tests passed and release preflight passed.
+- Quick path: 10/10 smoke tests passed and release preflight passed.
 - Full path: compact-baseline, grouped local-mutation, seven-group P/MSP,
   high-k compression, kNN-MI and short-read continuity commands all returned
   code 0.

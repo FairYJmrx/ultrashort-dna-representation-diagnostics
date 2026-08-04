@@ -1,5 +1,5 @@
 ﻿weight_name,weight_label,n_cells,paired_cosine,l2_drift,retrieval_top1
-property_only,"property_only (k=0, P=1, MSP=1)",24,0.9994316527933153,0.0271391992177062,0.9603333333333334
+property_only,"property_only (k=0, P=1, MSP=1)",24,0.9994316527933153,0.027139199217706193,0.9603333333333334
 property_dominant,"property_dominant (k=1, P=2, MSP=2)",24,0.9960745099581008,0.07833270546884308,1.0
 ck4p_msp,"ck4p_msp (k=1, P=1, MSP=1)",24,0.989360224287672,0.12847849195551744,1.0
 ck4_plus_p,"ck4_plus_p (k=1, P=1, MSP=0)",24,0.9842890617402502,0.15593478991781232,1.0

@@ -1,0 +1,38 @@
+{
+  "elapsed_seconds": 285.551,
+  "representations": [
+    "ck4",
+    "ck5",
+    "ck4p_msp",
+    "candidate_pkm_replace",
+    "candidate_cpkm_replace",
+    "candidate_pkm_augment",
+    "candidate_cpkm_augment",
+    "candidate_dual_augment"
+  ],
+  "lengths": [
+    69,
+    75,
+    100,
+    150
+  ],
+  "conditions": [
+    "substitution_1pct",
+    "N_3pct",
+    "trim_5bp",
+    "substitution_1pct_N_3pct",
+    "local_mismatch_6bp",
+    "short_indel"
+  ],
+  "max_pairs": 500,
+  "max_triplets": 400,
+  "max_art_pairs_per_length": 2000,
+  "max_cami_sources_per_class": 600,
+  "runtime_reads": 10000,
+  "runtime_repeats": 2,
+  "cv_folds": 5,
+  "seed": 20260805,
+  "python": "3.13.9 | packaged by Anaconda, Inc. | (main, Oct 21 2025, 19:09:58) [MSC v.1929 64 bit (AMD64)]",
+  "platform": "Windows-11-10.0.26200-SP0",
+  "processor": "Intel64 Family 6 Model 170 Stepping 4, GenuineIntel"
+}

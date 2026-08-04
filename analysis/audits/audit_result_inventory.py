@@ -46,7 +46,7 @@ CONTAINER_RULES = {
     "results/stage3": ("stage3_container", "container_directory", "container_only", "Top-level stage-3 container; evidence classification is assigned to child result directories."),
     "results/audits": ("audit_container", "container_directory", "container_only", "Top-level audit container; evidence classification is assigned to child audit directories."),
     "results/runs": ("stage1_exploratory_runs", "historical_exploration", "exclude_bulk", "Stage-1 exploratory run container; child directories are historical development outputs."),
-    "results/figures": ("legacy_publication_assets", "legacy_or_unused_figures", "exclude_until_explicitly_used", "Legacy top-level figure directory; final figures are selected from paper_latex/figures or figures/contract_v2."),
+    "results/figures": ("legacy_publication_assets", "legacy_or_unused_figures", "exclude_until_explicitly_used", "Legacy top-level figure directory; final submission figures are selected from figures/contract_v2 and paper_latex/figures."),
 }
 
 STAGE_RULES = [
@@ -107,7 +107,13 @@ FINAL_RESULT_DIRS = {
     "results/audits/result_inventory",
 }
 
-DEPRECATED_TABLES: list[str] = []
+DEPRECATED_TABLES = [
+    "manuscript/tables/stage2_table_parameter_readout_best.md",
+    "manuscript/tables/stage2_table_parameter_stability_best.md",
+    "manuscript/tables/table_parameter_sensitivity_best_classification.md",
+    "manuscript/tables/table_parameter_sensitivity_best_stability.md",
+    "manuscript/tables/stage2_table_neural_compatibility_aggregate.md",
+]
 
 
 def rel(path: Path) -> str:

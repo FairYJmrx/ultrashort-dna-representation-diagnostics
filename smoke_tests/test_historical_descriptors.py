@@ -44,5 +44,9 @@ def main() -> None:
     print("Historical descriptor contract checks passed.")
 
 
+def test_historical_descriptor_smoke() -> None:
+    main()
+
+
 if __name__ == "__main__":
     main()
