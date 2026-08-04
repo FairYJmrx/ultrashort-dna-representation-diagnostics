@@ -29,8 +29,10 @@ Status labels:
   14 pages, compiled successfully on 2026-08-04 with revised Figures S6 and
   S13.
 - [x] Current supplementary source contains Figures S1-S14 and Tables S1-S9.
-- [ ] Before submission, compile both main and supplementary files from a clean
-  build directory and freeze the exact source commit used for the PDFs.
+- [x] Main and supplementary files were compiled from the clean QA build and
+  the exact source/PDF snapshot was committed and pushed to the remote
+  `release` branch as commit `956bd00` on 2026-08-04. A final release tag is
+  still required if author-supplied metadata changes before submission.
 - [ ] Use the final NARGAB/OUP portal requirements at submission; do not infer
   a blind-review manuscript requirement. The submission manuscript will be
   author visible and include the sole author, affiliation, corresponding-author
@@ -129,6 +131,9 @@ Official references:
 - [x] Release repository exists:
   https://github.com/FairYJmrx/ultrashort-dna-representation-diagnostics
 - [x] Release branch exists and contains the current reproduction manifest.
+- [x] The current 18-page main PDF, 14-page supplementary PDF, LaTeX sources,
+  figures, bibliography and submission checklist were synchronized to remote
+  `release` commit `956bd00` on 2026-08-04.
 - [x] `README.md` and `RELEASE_MANIFEST.md` map the reproduction path, scripts,
   inputs, outputs and manuscript assets.
 - [x] The manuscript now uses only public reference/benchmark and simulated
@@ -384,10 +389,10 @@ overlap. Every figure must pass all items below.
 
 ## 10. Final Submission Package
 
-- [x] Current main PDF copied from the clean QA build; final freeze still
-  requires the release commit/tag.
-- [x] Current supplementary PDF copied from the clean QA build; final freeze
-  still requires the release commit/tag.
+- [x] Current main PDF copied from the clean QA build and frozen in remote
+  `release` commit `956bd00`; a named release tag remains pending.
+- [x] Current supplementary PDF copied from the clean QA build and frozen in
+  remote `release` commit `956bd00`; a named release tag remains pending.
 - [x] Separate high-resolution/editable figure files with stable names are
   present in the LaTeX source tree.
 - [x] LaTeX source, bibliography and compilation instructions for revision or
