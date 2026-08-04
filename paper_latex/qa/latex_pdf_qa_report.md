@@ -17,7 +17,7 @@ Date: 2026-08-04
 - PseKNC, PseEIIP, PCA/SVD, high-k compressed vectors, MinHash/Jaccard controls and full-position probes remain visible as boundaries rather than being hidden when they win a particular axis.
 - The main figures preserve the intended division of labor: K supports composition-linked retrieval, P mainly reduces global perturbation drift, and MSP improves grouped local-change readability.
 - The current public-release source contains the AI-assisted-tools disclosure, sole-author metadata and no Huang Jianhua author entry.
-- Data and code statements point to the versioned GitHub repository; the Zenodo DOI remains the only release-stage placeholder until the public archive is minted.
+- Data and code statements point to the versioned GitHub repository and the frozen Zenodo archive (DOI `10.5281/zenodo.21792508`).
 
 ## Visual QA
 
@@ -34,6 +34,6 @@ Date: 2026-08-04
 - A second clean run produced bytewise-identical kNN-MI and seven-block/binset outputs. Stale frozen summaries were refreshed where the current implementation added valid-observation fields or updated estimator values.
 - The observed full-path wall time was approximately 39.5 minutes on the verification host. This is a host-specific reproduction time, not a method benchmark.
 
-## Remaining release action
+## Release status
 
-The only unresolved release action is to publish the frozen GitHub Release, enable its Zenodo archive, obtain the DOI, and replace the DOI placeholder in the manuscript, `CITATION.cff`, cover letter and release notes. The final public package must then receive a clean commit and tag.
+GitHub Release `v1.0.0` is public and archived at Zenodo under DOI `10.5281/zenodo.21792508`. The DOI has been added to the manuscript, `CITATION.cff`, cover letter and repository documentation. The archived tag remains immutable; DOI metadata are maintained on the `release` branch as a post-archive metadata update.

@@ -13,8 +13,8 @@ Release branch for the reproducible manuscript package:
 ## Access model for NAR Genomics and Bioinformatics submission
 
 The versioned GitHub Release and Zenodo record are the reviewer-access route.
-Until the DOI is minted, the manuscript retains an explicit repository-release
-placeholder that must be replaced before submission.
+The frozen `v1.0.0` release is archived at
+`https://doi.org/10.5281/zenodo.21792508`.
 
 ## Files intentionally excluded
 
@@ -28,7 +28,5 @@ resources and generated result tables.
 
 - Run `python tools/release_preflight.py` from a clean checkout.
 - Confirm reviewer access through the public GitHub Release and Zenodo record.
-- Replace the placeholder repository DOI in the manuscript after Zenodo or
-  another archive has been minted.
 - Keep the `release` branch frozen during active review unless a revision
   release is explicitly created.

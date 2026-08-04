@@ -1,10 +1,16 @@
 # Short DNA Read Representation Diagnostics
 
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.21792508.svg)](https://doi.org/10.5281/zenodo.21792508)
+[![release-smoke](https://github.com/FairYJmrx/ultrashort-dna-representation-diagnostics/actions/workflows/smoke.yml/badge.svg?branch=release)](https://github.com/FairYJmrx/ultrashort-dna-representation-diagnostics/actions/workflows/smoke.yml)
+
 This repository is the reproducible release for the manuscript on
 representation diagnostics for short metagenomic reads. It is organized
 as a methods repository: method definitions are centralized, data preparation
 and experiments have separate entrypoints, and manuscript claims are mapped to
 scripts and outputs.
+
+The frozen `v1.0.0` software release is archived at Zenodo under
+[DOI 10.5281/zenodo.21792508](https://doi.org/10.5281/zenodo.21792508).
 
 ## 1. Repository Map
 

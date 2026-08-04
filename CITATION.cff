@@ -4,6 +4,9 @@ title: "Short-read representation diagnostics"
 version: "1.0.0"
 date-released: "2026-08-04"
 url: "https://github.com/FairYJmrx/ultrashort-dna-representation-diagnostics"
+identifiers:
+  - type: doi
+    value: "10.5281/zenodo.21792508"
 license: "MIT"
 authors:
   - family-names: "Mei"
