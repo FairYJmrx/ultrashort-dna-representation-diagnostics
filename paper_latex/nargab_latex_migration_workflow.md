@@ -16,8 +16,8 @@ Confirmed:
 
 - Sole and corresponding author: Ruixiang Mei.
 - ORCID: https://orcid.org/0009-0003-2128-0726.
-- Current corresponding email: 121090416@link.cuhk.edu.cn; confirm long-term access before submission.
-- Current affiliation: School of Data Science, The Chinese University of Hong Kong, Shenzhen, Shenzhen 518172, Guangdong, China; confirm the official institutional wording before submission.
+- Confirmed corresponding email: 121090416@link.cuhk.edu.cn.
+- Confirmed affiliation: School of Data Science, The Chinese University of Hong Kong, Shenzhen, 2001 Longxiang Road, Longgang District, Shenzhen 518172, Guangdong, China.
 - Conflict of interest: The author declares no competing interests.
 - Funding: no specific grant from a public, commercial or not-for-profit funding body.
 

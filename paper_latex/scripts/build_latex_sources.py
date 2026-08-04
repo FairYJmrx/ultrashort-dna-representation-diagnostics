@@ -451,7 +451,7 @@ def main_tex() -> str:
 
 \author[1]{Ruixiang Mei\,\ORCID{0009-0003-2128-0726}}
 
-\address[1]{School of Data Science, The Chinese University of Hong Kong, Shenzhen, Shenzhen 518172, Guangdong, China}
+\address[1]{School of Data Science, The Chinese University of Hong Kong, Shenzhen, 2001 Longxiang Road, Longgang District, Shenzhen 518172, Guangdong, China}
 
 \corresp{*Correspondence: Ruixiang Mei, \url{121090416@link.cuhk.edu.cn}}
 
@@ -497,7 +497,7 @@ def supplementary_tex() -> str:
              r"\pagestyle{headings}",
              r"\title[Supplementary Data]{Supplementary Data for Layered representation diagnostics for short metagenomic reads}",
              r"\author[1]{Ruixiang Mei\,\ORCID{0009-0003-2128-0726}}",
-             r"\address[1]{School of Data Science, The Chinese University of Hong Kong, Shenzhen, Shenzhen 518172, Guangdong, China}",
+             r"\address[1]{School of Data Science, The Chinese University of Hong Kong, Shenzhen, 2001 Longxiang Road, Longgang District, Shenzhen 518172, Guangdong, China}",
              r"\corresp{*Correspondence: Ruixiang Mei, \url{121090416@link.cuhk.edu.cn}}",
              r"\abstract{Supplementary figures and source-table preview supporting the representation-diagnostic analyses.}",
              r"\keywords{supplementary data, metagenomics, representation diagnostics}",

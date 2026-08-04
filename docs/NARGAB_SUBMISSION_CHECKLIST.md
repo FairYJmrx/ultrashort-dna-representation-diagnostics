@@ -75,9 +75,8 @@ Official references:
   The synchronized DOCX artifact will be refreshed after the source freeze.
 - [x] Designate Ruixiang Mei as the sole and corresponding author throughout
   the main manuscript, supplementary file and submission metadata.
-- [ ] Confirm the corresponding-author email. Prefer an institutional address
-  if it will remain accessible during review; the currently known candidate is
-  `121090416@link.cuhk.edu.cn`.
+- [x] Confirmed Ruixiang Mei as sole corresponding author using the
+  institutional email `121090416@link.cuhk.edu.cn`.
 - [ ] Link Ruixiang Mei's ORCID to the corresponding-author submission account.
 - [x] Replace the current Author Contributions paragraph with a sole-author
   CRediT statement covering the roles actually performed: conceptualization,
@@ -108,10 +107,9 @@ Official references:
 
 ### Author or institutional confirmation required
 
-- [x] Current intended affiliation: School of Data Science, The Chinese
-  University of Hong Kong, Shenzhen, Shenzhen 518172, Guangdong, China.
-- [ ] Confirm the exact official affiliation wording and postal code with the
-  institution.
+- [x] Confirmed affiliation and postal address: School of Data Science, The
+  Chinese University of Hong Kong, Shenzhen, 2001 Longxiang Road, Longgang
+  District, Shenzhen 518172, Guangdong, China.
 
 ## 3. AI-Use Disclosure
 
@@ -409,9 +407,9 @@ overlap. Every figure must pass all items below.
 ## 11. Decisions Explicitly Deferred
 
 - [ ] Public repository release and DOI: author decision before submission.
-- [ ] Ruixiang Mei corresponding-author email: author confirmation.
-- [ ] Exact official affiliation wording and postal code: author/institution
-  confirmation.
+- [x] Ruixiang Mei corresponding-author email confirmed as
+  `121090416@link.cuhk.edu.cn`.
+- [x] Official School of Data Science affiliation and postal code confirmed.
 - [ ] Final AI-use disclosure wording and placement: author confirmation.
 - [x] Final supplementary palette and semantic figure fixes completed; no new
   scientific experiment was required.
