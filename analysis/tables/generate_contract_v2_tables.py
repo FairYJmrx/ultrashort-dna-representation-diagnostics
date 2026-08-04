@@ -71,8 +71,9 @@ def factorial_table(out: Path) -> None:
         r"\midrule",
     ]
     for row in frame.itertuples(index=False):
+        contrast = row.contrast.replace("|", r"$\mid$")
         lines.append(
-            f"{row.contrast.replace('|', r'$\mid$')} & {target_labels[row.target]} & "
+            f"{contrast} & {target_labels[row.target]} & "
             f"{row.full_mean:.3f} & {row.comparator_mean:.3f} & {row.mean_macro_f1_difference:.3f} "
             f"[{row.bootstrap_95_ci_low:.3f}, {row.bootstrap_95_ci_high:.3f}] & {row.bh_q:.4g} \\\\"
         )
