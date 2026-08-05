@@ -9,7 +9,7 @@ as a methods repository: method definitions are centralized, data preparation
 and experiments have separate entrypoints, and manuscript claims are mapped to
 scripts and outputs.
 
-The frozen submission snapshot is GitHub Release `v1.1.2`. Zenodo links all
+The frozen submission snapshot is GitHub Release `v1.1.3`. Zenodo links all
 archived versions under the stable concept DOI
 [10.5281/zenodo.21792340](https://doi.org/10.5281/zenodo.21792340).
 
@@ -219,9 +219,6 @@ CK4P-MSP contract.
 ### Figures, tables and audits
 
 ```powershell
-.\.venv\Scripts\python.exe analysis\tables\generate_stage3_bootstrap_ci.py
-.\.venv\Scripts\python.exe analysis\tables\generate_fullmatrix_property_contribution_ci.py
-.\.venv\Scripts\python.exe analysis\figures\generate_paper_supplementary_figures.py
 .\.venv\Scripts\python.exe analysis\figures\generate_contract_v2_figures.py
 .\.venv\Scripts\python.exe analysis\figures\generate_supp_fig_s8_redundancy_runtime_audit.py
 .\.venv\Scripts\python.exe analysis\figures\generate_supp_fig_s12_historical_descriptor_audit.py
@@ -231,7 +228,6 @@ CK4P-MSP contract.
 .\.venv\Scripts\python.exe analysis\figures\sync_manuscript_figures.py
 .\.venv\Scripts\python.exe analysis\tables\generate_contract_v2_tables.py
 .\.venv\Scripts\python.exe analysis\audits\audit_result_inventory.py
-.\.venv\Scripts\python.exe analysis\audits\audit_final_provenance.py
 .\.venv\Scripts\python.exe smoke_tests\test_contract_artifacts.py
 ```
 

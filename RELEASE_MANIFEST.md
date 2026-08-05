@@ -3,7 +3,7 @@
 This manifest is generated from the release worktree by
 `python tools/generate_release_manifest.py`.
 
-Tracked release files: **694**
+Tracked release files: **684**
 
 ## Source-of-truth directories
 
@@ -27,17 +27,13 @@ and ART FASTQ/SAM intermediates are excluded.
 - `README.md`
 - `analysis/README.md`
 - `analysis/audits/__init__.py`
-- `analysis/audits/audit_final_provenance.py`
 - `analysis/audits/audit_result_inventory.py`
 - `analysis/audits/run_decision_stage_audits.py`
 - `analysis/figures/__init__.py`
 - `analysis/figures/figure_style.py`
 - `analysis/figures/generate_cami_fixed_head_figures.py`
 - `analysis/figures/generate_contract_v2_figures.py`
-- `analysis/figures/generate_local_mutation_sensitivity_assets.py`
-- `analysis/figures/generate_paper_supplementary_figures.py`
 - `analysis/figures/generate_short_read_continuity_figures.py`
-- `analysis/figures/generate_stage3_manuscript_assets_v2.py`
 - `analysis/figures/generate_supp_fig_s10_cami2_marine_probe.py`
 - `analysis/figures/generate_supp_fig_s12_historical_descriptor_audit.py`
 - `analysis/figures/generate_supp_fig_s15_pkm_pareto_audit.py`
@@ -48,7 +44,6 @@ and ART FASTQ/SAM intermediates are excluded.
 - `analysis/tables/__init__.py`
 - `analysis/tables/generate_contract_v2_tables.py`
 - `analysis/tables/generate_fullmatrix_property_contribution_ci.py`
-- `analysis/tables/generate_nature_main_tables.py`
 - `analysis/tables/generate_stage3_bootstrap_ci.py`
 - `configs/ck4p_msp_pkm_supplementary.yaml`
 - `configs/experiment_matrix.yaml`
@@ -642,16 +637,11 @@ and ART FASTQ/SAM intermediates are excluded.
 - `results/stage3/spaced_pattern_sanity/spaced_pattern_sanity_stability.csv`
 - `results/stage3/spaced_pattern_sanity/spaced_pattern_sanity_summary.md`
 - `scripts/__init__.py`
-- `scripts/audit_final_provenance.py`
 - `scripts/audit_result_inventory.py`
 - `scripts/download_stage3_cami_toy_low.py`
 - `scripts/generate_fullmatrix_property_contribution_ci.py`
-- `scripts/generate_local_mutation_sensitivity_assets.py`
-- `scripts/generate_nature_main_tables.py`
-- `scripts/generate_paper_supplementary_figures.py`
 - `scripts/generate_reviewer_statistical_tests.py`
 - `scripts/generate_stage3_bootstrap_ci.py`
-- `scripts/generate_stage3_manuscript_assets_v2.py`
 - `scripts/generate_supp_fig_s10_cami2_marine_probe.py`
 - `scripts/generate_supp_fig_s7_method_hardening_audit.py`
 - `scripts/generate_supp_fig_s8_redundancy_runtime_audit.py`

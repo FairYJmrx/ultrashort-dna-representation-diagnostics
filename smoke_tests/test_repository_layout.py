@@ -34,7 +34,7 @@ REPRESENTATIVE_MODULES = (
     "data_pipeline.preprocess.make_close_relative_reads",
     "experiments.main.run_stage3_compact_baselines",
     "experiments.audits.run_high_k_compressed_baselines",
-    "analysis.tables.generate_nature_main_tables",
+    "analysis.tables.generate_contract_v2_tables",
 )
 
 

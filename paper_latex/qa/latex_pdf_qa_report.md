@@ -38,4 +38,4 @@ Date: 2026-08-05
 
 ## Release status
 
-The synchronized snapshot is prepared for GitHub Release `v1.1.2`. The manuscript, `CITATION.cff`, cover letter and repository documentation use the stable Zenodo concept DOI `10.5281/zenodo.21792340`, which resolves across archived versions without creating a version-DOI dependency loop. The final release commit, CI result and version DOI are recorded in the GitHub Release notes after the tag is published.
+The synchronized snapshot is prepared for GitHub Release `v1.1.3`. The manuscript, `CITATION.cff`, cover letter and repository documentation use the stable Zenodo concept DOI `10.5281/zenodo.21792340`, which resolves across archived versions without creating a version-DOI dependency loop. The final release commit, CI result and version DOI are recorded in the GitHub Release notes after the tag is published.

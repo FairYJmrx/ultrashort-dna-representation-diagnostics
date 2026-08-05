@@ -303,7 +303,7 @@ def write_analysis_report(out_dir: Path, dir_df: pd.DataFrame, json_df: pd.DataF
         directories=("dir", "count"), csv_files=("csv_files", "sum"), csv_bytes=("total_csv_bytes", "sum")
     )
     deprecated_existing = [path for path in DEPRECATED_TABLES if (PROJECT_ROOT / path).exists()]
-    unsupported_note = "All known final manuscript pattern tokens are checked separately by audit_final_provenance.py."
+    unsupported_note = "Current manuscript assets are checked by tools/release_preflight.py and the maintained manuscript-to-script mapping."
     lines = [
         "# Final Result Source Analysis",
         "",
