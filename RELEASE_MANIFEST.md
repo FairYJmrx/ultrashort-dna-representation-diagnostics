@@ -3,7 +3,7 @@
 This manifest is generated from the release worktree by
 `python tools/generate_release_manifest.py`.
 
-Tracked release files: **714**
+Tracked release files: **696**
 
 ## Source-of-truth directories
 
@@ -152,6 +152,9 @@ and ART FASTQ/SAM intermediates are excluded.
 - `experiments/main/run_stage3_cami_probe.py`
 - `experiments/main/run_stage3_compact_baselines.py`
 - `figures/README.md`
+- `figures/contract_v2/figure_1_framework.pdf`
+- `figures/contract_v2/figure_1_framework.png`
+- `figures/contract_v2/figure_1_framework.svg`
 - `figures/contract_v2/figure_2_p_msp_contribution.pdf`
 - `figures/contract_v2/figure_2_p_msp_contribution.png`
 - `figures/contract_v2/figure_2_p_msp_contribution.svg`
@@ -164,6 +167,9 @@ and ART FASTQ/SAM intermediates are excluded.
 - `figures/contract_v2/figure_4_external_fixed_head.pdf`
 - `figures/contract_v2/figure_4_external_fixed_head.png`
 - `figures/contract_v2/figure_4_external_fixed_head.svg`
+- `figures/contract_v2/figure_5_full_position_upper_bound.pdf`
+- `figures/contract_v2/figure_5_full_position_upper_bound.png`
+- `figures/contract_v2/figure_5_full_position_upper_bound.svg`
 - `figures/contract_v2/figure_6_local_readout_boundary.pdf`
 - `figures/contract_v2/figure_6_local_readout_boundary.png`
 - `figures/contract_v2/figure_6_local_readout_boundary.svg`
@@ -212,24 +218,6 @@ and ART FASTQ/SAM intermediates are excluded.
 - `figures/contract_v2/supplementary_figure_s9_p_msp_relation.pdf`
 - `figures/contract_v2/supplementary_figure_s9_p_msp_relation.png`
 - `figures/contract_v2/supplementary_figure_s9_p_msp_relation.svg`
-- `figures/main/nature_fig1_framework.jpg`
-- `figures/main/nature_fig2_compact_stability.jpg`
-- `figures/main/nature_fig3_ck4p_msp_tradeoff.jpg`
-- `figures/main/nature_fig4_external_probes.jpg`
-- `figures/main/nature_fig5_full_position_upper_bound.jpg`
-- `figures/main/nature_fig6_local_mutation_sensitivity.jpg`
-- `figures/main/nature_fig7_spaced_seed_transfer.jpg`
-- `figures/main/nature_fig8_context_arg_boundaries.jpg`
-- `figures/supplementary/supp_fig_s10_cami2_marine_probe.jpg`
-- `figures/supplementary/supp_fig_s1_baseline_audit.jpg`
-- `figures/supplementary/supp_fig_s2_mi_audit.jpg`
-- `figures/supplementary/supp_fig_s3_error_aware_art.jpg`
-- `figures/supplementary/supp_fig_s4_mutation_fraction_sweep.jpg`
-- `figures/supplementary/supp_fig_s5_p_channel_counterfactual_audit.jpg`
-- `figures/supplementary/supp_fig_s6_msp_bin_gamma_sensitivity.jpg`
-- `figures/supplementary/supp_fig_s7_method_hardening_audit.jpg`
-- `figures/supplementary/supp_fig_s8_redundancy_runtime_audit.jpg`
-- `figures/supplementary/supp_fig_s9_p_msp_relation_audit.jpg`
 - `methods/README.md`
 - `methods/__init__.py`
 - `methods/base_encodings.py`
@@ -255,12 +243,6 @@ and ART FASTQ/SAM intermediates are excluded.
 - `paper_latex/figures/main/nature_fig4_external_probes.pdf`
 - `paper_latex/figures/main/nature_fig5_full_position_upper_bound.pdf`
 - `paper_latex/figures/main/nature_fig6_local_mutation_sensitivity.pdf`
-- `paper_latex/figures/main/nature_fig7_spaced_seed_transfer.pdf`
-- `paper_latex/figures/main/nature_fig8_context_arg_boundaries.pdf`
-- `paper_latex/figures/main/supp_fig_s2_mi_audit.pdf`
-- `paper_latex/figures/main/supp_fig_s6_msp_bin_gamma_sensitivity.pdf`
-- `paper_latex/figures/main/supp_fig_s7_method_hardening_audit.pdf`
-- `paper_latex/figures/main/supp_fig_s8_redundancy_runtime_audit.pdf`
 - `paper_latex/figures/supplementary/supp_fig_s10_cami2_marine_probe.pdf`
 - `paper_latex/figures/supplementary/supp_fig_s11_factorial_scaling.pdf`
 - `paper_latex/figures/supplementary/supp_fig_s12_historical_descriptor_audit.pdf`

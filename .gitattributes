@@ -14,3 +14,5 @@
 *.gz binary
 *.docx binary
 data/external/mibbs_dorsal/Data/*.fa -whitespace
+figures/contract_v2/figure_1_framework.svg -whitespace
+figures/contract_v2/figure_5_full_position_upper_bound.svg -whitespace

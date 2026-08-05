@@ -13,18 +13,16 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
 CONTRACT = ROOT / "figures" / "contract_v2"
-LEGACY_MAIN = ROOT / "manuscript" / "figures"
-PAPER_FIGURES = ROOT / "paper" / "figures"
 COUNTERFACTUAL = ROOT / "results" / "stage3" / "contract_v2" / "p_channel_counterfactual_audit"
 LATEX = ROOT / "paper_latex" / "figures"
 
 
 FIGURE_MAP = {
-    "main/nature_fig1_framework": LEGACY_MAIN / "nature_fig1_framework",
+    "main/nature_fig1_framework": CONTRACT / "figure_1_framework",
     "main/nature_fig2_compact_stability": CONTRACT / "figure_2_p_msp_contribution",
     "main/nature_fig3_ck4p_msp_tradeoff": CONTRACT / "figure_3_contract_v2_stability",
     "main/nature_fig4_external_probes": CONTRACT / "figure_4_external_contract_v2",
-    "main/nature_fig5_full_position_upper_bound": LEGACY_MAIN / "nature_fig5_full_position_upper_bound",
+    "main/nature_fig5_full_position_upper_bound": CONTRACT / "figure_5_full_position_upper_bound",
     "main/nature_fig6_local_mutation_sensitivity": CONTRACT / "figure_6_local_readout_boundary",
     "supplementary/supp_fig_s1_baseline_audit": CONTRACT / "supplementary_figure_s1_baseline_audit",
     "supplementary/supp_fig_s2_mi_audit": CONTRACT / "supplementary_figure_s2_knn_mi",

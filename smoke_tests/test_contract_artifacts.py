@@ -11,10 +11,19 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
 from analysis.figures.generate_contract_v2_figures import figure_3, style  # noqa: E402
+from analysis.figures.sync_manuscript_figures import FIGURE_MAP  # noqa: E402
 from analysis.tables.generate_contract_v2_tables import compact_table  # noqa: E402
 
 
 def main() -> None:
+    missing_sources = [
+        str(source.with_suffix(suffix).relative_to(ROOT))
+        for source in FIGURE_MAP.values()
+        for suffix in (".pdf", ".png", ".svg")
+        if not source.with_suffix(suffix).is_file()
+    ]
+    assert not missing_sources, f"Missing manuscript figure sources: {missing_sources}"
+
     with tempfile.TemporaryDirectory(prefix="ck4p_msp_artifact_smoke_") as tmp:
         output = Path(tmp)
         compact_table(output)

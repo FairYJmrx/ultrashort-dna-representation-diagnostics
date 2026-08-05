@@ -1,11 +1,12 @@
 # Figures Directory
 
-This folder provides a centralized copy of final figure bitmaps for quick
-inspection.
+This folder contains the authoritative submission-grade figure exports.
 
 | Subfolder | Contents |
 |---|---|
-| `main/` | Main paper figures copied from `paper/figures_docx/`. |
-| `supplementary/` | Supplementary paper figures copied from `paper/figures_docx/`. |
+| `contract_v2/` | PDF, PNG and SVG exports used by the final manuscript and supplementary information. |
 
-Editable/vector source exports remain in `paper/figures/` when available.
+`analysis/figures/sync_manuscript_figures.py` maps these exports into the stable
+filenames under `paper_latex/figures/`. The LaTeX tree tracks only the PDF
+copies required for compilation; PNG and SVG exports remain here for visual
+inspection and editing.
