@@ -9,7 +9,7 @@ as a methods repository: method definitions are centralized, data preparation
 and experiments have separate entrypoints, and manuscript claims are mapped to
 scripts and outputs.
 
-The frozen submission snapshot is GitHub Release `v1.1.1`. Zenodo links all
+The frozen submission snapshot is GitHub Release `v1.1.2`. Zenodo links all
 archived versions under the stable concept DOI
 [10.5281/zenodo.21792340](https://doi.org/10.5281/zenodo.21792340).
 
@@ -221,7 +221,6 @@ CK4P-MSP contract.
 ```powershell
 .\.venv\Scripts\python.exe analysis\tables\generate_stage3_bootstrap_ci.py
 .\.venv\Scripts\python.exe analysis\tables\generate_fullmatrix_property_contribution_ci.py
-.\.venv\Scripts\python.exe analysis\figures\generate_nature_main_figures.py
 .\.venv\Scripts\python.exe analysis\figures\generate_paper_supplementary_figures.py
 .\.venv\Scripts\python.exe analysis\figures\generate_contract_v2_figures.py
 .\.venv\Scripts\python.exe analysis\figures\generate_supp_fig_s8_redundancy_runtime_audit.py

@@ -13,7 +13,7 @@ Release branch for the reproducible manuscript package:
 ## Access model for NAR Genomics and Bioinformatics submission
 
 The versioned GitHub Release and Zenodo record are the reviewer-access route.
-The submission snapshot is GitHub Release `v1.1.1`. All archived versions are
+The submission snapshot is GitHub Release `v1.1.2`. All archived versions are
 linked through the stable Zenodo concept DOI
 `https://doi.org/10.5281/zenodo.21792340`; the version DOI is recorded in the
 GitHub release notes after Zenodo completes ingestion.

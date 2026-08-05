@@ -3,7 +3,7 @@
 This manifest is generated from the release worktree by
 `python tools/generate_release_manifest.py`.
 
-Tracked release files: **696**
+Tracked release files: **694**
 
 ## Source-of-truth directories
 
@@ -35,7 +35,6 @@ and ART FASTQ/SAM intermediates are excluded.
 - `analysis/figures/generate_cami_fixed_head_figures.py`
 - `analysis/figures/generate_contract_v2_figures.py`
 - `analysis/figures/generate_local_mutation_sensitivity_assets.py`
-- `analysis/figures/generate_nature_main_figures.py`
 - `analysis/figures/generate_paper_supplementary_figures.py`
 - `analysis/figures/generate_short_read_continuity_figures.py`
 - `analysis/figures/generate_stage3_manuscript_assets_v2.py`
@@ -648,7 +647,6 @@ and ART FASTQ/SAM intermediates are excluded.
 - `scripts/download_stage3_cami_toy_low.py`
 - `scripts/generate_fullmatrix_property_contribution_ci.py`
 - `scripts/generate_local_mutation_sensitivity_assets.py`
-- `scripts/generate_nature_main_figures.py`
 - `scripts/generate_nature_main_tables.py`
 - `scripts/generate_paper_supplementary_figures.py`
 - `scripts/generate_reviewer_statistical_tests.py`
