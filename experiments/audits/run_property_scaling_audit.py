@@ -128,17 +128,26 @@ def run_audit(
             p_standardized = train_standardized(features.p, n)
             msp_standardized = train_standardized(features.msp, n)
             p_range, msp_range = range_scaled_property_blocks(sequences)
+            raw_p = property_summary_matrix(sequences)
+            p_property = safe_norm(raw_p[:, :8])
+            p_auxiliary = safe_norm(raw_p[:, 8:])
             representations = {
                 "P_declared": features.p,
+                "P_property_only": p_property,
+                "P_auxiliary_only": p_auxiliary,
                 "P_train_zscore": p_standardized,
                 "P_unit_range": p_range,
                 "MSP_declared": features.msp,
                 "MSP_train_zscore": msp_standardized,
                 "MSP_unit_range": msp_range,
                 "CK4+P_declared": fixed_combine(features.ck4, features.p),
+                "CK4+P_property_only": fixed_combine(features.ck4, p_property),
+                "CK4+P_auxiliary_only": fixed_combine(features.ck4, p_auxiliary),
                 "CK4+P_train_zscore": fixed_combine(features.ck4, p_standardized),
                 "CK4+P_unit_range": fixed_combine(features.ck4, p_range),
                 "CK4P-MSP_declared": fixed_combine(features.ck4, features.p, features.msp),
+                "CK4P-MSP_property_only": fixed_combine(features.ck4, p_property, features.msp),
+                "CK4P-MSP_auxiliary_only": fixed_combine(features.ck4, p_auxiliary, features.msp),
                 "CK4P-MSP_train_zscore": fixed_combine(features.ck4, p_standardized, msp_standardized),
                 "CK4P-MSP_unit_range": fixed_combine(features.ck4, p_range, msp_range),
             }
@@ -155,7 +164,6 @@ def run_audit(
                     }
                 )
 
-            raw_p = property_summary_matrix(sequences)
             for omitted, indices in {"none": [], **P_GROUPS}.items():
                 keep_indices = [idx for idx in range(raw_p.shape[1]) if idx not in indices]
                 reduced_p = safe_norm(raw_p[:, keep_indices])
@@ -227,6 +235,11 @@ def main() -> None:
         "max_pairs": args.max_pairs,
         "seed": args.seed,
         "scaling_boundary": "Train-fitted coordinate z-scoring is a sensitivity analysis, not the declared method.",
+        "p_attribution": {
+            "property_only_columns": "hydrogen, GC, purine and EIIP means and population standard deviations (8 coordinates)",
+            "auxiliary_only_columns": "N fraction, scaled length and normalized entropy (3 coordinates)",
+            "purpose": "separate nucleotide-property summaries from auxiliary global read-level summaries without changing the declared CK4P-MSP representation",
+        },
     }
     (output_dir / "property_scaling_run.json").write_text(json.dumps(metadata, indent=2), encoding="utf-8")
     (output_dir / "property_scaling_summary.md").write_text(

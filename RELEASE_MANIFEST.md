@@ -3,7 +3,7 @@
 This manifest is generated from the release worktree by
 `python tools/generate_release_manifest.py`.
 
-Tracked release files: **684**
+Tracked release files: **700**
 
 ## Source-of-truth directories
 
@@ -255,6 +255,7 @@ and ART FASTQ/SAM intermediates are excluded.
 - `paper_latex/figures/supplementary/supp_fig_s8_redundancy_runtime_audit.png`
 - `paper_latex/figures/supplementary/supp_fig_s9_p_msp_relation_audit.pdf`
 - `paper_latex/main.tex`
+- `paper_latex/nargab_latex_migration_workflow.md`
 - `paper_latex/paper_manuscript_latex.pdf`
 - `paper_latex/paper_supplementary_latex.pdf`
 - `paper_latex/qa/latex_pdf_qa_report.md`
@@ -262,6 +263,7 @@ and ART FASTQ/SAM intermediates are excluded.
 - `paper_latex/scripts/audit_figure_layout.py`
 - `paper_latex/scripts/build_latex.cmd`
 - `paper_latex/scripts/build_latex.ps1`
+- `paper_latex/scripts/build_latex_sources.py`
 - `paper_latex/scripts/render_pdf_pages.py`
 - `paper_latex/sections/abstract.tex`
 - `paper_latex/sections/back_matter.tex`
@@ -280,6 +282,7 @@ and ART FASTQ/SAM intermediates are excluded.
 - `paper_latex/tables/main/table4.tex`
 - `paper_latex/tables/main/table5.tex`
 - `paper_latex/tables/supplementary/supp_table_s10_cami2_marine_probe_source.csv`
+- `paper_latex/tables/supplementary/table_s10_p_attribution.tex`
 - `paper_latex/tables/supplementary/table_s10_preview.tex`
 - `paper_latex/tables/supplementary/table_s2_conditional_contrasts.tex`
 - `paper_latex/tables/supplementary/table_s3_mi_inference.tex`
@@ -511,6 +514,13 @@ and ART FASTQ/SAM intermediates are excluded.
 - `results/stage3/contract_v2/local_change_factorial/local_change_factorial_run.json`
 - `results/stage3/contract_v2/local_change_factorial/local_change_factorial_summary.csv`
 - `results/stage3/contract_v2/local_change_factorial/local_change_factorial_summary.md`
+- `results/stage3/contract_v2/local_change_p_attribution/local_change_factorial_conditional_contrasts.csv`
+- `results/stage3/contract_v2/local_change_p_attribution/local_change_factorial_metrics.csv`
+- `results/stage3/contract_v2/local_change_p_attribution/local_change_factorial_readout.csv`
+- `results/stage3/contract_v2/local_change_p_attribution/local_change_factorial_reads.csv`
+- `results/stage3/contract_v2/local_change_p_attribution/local_change_factorial_run.json`
+- `results/stage3/contract_v2/local_change_p_attribution/local_change_factorial_summary.csv`
+- `results/stage3/contract_v2/local_change_p_attribution/local_change_factorial_summary.md`
 - `results/stage3/contract_v2/local_mutation_fraction_sweep/local_mutation_fraction_delta_readout.csv`
 - `results/stage3/contract_v2/local_mutation_fraction_sweep/local_mutation_fraction_delta_readout_summary.csv`
 - `results/stage3/contract_v2/local_mutation_fraction_sweep/local_mutation_fraction_distance_summary.csv`
@@ -563,6 +573,12 @@ and ART FASTQ/SAM intermediates are excluded.
 - `results/stage3/contract_v2/p_channel_counterfactual_audit/pooled_feature_reliability.csv`
 - `results/stage3/contract_v2/p_channel_counterfactual_audit/reliability_summary.csv`
 - `results/stage3/contract_v2/p_channel_counterfactual_audit/stability_summary.csv`
+- `results/stage3/contract_v2/p_coordinate_attribution/p_group_ablation_stability.csv`
+- `results/stage3/contract_v2/p_coordinate_attribution/p_group_ablation_summary.csv`
+- `results/stage3/contract_v2/p_coordinate_attribution/property_scaling_run.json`
+- `results/stage3/contract_v2/p_coordinate_attribution/property_scaling_stability.csv`
+- `results/stage3/contract_v2/p_coordinate_attribution/property_scaling_summary.csv`
+- `results/stage3/contract_v2/p_coordinate_attribution/property_scaling_summary.md`
 - `results/stage3/contract_v2/p_msp_contribution/p_msp_contribution_conditional_contrasts.csv`
 - `results/stage3/contract_v2/p_msp_contribution/p_msp_contribution_delta_readout.csv`
 - `results/stage3/contract_v2/p_msp_contribution/p_msp_contribution_delta_readout_by_length.csv`

@@ -15,7 +15,7 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import accuracy_score, f1_score
 from sklearn.model_selection import StratifiedGroupKFold
 from sklearn.pipeline import make_pipeline
-from sklearn.preprocessing import StandardScaler
+from sklearn.preprocessing import StandardScaler, normalize
 
 
 def _find_project_root(start: Path) -> Path:
@@ -29,19 +29,40 @@ PROJECT_ROOT = _find_project_root(Path(__file__).resolve())
 sys.path.insert(0, str(PROJECT_ROOT))
 
 from methods.ck4p_msp import build_block_combination, build_ck4p_msp_features  # noqa: E402
+from methods.spaced_features import property_summary_matrix  # noqa: E402
 
 
 BASES = np.asarray(list("ACGT"))
 PROPERTY_SHIFT = {"A": "C", "C": "A", "G": "T", "T": "G", "N": "A"}
-REPRESENTATIONS = ["ck4", "p", "msp", "ck4_p", "ck4_msp", "p_msp", "ck4p_msp"]
+REPRESENTATIONS = [
+    "ck4",
+    "p",
+    "p_property_only",
+    "p_auxiliary_only",
+    "msp",
+    "ck4_p",
+    "ck4_p_property_only",
+    "ck4_p_auxiliary_only",
+    "ck4_msp",
+    "p_msp",
+    "ck4p_msp",
+    "ck4p_msp_property_only",
+    "ck4p_msp_auxiliary_only",
+]
 REP_LABELS = {
     "ck4": "CK4",
     "p": "P",
+    "p_property_only": "P property coordinates",
+    "p_auxiliary_only": "P auxiliary coordinates",
     "msp": "MSP",
     "ck4_p": "CK4+P",
+    "ck4_p_property_only": "CK4+P property coordinates",
+    "ck4_p_auxiliary_only": "CK4+P auxiliary coordinates",
     "ck4_msp": "CK4+MSP",
     "p_msp": "P+MSP",
     "ck4p_msp": "CK4P-MSP",
+    "ck4p_msp_property_only": "CK4P-MSP property coordinates",
+    "ck4p_msp_auxiliary_only": "CK4P-MSP auxiliary coordinates",
 }
 VARIANTS = ["dispersed_random", "contiguous_random", "dispersed_property", "contiguous_property"]
 CONDITIONAL_COMPARATORS = {
@@ -238,6 +259,19 @@ def run_audit(reads: pd.DataFrame, seed: int, cv_folds: int) -> tuple[pd.DataFra
             ordered.extend(cell[cell["variant"].eq(variant)].set_index("sample_id").loc[sample_ids, "sequence"].tolist())
         n = len(sample_ids)
         features = build_ck4p_msp_features(ordered, train_indices=list(range(n)))
+        raw_p = property_summary_matrix(ordered)
+        p_property = normalize(raw_p[:, :8], norm="l2", axis=1)
+        p_auxiliary = normalize(raw_p[:, 8:], norm="l2", axis=1)
+        k_block = normalize(features.ck4, norm="l2", axis=1)
+        msp_block = normalize(features.msp, norm="l2", axis=1)
+        custom_representations = {
+            "p_property_only": p_property,
+            "p_auxiliary_only": p_auxiliary,
+            "ck4_p_property_only": np.hstack([k_block, p_property]) / np.sqrt(2.0),
+            "ck4_p_auxiliary_only": np.hstack([k_block, p_auxiliary]) / np.sqrt(2.0),
+            "ck4p_msp_property_only": np.hstack([k_block, p_property, msp_block]) / np.sqrt(3.0),
+            "ck4p_msp_auxiliary_only": np.hstack([k_block, p_auxiliary, msp_block]) / np.sqrt(3.0),
+        }
         clean_metadata = cell[cell["variant"].eq("clean")].set_index("sample_id").loc[sample_ids]
         del clean_metadata
         variant_metadata = pd.concat(
@@ -245,7 +279,11 @@ def run_audit(reads: pd.DataFrame, seed: int, cv_folds: int) -> tuple[pd.DataFra
             ignore_index=True,
         )
         for representation in REPRESENTATIONS:
-            matrix = build_block_combination(features, representation)
+            matrix = (
+                custom_representations[representation]
+                if representation in custom_representations
+                else build_block_combination(features, representation)
+            )
             clean = matrix[:n]
             variant_blocks = {
                 variant: matrix[(idx + 1) * n : (idx + 2) * n]

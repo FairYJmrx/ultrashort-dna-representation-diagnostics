@@ -139,7 +139,9 @@ where local perturbation variants share a source template.
 .\.venv\Scripts\python.exe experiments\audits\run_high_k_compressed_baselines.py --output-dir results\stage3\contract_v2\high_k_compressed_baselines
 .\.venv\Scripts\python.exe experiments\audits\run_knn_mi_robustness_audit.py --output-dir results\stage3\contract_v2\knn_mi_robustness
 .\.venv\Scripts\python.exe experiments\audits\run_local_change_factorial_audit.py --output-dir results\stage3\contract_v2\local_change_factorial
+.\.venv\Scripts\python.exe experiments\audits\run_local_change_factorial_audit.py --output-dir results\stage3\contract_v2\local_change_p_attribution --lengths 69,100,150 --local-modes center,left,right,jittered --n-reads 250 --mutation-fraction 0.03 --cv-folds 5 --seed 20260728
 .\.venv\Scripts\python.exe experiments\audits\run_property_scaling_audit.py --output-dir results\stage3\contract_v2\property_scaling
+.\.venv\Scripts\python.exe experiments\audits\run_property_scaling_audit.py --input results\stage3\contract_v2\compact_baselines\stage3_compact_baseline_reads.csv --output-dir results\stage3\contract_v2\p_coordinate_attribution --lengths 69,75,100,150 --conditions substitution_1pct,N_3pct,trim_5bp,substitution_1pct_N_3pct,local_mismatch_6bp,short_indel --max-pairs 250 --seed 20260728
 .\.venv\Scripts\python.exe experiments\audits\run_msp_bin_gamma_sensitivity_audit.py --output-dir results\stage3\contract_v2\msp_bin_gamma_sensitivity
 .\.venv\Scripts\python.exe experiments\audits\run_property_redundancy_and_runtime_audit.py --output-dir results\stage3\contract_v2\property_redundancy_runtime
 .\.venv\Scripts\python.exe experiments\audits\run_historical_descriptor_audit.py --output-dir results\stage3\contract_v2\historical_descriptor_audit --runtime-read-counts 10000,100000 --runtime-repeats 5 --runtime-large-batch-repeats 1

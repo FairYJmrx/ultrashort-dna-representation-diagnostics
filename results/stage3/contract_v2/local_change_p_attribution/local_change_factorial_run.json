@@ -1,0 +1,19 @@
+{
+  "elapsed_seconds": 49.35302734375,
+  "lengths": [
+    69,
+    100,
+    150
+  ],
+  "local_modes": [
+    "center",
+    "left",
+    "right",
+    "jittered"
+  ],
+  "n_reads_per_cell": 250,
+  "mutation_fraction": 0.03,
+  "cv_folds": 5,
+  "seed": 20260728,
+  "paired_unit": "template_id"
+}
