@@ -19,8 +19,11 @@ SECRET_PATTERNS = {
 }
 
 
-def tracked_files() -> list[Path]:
-    output = subprocess.check_output(["git", "ls-files", "-z"], cwd=ROOT)
+def release_files() -> list[Path]:
+    output = subprocess.check_output(
+        ["git", "ls-files", "--cached", "--others", "--exclude-standard", "-z"],
+        cwd=ROOT,
+    )
     return [ROOT / item.decode("utf-8") for item in output.split(b"\0") if item]
 
 
@@ -39,7 +42,7 @@ def main() -> None:
         if not (ROOT / relative).is_file():
             errors.append(f"missing required file: {relative}")
 
-    for path in tracked_files():
+    for path in release_files():
         relative = path.relative_to(ROOT).as_posix()
         if not path.is_file():
             continue

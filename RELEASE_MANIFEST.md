@@ -3,7 +3,7 @@
 This manifest is generated from the release worktree by
 `python tools/generate_release_manifest.py`.
 
-Tracked release files: **700**
+Tracked release files: **699**
 
 ## Source-of-truth directories
 
@@ -255,7 +255,6 @@ and ART FASTQ/SAM intermediates are excluded.
 - `paper_latex/figures/supplementary/supp_fig_s8_redundancy_runtime_audit.png`
 - `paper_latex/figures/supplementary/supp_fig_s9_p_msp_relation_audit.pdf`
 - `paper_latex/main.tex`
-- `paper_latex/nargab_latex_migration_workflow.md`
 - `paper_latex/paper_manuscript_latex.pdf`
 - `paper_latex/paper_supplementary_latex.pdf`
 - `paper_latex/qa/latex_pdf_qa_report.md`
