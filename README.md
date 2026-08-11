@@ -9,8 +9,9 @@ as a methods repository: method definitions are centralized, data preparation
 and experiments have separate entrypoints, and manuscript claims are mapped to
 scripts and outputs.
 
-The frozen submission snapshot is GitHub Release `v1.2.0`. Zenodo links all
-archived versions under the stable concept DOI
+The archived `v1.2.0` source and output snapshot is available at version DOI
+[10.5281/zenodo.21882250](https://doi.org/10.5281/zenodo.21882250). Zenodo links
+all archived versions under the stable concept DOI
 [10.5281/zenodo.21792340](https://doi.org/10.5281/zenodo.21792340).
 
 ## 1. Repository Map

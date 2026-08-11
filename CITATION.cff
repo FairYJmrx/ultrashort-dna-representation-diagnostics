@@ -6,7 +6,7 @@ date-released: "2026-08-11"
 url: "https://github.com/FairYJmrx/ultrashort-dna-representation-diagnostics"
 identifiers:
   - type: doi
-    value: "10.5281/zenodo.21792340"
+    value: "10.5281/zenodo.21882250"
 license: "MIT"
 authors:
   - family-names: "Mei"
