@@ -7,4 +7,4 @@ CK4+MSP,composition plus positionalized nucleotide-property signal,positional pr
 P+MSP,global plus positionalized nucleotide-property summaries,property-only combination,tests property stability and retrieval without K
 CK4P-MSP,composition plus multi-scale nucleotide-property layout,compact main representation,"balances stability, grouped local-change readout and composition-linked retrieval"
 full-position matrix,per-position token or property signal,high-dimensional positional-readout reference,tests fine positional information at higher dimensional cost
-CSP,spaced-seed prior plus biochemical summary,spaced-seed transfer comparator,delimits where matching-oriented spaced seeds transfer to dense features
+CSP,spaced-seed prior plus nucleotide-property-coded summary,spaced-seed transfer comparator,delimits where matching-oriented spaced seeds transfer to dense features
