@@ -480,32 +480,6 @@ def supplementary_s7(out: Path) -> None:
     save(fig, out, "supplementary_figure_s7_high_k_audit")
 
 
-def supplementary_s8(out: Path) -> None:
-    cca = pd.read_csv(RESULTS / "property_redundancy_runtime" / "property_msp_cca_detail.csv")
-    runtime = pd.read_csv(RESULTS / "property_redundancy_runtime" / "feature_runtime_summary.csv")
-    runtime = runtime.groupby("representation_label", as_index=False).agg(ms_per_10k_reads=("ms_per_10k_reads", "mean"))
-    keep = ["CK4", "CK4+P", "CK4P-MSP", "Hashed k=15, d=222", "CK15 random projection, d=222"]
-    runtime = runtime[runtime["representation_label"].isin(keep)].copy()
-    runtime["display"] = runtime["representation_label"].replace({"Hashed k=15, d=222": "Hashed k=15", "CK15 random projection, d=222": "Sparse RP k=15"})
-    runtime = runtime.sort_values("ms_per_10k_reads")
-    fig, axes = plt.subplots(1, 2, figsize=(7.15, 2.35), gridspec_kw={"width_ratios": [1.05, 1]})
-    for length, part in cca.groupby("length"):
-        axes[0].plot(part["component"], part["canonical_correlation"], marker="o", linewidth=1.2, label=f"{length} bp")
-    axes[0].set_xlabel("canonical component")
-    axes[0].set_ylabel("canonical correlation (P vs MSP)")
-    axes[0].set_ylim(0, 1.05)
-    clean_axes(axes[0]); panel_label(axes[0], "A", "Related, not independent, property layers")
-    axes[0].legend(frameon=False, ncol=2, loc="lower left")
-    axes[1].barh(np.arange(len(runtime)), runtime["ms_per_10k_reads"], color=[COLORS.get(x, "#7768AE") for x in runtime["display"]])
-    axes[1].set_yticks(np.arange(len(runtime)), runtime["display"])
-    axes[1].set_xlabel("mean feature extraction time (ms / 10k reads)")
-    clean_axes(axes[1]); axes[1].grid(axis="x", color="#D9DDE3", linewidth=0.6); axes[1].grid(axis="y", visible=False)
-    panel_label(axes[1], "B", "Runtime boundary")
-    fig.suptitle("P and MSP share a global property component; compactness is not a speed claim", y=1.03, fontsize=10.0, fontweight="bold")
-    fig.tight_layout()
-    save(fig, out, "supplementary_figure_s8_redundancy_runtime")
-
-
 def _cell_bootstrap_interval(values: np.ndarray, seed: int = 20260728) -> tuple[float, float]:
     rng = np.random.default_rng(seed)
     indices = rng.integers(0, len(values), size=(10000, len(values)))
@@ -606,7 +580,6 @@ def main() -> None:
     supplementary_s4(args.outdir)
     supplementary_s6(args.outdir)
     supplementary_s7(args.outdir)
-    supplementary_s8(args.outdir)
     supplementary_s11(args.outdir)
     print(f"Wrote contract-v2 assets to {args.outdir}")
 

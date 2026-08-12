@@ -285,6 +285,45 @@ def cami2_preview_table(out: Path) -> None:
     _write(out / "table_s10_preview.tex", lines)
 
 
+def unified_runtime_table(out: Path) -> None:
+    summary = pd.read_csv(RESULTS / "unified_runtime_benchmark" / "unified_runtime_summary.csv")
+    scaling = pd.read_csv(RESULTS / "unified_runtime_scaling_pass" / "unified_runtime_scaling.csv")
+    scaling = scaling.set_index("method")
+    order = [
+        "ck4",
+        "ck4_p",
+        "ck4p_msp",
+        "ck4p_msp_pkm",
+        "hash_k15_d222",
+        "minhash_k15_s222",
+        "rp_ck15_d222",
+        "pseknc_k3_l3",
+        "ncp_anf",
+        "pseeiip",
+    ]
+    summary = summary.set_index("method").loc[order]
+    lines = [
+        r"\begin{tabular}{@{}lrrrrrr@{}}",
+        r"\toprule",
+        r"\textbf{representation} & \textbf{features} & \textbf{calls} & \textbf{timed s} & \textbf{10k median [IQR], s} & \textbf{late/early} & \textbf{100k pass, s} \\",
+        r"\midrule",
+    ]
+    for method, row in summary.iterrows():
+        label = str(row["method_label"]).replace("lambda", r"$\lambda$")
+        iqr = (
+            f"{row['median_seconds_per_call']:.2f} "
+            f"[{row['q25_seconds_per_call']:.2f}, {row['q75_seconds_per_call']:.2f}]"
+        )
+        lines.append(
+            f"{label} & {int(row['n_features'])} & {int(row['n_timed_calls'])} & "
+            f"{row['total_timed_seconds']:.1f} & {iqr} & "
+            f"{row['second_to_first_median_ratio']:.2f} & "
+            f"{float(scaling.loc[method, 'elapsed_seconds']):.2f} \\\\"
+        )
+    lines.extend([r"\bottomrule", r"\end{tabular}"])
+    _write(out / "table_s11_unified_runtime.tex", lines)
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--main-outdir", type=Path, default=DEFAULT_MAIN_OUT)
@@ -301,6 +340,7 @@ def main() -> None:
     cami_multitarget_table(args.supp_outdir)
     cami_metadata_table(args.supp_outdir)
     cami2_preview_table(args.supp_outdir)
+    unified_runtime_table(args.supp_outdir)
     print(
         "Wrote contract-v2 LaTeX tables to "
         f"{args.main_outdir} and {args.supp_outdir}"

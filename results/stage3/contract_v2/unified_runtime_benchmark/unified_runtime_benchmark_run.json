@@ -1,0 +1,29 @@
+{
+  "protocol": "same seeded clean 75-bp batch; no timed disk I/O; untimed 100-read warm-up; one numerical-library thread; round-robin randomized order; each method timed for at least target_seconds and minimum_repeats",
+  "n_reads": 10000,
+  "source_pool_clean_75bp_reads": 600,
+  "target_seconds_per_method": 120.0,
+  "minimum_repeats": 5,
+  "seed": 20260811,
+  "methods": [
+    "ck4",
+    "ck4_p",
+    "ck4p_msp",
+    "ck4p_msp_pkm",
+    "hash_k15_d222",
+    "minhash_k15_s222",
+    "rp_ck15_d222",
+    "pseknc_k3_l3",
+    "ncp_anf",
+    "pseeiip"
+  ],
+  "scaling_read_count": null,
+  "elapsed_wall_seconds": 1298.8662122001406,
+  "python": "3.13.9 | packaged by Anaconda, Inc. | (main, Oct 21 2025, 19:09:58) [MSC v.1929 64 bit (AMD64)]",
+  "platform": "Windows-11-10.0.26200-SP0",
+  "processor": "Intel64 Family 6 Model 170 Stepping 4, GenuineIntel",
+  "pid": 33712,
+  "input": "D:\\AI-NGS\\info\\release_code\\results\\stage3\\contract_v2\\compact_baselines\\stage3_compact_baseline_reads.csv",
+  "runtime_definition": "raw sequence strings to returned feature matrix, including method-specific construction/setup but excluding disk I/O",
+  "primary_summary": "unified_runtime_summary.csv"
+}

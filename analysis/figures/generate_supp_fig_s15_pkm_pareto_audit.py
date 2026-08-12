@@ -32,6 +32,7 @@ ROOT = _find_project_root(Path(__file__).resolve())
 DISCOVERY = ROOT / "results" / "stage3" / "candidate_positional_kmer_weight_sweep"
 RESAMPLE = ROOT / "results" / "stage3" / "candidate_positional_kmer_weight_confirmation"
 STRAND = ROOT / "results" / "stage3" / "candidate_positional_kmer_strand_audit"
+UNIFIED_RUNTIME = ROOT / "results" / "stage3" / "contract_v2" / "unified_runtime_benchmark"
 OUT = ROOT / "figures" / "contract_v2"
 
 MAIN_KEY = "ck4p_msp"
@@ -67,7 +68,7 @@ def _load() -> tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame, pd.DataFrame]:
     discovery = pd.read_csv(DISCOVERY / "weight_decision_table.csv")
     resample = pd.read_csv(RESAMPLE / "weight_decision_table.csv")
     strand = pd.read_csv(STRAND / "strand_audit.csv")
-    runtime = pd.read_csv(DISCOVERY / "weight_runtime.csv")
+    runtime = pd.read_csv(UNIFIED_RUNTIME / "unified_runtime_summary.csv")
     return discovery, resample, strand, runtime
 
 
@@ -158,11 +159,11 @@ def _cost_panel(
     runtime: pd.DataFrame,
 ) -> None:
     values = discovery.set_index("representation")
-    runtime_median = runtime.groupby("route")["seconds"].median()
+    runtime_median = runtime.set_index("method")["median_ms_per_10000_reads"] / 1000.0
     strand_values = strand.set_index("representation")
     ratios = [
         float(values.loc[VARIANT_KEY, "n_features"]) / float(values.loc[MAIN_KEY, "n_features"]),
-        float(runtime_median.loc["pkm"]) / float(runtime_median.loc["main"]),
+        float(runtime_median.loc["ck4p_msp_pkm"]) / float(runtime_median.loc["ck4p_msp"]),
         float(strand_values.loc[VARIANT_KEY, "l2_delta_mean"]) / float(strand_values.loc[MAIN_KEY, "l2_delta_mean"]),
     ]
     labels = ["Feature dimension", "Extraction time", "Reverse-complement drift"]
@@ -220,6 +221,14 @@ def main() -> None:
 
     source = discovery.copy()
     source.loc[source["representation"].eq(VARIANT_KEY), "representation_label"] = VARIANT_LABEL
+    runtime_indexed = runtime.set_index("method")
+    source["runtime_seconds"] = source["representation"].map(
+        {
+            MAIN_KEY: float(runtime_indexed.loc["ck4p_msp", "median_seconds_per_call"]),
+            VARIANT_KEY: float(runtime_indexed.loc["ck4p_msp_pkm", "median_seconds_per_call"]),
+        }
+    )
+    source["runtime_source"] = "unified long-duration full-run median"
     source["source"] = "prespecified_weight_sweep"
     resample_source = resample[resample["representation"].isin([MAIN_KEY, VARIANT_KEY])].copy()
     resample_source.loc[
@@ -245,6 +254,14 @@ def main() -> None:
         selected["representation"].eq("ck4p_msp_pkm_w025"),
         "representation_label",
     ] = VARIANT_LABEL
+    selected["runtime_seconds"] = selected["representation"].map(
+        {
+            MAIN_KEY: float(runtime_indexed.loc["ck4p_msp", "median_seconds_per_call"]),
+            "ck4p_msp_pkm_w025": float(
+                runtime_indexed.loc["ck4p_msp_pkm", "median_seconds_per_call"]
+            ),
+        }
+    )
     strand_indexed = strand.set_index("representation")
     selected["reverse_complement_l2"] = selected["representation"].map(
         {

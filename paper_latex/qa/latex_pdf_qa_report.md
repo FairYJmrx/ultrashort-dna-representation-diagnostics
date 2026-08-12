@@ -1,11 +1,11 @@
 # LaTeX and PDF QA Report
 
-Date: 2026-08-11
+Date: 2026-08-12
 
 ## Build status
 
-- Main manuscript: 19 pages, compiled from `main.tex` with the OUP authoring template.
-- Supplementary Data: 15 pages, compiled from `supplementary.tex` with Figures S1-S15 and Supplementary Tables S1-S10.
+- Main manuscript: 20 pages, compiled from `main.tex` with the OUP authoring template.
+- Supplementary Data: 15 pages, compiled from `supplementary.tex` with Figures S1-S15 and Supplementary Tables S1-S11.
 - Cover letter: 1 page, compiled from `cover_letter.tex`.
 - Main and supplementary compilation completed with exit code 0. No undefined citations, undefined references, missing figures or `Float too large` errors were reported.
 - The repeated 261.76535 pt output-routine warning is emitted by the OUP crop/output layer. Rendered pages were inspected and showed no content-level clipping or horizontal overflow.
@@ -24,6 +24,8 @@ Date: 2026-08-11
 
 - All six main figures and Supplementary Figures S1-S15 render without clipping, blank panels, legend-data occlusion or overlapping axis labels.
 - Figure 2, Figure 4 and Figure 6 show CK4P-MSP explicitly and preserve the method's fixed colour across panels.
+- Supplementary Figure S8 now contains only the P/MSP contribution and relation audit; the retired duplicate runtime panel is no longer generated or distributed.
+- Supplementary Figure S12 presents the historical-descriptor boundary and the unified long-duration runtime panel. Supplementary Table S11 gives the complete route-level timing profile.
 - Supplementary Figure S15 presents the CK4P-MSP-PKM benefit-cost profile in one bounded four-panel audit: structured readout gains are shown together with drift, dimension, runtime and reverse-complement sensitivity costs.
 - Main-text figures remain adjacent to their evidence sections; no full figure-only page was introduced.
 - The final bibliography page contains normal tail whitespace because the reference list ends before the page bottom; this is not a float or content-placement defect.
@@ -31,11 +33,11 @@ Date: 2026-08-11
 
 ## Reproducibility
 
-- The release snapshot passes the ten-test smoke suite, Python bytecode compilation and repository preflight. The method-contract test additionally fixes the manuscript-facing CK4P-MSP-PKM key and rejects the retired selected-point alias.
+- The current runtime-update worktree passes the ten-test smoke suite, Python bytecode compilation and repository preflight. The method-contract test additionally fixes the manuscript-facing CK4P-MSP-PKM key and rejects the retired selected-point alias.
 - The maintained full contract-v2 path completed compact baselines, grouped local mutation, all seven K/P/MSP combinations, high-k compression, kNN-MI robustness and short-read continuity audits with return code 0.
 - A second clean run produced bytewise-identical kNN-MI and seven-block/binset outputs. Stale frozen summaries were refreshed where the current implementation added valid-observation fields or updated estimator values.
 - The observed full-path wall time was approximately 39.5 minutes on the verification host. This is a host-specific reproduction time, not a method benchmark.
 
 ## Release status
 
-GitHub Release `v1.2.0` is published from commit `4d9c9d5ac2a0f0d8a7dbe3493097088b37660e09`, and its release-smoke workflow completed successfully. Zenodo archived the immutable release files under version DOI `10.5281/zenodo.21882250`; the concept DOI `10.5281/zenodo.21792340` continues to resolve to the release history. Any later author-metadata revision must use a new release version rather than moving or overwriting the `v1.2.0` tag.
+The prior GitHub Release `v1.2.0` and Zenodo version DOI `10.5281/zenodo.21882250` remain immutable. This runtime update is prepared for a new release version after the release smoke and metadata checks pass; it must not move or overwrite the `v1.2.0` tag.

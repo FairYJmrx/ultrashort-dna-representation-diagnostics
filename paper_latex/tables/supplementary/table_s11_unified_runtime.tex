@@ -1,0 +1,16 @@
+\begin{tabular}{@{}lrrrrrr@{}}
+\toprule
+\textbf{representation} & \textbf{features} & \textbf{calls} & \textbf{timed s} & \textbf{10k median [IQR], s} & \textbf{late/early} & \textbf{100k pass, s} \\
+\midrule
+CK4 & 136 & 77 & 120.9 & 1.29 [0.93, 2.17] & 2.35 & 9.19 \\
+CK4+P & 147 & 67 & 122.3 & 1.27 [1.12, 2.72] & 2.41 & 11.66 \\
+CK4P-MSP & 222 & 63 & 122.5 & 1.35 [1.26, 2.94] & 2.34 & 13.09 \\
+CK4P-MSP-PKM & 297 & 47 & 123.6 & 2.10 [2.03, 2.39] & 1.08 & 21.16 \\
+Hashed k=15, d=222 & 222 & 40 & 120.7 & 2.87 [2.80, 2.98] & 1.01 & 30.19 \\
+MinHash k=15, s=222 & 222 & 40 & 124.0 & 2.93 [2.89, 3.16] & 0.99 & 30.98 \\
+CK15 random projection, d=222 & 222 & 26 & 125.0 & 4.75 [4.67, 4.91] & 0.98 & 44.49 \\
+PseKNC (k=3, $\lambda$=3) & 67 & 5 & 124.7 & 25.14 [24.32, 25.41] & 0.96 & 246.18 \\
+NCP+ANF & 300 & 128 & 120.7 & 1.05 [0.66, 1.11] & 1.66 & 6.01 \\
+PseEIIP & 64 & 157 & 120.4 & 0.84 [0.76, 0.88] & 1.21 & 4.38 \\
+\bottomrule
+\end{tabular}

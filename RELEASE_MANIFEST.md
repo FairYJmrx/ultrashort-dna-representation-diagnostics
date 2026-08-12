@@ -3,7 +3,7 @@
 This manifest is generated from the release worktree by
 `python tools/generate_release_manifest.py`.
 
-Tracked release files: **699**
+Tracked release files: **709**
 
 ## Source-of-truth directories
 
@@ -105,6 +105,7 @@ and ART FASTQ/SAM intermediates are excluded.
 - `docs/manuscript_source_of_truth.md`
 - `docs/method_contract.md`
 - `docs/repository_structure.md`
+- `docs/unified_runtime_benchmark.md`
 - `experiments/README.md`
 - `experiments/audits/__init__.py`
 - `experiments/audits/generate_reviewer_statistical_tests.py`
@@ -133,6 +134,7 @@ and ART FASTQ/SAM intermediates are excluded.
 - `experiments/audits/run_property_redundancy_and_runtime_audit.py`
 - `experiments/audits/run_property_scaling_audit.py`
 - `experiments/audits/run_short_read_length_continuity_audit.py`
+- `experiments/audits/run_unified_runtime_benchmark.py`
 - `experiments/main/__init__.py`
 - `experiments/main/run_attention_context_diagnostic.py`
 - `experiments/main/run_local_mutation_sensitivity.py`
@@ -283,6 +285,7 @@ and ART FASTQ/SAM intermediates are excluded.
 - `paper_latex/tables/supplementary/supp_table_s10_cami2_marine_probe_source.csv`
 - `paper_latex/tables/supplementary/table_s10_p_attribution.tex`
 - `paper_latex/tables/supplementary/table_s10_preview.tex`
+- `paper_latex/tables/supplementary/table_s11_unified_runtime.tex`
 - `paper_latex/tables/supplementary/table_s2_conditional_contrasts.tex`
 - `paper_latex/tables/supplementary/table_s3_mi_inference.tex`
 - `paper_latex/tables/supplementary/table_s4_factorial_contrasts.tex`
@@ -621,6 +624,13 @@ and ART FASTQ/SAM intermediates are excluded.
 - `results/stage3/contract_v2/short_read_length_continuity/short_read_length_continuity_summary.md`
 - `results/stage3/contract_v2/short_read_length_continuity/short_read_length_grid.csv.gz`
 - `results/stage3/contract_v2/short_read_length_continuity/short_read_local_triplets.csv.gz`
+- `results/stage3/contract_v2/unified_runtime_benchmark/unified_runtime_benchmark_run.json`
+- `results/stage3/contract_v2/unified_runtime_benchmark/unified_runtime_benchmark_summary.md`
+- `results/stage3/contract_v2/unified_runtime_benchmark/unified_runtime_raw.csv`
+- `results/stage3/contract_v2/unified_runtime_benchmark/unified_runtime_raw_partial.csv`
+- `results/stage3/contract_v2/unified_runtime_benchmark/unified_runtime_summary.csv`
+- `results/stage3/contract_v2/unified_runtime_scaling_pass/unified_runtime_scaling.csv`
+- `results/stage3/contract_v2/unified_runtime_scaling_pass/unified_runtime_scaling_run.json`
 - `results/stage3/external_motif_position_probe/external_motif_position_probe.pdf`
 - `results/stage3/external_motif_position_probe/external_motif_position_probe.png`
 - `results/stage3/external_motif_position_probe/external_motif_position_probe.svg`

@@ -146,6 +146,8 @@ where local perturbation variants share a source template.
 .\.venv\Scripts\python.exe experiments\audits\run_msp_bin_gamma_sensitivity_audit.py --output-dir results\stage3\contract_v2\msp_bin_gamma_sensitivity
 .\.venv\Scripts\python.exe experiments\audits\run_property_redundancy_and_runtime_audit.py --output-dir results\stage3\contract_v2\property_redundancy_runtime
 .\.venv\Scripts\python.exe experiments\audits\run_historical_descriptor_audit.py --output-dir results\stage3\contract_v2\historical_descriptor_audit --runtime-read-counts 10000,100000 --runtime-repeats 5 --runtime-large-batch-repeats 1
+.\.venv\Scripts\python.exe experiments\audits\run_unified_runtime_benchmark.py --output-dir results\stage3\contract_v2\unified_runtime_benchmark --target-seconds 120 --minimum-repeats 5 --skip-scaling
+.\.venv\Scripts\python.exe experiments\audits\run_unified_runtime_benchmark.py --output-dir results\stage3\contract_v2\unified_runtime_scaling_pass --scaling-only
 .\.venv\Scripts\python.exe experiments\audits\run_short_read_length_continuity_audit.py --output-dir results\stage3\contract_v2\short_read_length_continuity
 .\.venv\Scripts\python.exe experiments\main\run_stage3_cami_probe.py --input data\stage3\cami\cami_toy_low_subset_reads_expanded.csv --output-dir results\stage3\contract_v2\cami_toy_readout
 .\.venv\Scripts\python.exe experiments\audits\run_cami_fixed_head_transfer.py --output-dir results\stage3\contract_v2\cami_fixed_head_transfer
@@ -160,6 +162,13 @@ where local perturbation variants share a source template.
 .\.venv\Scripts\python.exe data_pipeline\simulate\summarize_stage3_art_quality.py
 ```
 
+The manuscript runtime values come only from `run_unified_runtime_benchmark.py`.
+The historical-descriptor and positional-kmer candidate timing files are retained
+for provenance but are not interchangeable with the unified long-duration
+contract. The primary run uses full-run medians and interquartile ranges after
+at least 120 cumulative timed seconds and five calls per method. The separate
+100,000-read invocation is a single scaling pass.
+
 The K/P/MSP contribution audit evaluates all seven non-empty block combinations
 and reports prespecified conditional contrasts for K given P+MSP, P given
 CK4+MSP, and MSP given CK4+P. Grouped delta-readout keeps all derivatives of a
@@ -171,6 +180,8 @@ learned-preprocessing sensitivity and CAMI II stability outputs are included in
 that map. The current ART audit uses the public CK4P-MSP contract at
 50, 60, 69, 75, 100, 125 and 150 bp. Full-position probes remain upper-bound
 controls; legacy feature labels must not be used to make claims about the public
+method. The runtime protocol is specified separately in
+`docs/unified_runtime_benchmark.md`.
 CK4P-MSP contract.
 
 ### Data and simulation
@@ -213,6 +224,7 @@ CK4P-MSP contract.
 .\.venv\Scripts\python.exe experiments\audits\run_local_change_factorial_audit.py
 .\.venv\Scripts\python.exe experiments\audits\run_property_scaling_audit.py
 .\.venv\Scripts\python.exe experiments\audits\run_historical_descriptor_audit.py
+.\.venv\Scripts\python.exe experiments\audits\run_unified_runtime_benchmark.py --target-seconds 120 --minimum-repeats 5 --skip-scaling
 .\.venv\Scripts\python.exe experiments\audits\run_short_read_length_continuity_audit.py
 .\.venv\Scripts\python.exe experiments\audits\run_cami_fixed_head_transfer.py
 .\.venv\Scripts\python.exe experiments\audits\run_cami_fixed_head_coordinate_audit.py

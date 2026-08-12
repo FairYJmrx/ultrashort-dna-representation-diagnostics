@@ -26,7 +26,8 @@ smoke/preflight checks.
 | Seven K/P/MSP combinations | `experiments/audits/run_p_msp_contribution_audit.py` | `results/stage3/contract_v2/p_msp_contribution/` | Figure 2; Supplementary Table S2 |
 | Same-dimension and high-k controls | `run_dimension_reduction_baselines.py`, `run_high_k_compressed_baselines.py` | corresponding `contract_v2/` directories | Figure 3; Supplementary Figure S1 |
 | Counterfactual, weight and MI/KSG audits | maintained scripts under `experiments/audits/` | `mixed_metric_audit/`, `p_channel_counterfactual_audit/`, `knn_mi_robustness/` | Supplementary Figures S1--S7 |
-| P/MSP relation and runtime | `run_property_redundancy_and_runtime_audit.py`, `run_historical_descriptor_audit.py` | `property_redundancy_runtime/`, `historical_descriptor_audit/` | Supplementary Figures S8--S9 and S12 |
+| P/MSP relation | `run_property_redundancy_and_runtime_audit.py` | `property_redundancy_runtime/` | Supplementary Figures S8--S9 |
+| Unified runtime | `run_unified_runtime_benchmark.py` | `unified_runtime_benchmark/`, `unified_runtime_scaling_pass/` | Supplementary Figures S12/S15; Supplementary Table S11 |
 | Short-read continuity | `run_short_read_length_continuity_audit.py` | `short_read_length_continuity/` | Supplementary Figure S13 |
 | ART simulator probe | `data_pipeline/simulate/run_stage3_art_generate_and_evaluate.py` | `art_current_contract/` | Figure 4A; Supplementary Figure S3 |
 | CAMI_TOY_low fixed-head probes | `run_cami_multitarget_fixed_head_transfer.py` | `cami_multitarget_fixed_head/`, `cami_multitarget_c_sensitivity/` | Figure 4B--C; Supplementary Figure S14 |

@@ -31,6 +31,7 @@ def _find_project_root(start: Path) -> Path:
 
 ROOT = _find_project_root(Path(__file__).resolve())
 RESULTS = ROOT / "results" / "stage3" / "contract_v2" / "historical_descriptor_audit"
+UNIFIED_RUNTIME = ROOT / "results" / "stage3" / "contract_v2" / "unified_runtime_benchmark"
 OUT = ROOT / "figures" / "contract_v2"
 
 ORDER = ["ck4", "ck4p_msp", "pseknc_k3_l3", "ncp_anf", "pseeiip"]
@@ -183,9 +184,7 @@ def main() -> None:
         local["split"].astype(str).str.contains("grouped_cv")
         & local["classifier"].eq("logistic")
     ].copy()
-    runtime = pd.read_csv(RESULTS / "historical_descriptor_runtime.csv")
-    primary_runtime_reads = int(runtime["n_reads"].min())
-    runtime_primary = runtime[runtime["n_reads"].eq(primary_runtime_reads)].copy()
+    runtime = pd.read_csv(UNIFIED_RUNTIME / "unified_runtime_summary.csv")
 
     stability_summary = summarize_metric(stability, "l2_delta_mean", seed=20260729)
     local_summary = summarize_metric(local, "macro_f1", seed=20260829)
@@ -199,16 +198,7 @@ def main() -> None:
         .set_index("representation")
         .loc[ORDER]
     )
-    runtime_summary = (
-        runtime_primary.groupby("representation", as_index=False)
-        .agg(
-            runtime_ms=("milliseconds_per_10000_reads", "median"),
-            runtime_q25=("milliseconds_per_10000_reads", lambda values: float(np.quantile(values, 0.25))),
-            runtime_q75=("milliseconds_per_10000_reads", lambda values: float(np.quantile(values, 0.75))),
-        )
-        .set_index("representation")
-        .loc[ORDER]
-    )
+    runtime_summary = runtime.set_index("method").loc[ORDER].copy()
 
     source_rows = []
     for _, row in stability.iterrows():
@@ -244,14 +234,14 @@ def main() -> None:
                 "metric": "feature_dimension",
             }
         )
-    for _, row in runtime.iterrows():
+    for _, row in runtime_summary.reset_index().iterrows():
         source_rows.append(
             {
                 "panel": "D",
-                "representation": row["representation"],
-                "cell_1": int(row["repeat"]),
-                "cell_2": f"75_bp_actual_{int(row['n_reads'])}_reads",
-                "value": float(row["elapsed_seconds"]),
+                "representation": row["method"],
+                "cell_1": "long_duration_full_run_median",
+                "cell_2": "75_bp_10000_reads",
+                "value": float(row["median_seconds_per_call"]),
                 "metric": "reference_runtime_seconds",
             }
         )
@@ -295,9 +285,9 @@ def main() -> None:
     for idx, value in enumerate(dimensions["n_features"].to_numpy(int)):
         ax_c.text(value + 6, idx, str(value), va="center", fontsize=6.2)
 
-    runtime_seconds = runtime_summary["runtime_ms"].to_numpy(float) / 1000.0
-    runtime_low = runtime_summary["runtime_q25"].to_numpy(float) / 1000.0
-    runtime_high = runtime_summary["runtime_q75"].to_numpy(float) / 1000.0
+    runtime_seconds = runtime_summary["median_seconds_per_call"].to_numpy(float)
+    runtime_low = runtime_summary["q25_seconds_per_call"].to_numpy(float)
+    runtime_high = runtime_summary["q75_seconds_per_call"].to_numpy(float)
     for idx, representation in enumerate(ORDER):
         ax_d.errorbar(
             runtime_seconds[idx],
@@ -316,8 +306,8 @@ def main() -> None:
     ax_d.set_yticks(y)
     ax_d.set_yticklabels([LABELS[item] for item in ORDER])
     ax_d.invert_yaxis()
-    ax_d.set_xlabel(f"Seconds per actual {primary_runtime_reads:,}-read batch (log scale)")
-    ax_d.set_title("D  Optimized reference implementation", loc="left", fontweight="bold")
+    ax_d.set_xlabel("Seconds per 10,000-read batch (log scale)")
+    ax_d.set_title("D  Long-duration extraction benchmark", loc="left", fontweight="bold")
     ax_d.grid(axis="x", which="both", color="#E1E5E8", linewidth=0.65, zorder=0)
     for idx, value in enumerate(runtime_seconds):
         ax_d.text(value * 1.12, idx, f"{value:.1f}", va="center", fontsize=6.2)
