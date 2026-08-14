@@ -9,8 +9,9 @@ This document records the completed migration into an OUP/NAR-compatible LaTeX s
   Rui Cao and Xunbing Gong. Huang Jianhua is not an author.
 - Scientific and figure/layout QA are complete for the current claim boundary. No MIXBend
   comparison, Transformer benchmark, Kraken integration or new clinical experiment is pending.
-- `v1.2.0` is an immutable historical single-author snapshot. The current four-author release,
-  version DOI and NAR submission package remain to be frozen and created.
+- `v1.2.0` is an immutable historical single-author snapshot. The current four-author code
+  candidate is frozen at release-branch commit `f602b51`; the GitHub tag/Release, version DOI
+  and final DOI-backfilled NAR submission package remain to be created.
 
 ## 1. Target and Submission Constraints
 
