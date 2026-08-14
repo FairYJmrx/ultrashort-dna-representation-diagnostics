@@ -36,12 +36,17 @@
 \makeatother
 \pagestyle{headings}
 \title[Supplementary Data]{Supplementary Data for Layered representation diagnostics for short metagenomic reads}
-\author[1]{Ruixiang Mei\,\ORCID{0009-0003-2128-0726}}
+\author[1,*]{Ruixiang Mei\,\ORCID{0009-0003-2128-0726}}
+\author[2]{Zhi Chen\,\ORCID{0009-0001-0072-5576}}
+\author[3]{Rui Cao\,\ORCID{0009-0006-6182-1381}}
+\author[2]{Xunbing Gong\,\ORCID{0009-0009-6715-0656}}
 \address[1]{School of Data Science, The Chinese University of Hong Kong, Shenzhen, 2001 Longxiang Road, Longgang District, Shenzhen 518172, Guangdong, China}
-\corresp{*Correspondence: Ruixiang Mei, \url{121090416@link.cuhk.edu.cn}}
+\address[2]{School of Medicine, The Chinese University of Hong Kong, Shenzhen, 2001 Longxiang Road, Longgang District, Shenzhen 518172, Guangdong, China}
+\address[3]{School of Artificial Intelligence, The Chinese University of Hong Kong, Shenzhen, 2001 Longxiang Road, Longgang District, Shenzhen 518172, Guangdong, China}
+\corresp[*]{Correspondence: Ruixiang Mei, \url{ruixiangmei@link.cuhk.edu.cn}}
 \hypersetup{
   pdftitle={Supplementary Data for Layered representation diagnostics for short metagenomic reads},
-  pdfauthor={Ruixiang Mei},
+  pdfauthor={Ruixiang Mei; Zhi Chen; Rui Cao; Xunbing Gong},
   pdfsubject={Supplementary audits for short-read representation diagnostics}
 }
 \abstract{Supplementary figures and source tables supporting the representation-diagnostic analyses, including baseline, estimator, perturbation, parameter, redundancy and runtime audits.}
@@ -51,7 +56,7 @@
 \renewcommand{\thetable}{S\arabic{table}}
 \maketitle
 \section{Supplementary data overview}
-The canonical 4-mer, property and multi-scale property-pooling representation (CK4P-MSP) comprises a canonical 4-mer composition block (K), a global property block (P) and multi-scale property pooling (MSP). Figures S1--S7 report reduction, information-estimator, perturbation, counterfactual, parameter and dimension-matched baseline audits. Figures S8--S14 cover P/MSP relations, external stability, mechanism, historical descriptors, read-length continuity and fixed-head transfer. Figure S15 reports the supplementary CK4P-MSP-PKM positional-readout Pareto audit. Tables S1--S10 provide the corresponding dataset previews, contrasts, estimator checks, feature definitions, accessions, target metadata and coordinate-family attribution. Unless otherwise stated, plots show analysis-cell means without error bars. Cell-bootstrap intervals summarize prespecified matched cells that reuse source template panels and therefore do not represent independent biological cohorts.
+The canonical 4-mer, property and multi-scale property-pooling representation (CK4P-MSP) comprises a canonical 4-mer composition block (K), a global property block (P) and multi-scale property pooling (MSP). Figures S1--S7 report reduction, information-estimator, perturbation, counterfactual, parameter and dimension-matched baseline audits. Figures S8--S14 cover P/MSP relations, external stability, mechanism, historical descriptors, read-length continuity and fixed-head transfer. Figure S15 reports the supplementary CK4P-MSP-PKM positional-readout Pareto audit. Tables S1--S11 provide the corresponding dataset previews, contrasts, estimator checks, feature definitions, accessions, target metadata, coordinate-family attribution and unified runtime benchmark. Unless otherwise stated, plots show analysis-cell means without error bars. Cell-bootstrap intervals summarize prespecified matched cells that reuse source template panels and therefore do not represent independent biological cohorts.
 
 \section{Supplementary Methods: positional k-mer moment extension}
 
@@ -89,7 +94,7 @@ The supplementary extension retained the normalized CK4P-MSP blocks and appended
 The fixed grid $\delta\in\{0.1,0.25,0.5,0.75,1\}$ was declared before the exploratory sweep. Among the tested weights, $\delta=0.25$ met the prespecified screen for motif-position gain, bounded WGS/ART drift change, retained nearest-clean retrieval, local-change readout, CAMI fixed-head retention and less than twofold reference extraction time. It is reported as the exploratory CK4P-MSP-PKM Pareto setting.
 
 The sweep reused the WGS, local-change, public Dorsal motif-position, ART and CAMI resources defined in the main Methods. The motif-position probe comprised 1,125 windows from 32 cis-regulatory modules, and all windows from one module were retained in the same cross-validation fold. A seed-20260819 resampling check quantified seed sensitivity within the same benchmark resources. Extraction cost was taken from the unified long-duration runtime benchmark, and the direction audit used 5,000 clean/reverse-complement pairs. Because odd position moments reverse sign, CK4P-MSP-PKM is input-order-sensitive; only its CK4 block is canonicalized. Historical descriptors were evaluated under the same sampled protocol to position the extension within the observed stability--readout--cost trade-offs.
-\begin{figure*}[p]
+\begin{figure*}[!b]
 \centering
 {\Large\bfseries Supplementary Figures\par}
 \vspace{0.8em}

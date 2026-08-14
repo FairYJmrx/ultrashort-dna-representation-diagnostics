@@ -28,6 +28,14 @@ TEXT_FILES = [
     "results/stage3/contract_v2/property_redundancy_runtime/property_redundancy_runtime_summary.md",
 ]
 
+TEXT_SUFFIXES = {".cff", ".csv", ".json", ".md", ".py", ".tex", ".txt", ".yaml", ".yml"}
+MACHINE_ROOTS = (
+    "D:\\AI-NGS\\info\\release_code\\",
+    "D:\\AI-NGS\\info\\",
+    "D:/AI-NGS/info/release_code/",
+    "D:/AI-NGS/info/",
+)
+
 
 def read_csv(path: Path) -> tuple[list[str], list[dict[str, str]]]:
     with path.open("r", encoding="utf-8-sig", newline="") as handle:
@@ -101,14 +109,7 @@ def sanitize_art_manifest() -> None:
 def sanitize_inventory() -> None:
     path = ROOT / "results/audits/result_inventory/run_json_configuration_inventory.csv"
     fields, rows = read_csv(path)
-    roots = (
-        "D:\\AI-NGS\\info\\release_code\\",
-        "D:\\AI-NGS\\info\\",
-        "D:/AI-NGS/info/release_code/",
-        "D:/AI-NGS/info/",
-        "D:/AI-NGS/信息学/",
-        "D:/AI-NGS/信息学/",
-    )
+    roots = MACHINE_ROOTS
     for row in rows:
         for field, value in list(row.items()):
             if not value:
@@ -123,7 +124,6 @@ def sanitize_text() -> None:
     replacements = (
         ("D:\\AI-NGS\\info\\release_code\\", ""),
         ("D:\\AI-NGS\\info\\", ""),
-        ("D:\\AI-NGS\\信息学\\", ""),
         ("D:/AI-NGS/info/release_code/", ""),
         ("D:/AI-NGS/info/", ""),
     )
@@ -135,12 +135,30 @@ def sanitize_text() -> None:
         path.write_text(text.replace("\\", "/"), encoding="utf-8", newline="\n")
 
 
+def sanitize_all_text_paths() -> None:
+    """Remove known workstation roots while preserving non-path escapes."""
+    tool_path = Path(__file__).resolve()
+    for path in ROOT.rglob("*"):
+        if not path.is_file() or path.resolve() == tool_path or path.suffix.lower() not in TEXT_SUFFIXES:
+            continue
+        try:
+            text = path.read_text(encoding="utf-8-sig")
+        except UnicodeDecodeError:
+            continue
+        updated = text
+        for machine_root in MACHINE_ROOTS:
+            updated = updated.replace(machine_root, "")
+        if updated != text:
+            path.write_text(updated, encoding="utf-8", newline="\n")
+
+
 def main() -> None:
     accessions = sanitize_manifests()
     sanitize_read_tables(accessions)
     sanitize_art_manifest()
     sanitize_inventory()
     sanitize_text()
+    sanitize_all_text_paths()
     print("ok: machine-local paths replaced with accessions or repository-relative paths")
 
 

@@ -449,11 +449,16 @@ def main_tex() -> str:
 
 \title[Layered representation diagnostics for short metagenomic reads]{Layered representation diagnostics for short metagenomic reads}
 
-\author[1]{Ruixiang Mei\,\ORCID{0009-0003-2128-0726}}
+\author[1,*]{Ruixiang Mei\,\ORCID{0009-0003-2128-0726}}
+\author[2]{Zhi Chen\,\ORCID{0009-0001-0072-5576}}
+\author[3]{Rui Cao\,\ORCID{0009-0006-6182-1381}}
+\author[2]{Xunbing Gong\,\ORCID{0009-0009-6715-0656}}
 
 \address[1]{School of Data Science, The Chinese University of Hong Kong, Shenzhen, 2001 Longxiang Road, Longgang District, Shenzhen 518172, Guangdong, China}
+\address[2]{School of Medicine, The Chinese University of Hong Kong, Shenzhen, 2001 Longxiang Road, Longgang District, Shenzhen 518172, Guangdong, China}
+\address[3]{School of Artificial Intelligence, The Chinese University of Hong Kong, Shenzhen, 2001 Longxiang Road, Longgang District, Shenzhen 518172, Guangdong, China}
 
-\corresp{*Correspondence: Ruixiang Mei, \url{121090416@link.cuhk.edu.cn}}
+\corresp[*]{Correspondence: Ruixiang Mei, \url{ruixiangmei@link.cuhk.edu.cn}}
 
 \abstract{\input{sections/abstract}}
 
@@ -503,9 +508,14 @@ def supplementary_tex() -> str:
              r"\makeatother",
              r"\pagestyle{headings}",
              r"\title[Supplementary Data]{Supplementary Data for Layered representation diagnostics for short metagenomic reads}",
-             r"\author[1]{Ruixiang Mei\,\ORCID{0009-0003-2128-0726}}",
+             r"\author[1,*]{Ruixiang Mei\,\ORCID{0009-0003-2128-0726}}",
+             r"\author[2]{Zhi Chen\,\ORCID{0009-0001-0072-5576}}",
+             r"\author[3]{Rui Cao\,\ORCID{0009-0006-6182-1381}}",
+             r"\author[2]{Xunbing Gong\,\ORCID{0009-0009-6715-0656}}",
              r"\address[1]{School of Data Science, The Chinese University of Hong Kong, Shenzhen, 2001 Longxiang Road, Longgang District, Shenzhen 518172, Guangdong, China}",
-             r"\corresp{*Correspondence: Ruixiang Mei, \url{121090416@link.cuhk.edu.cn}}",
+             r"\address[2]{School of Medicine, The Chinese University of Hong Kong, Shenzhen, 2001 Longxiang Road, Longgang District, Shenzhen 518172, Guangdong, China}",
+             r"\address[3]{School of Artificial Intelligence, The Chinese University of Hong Kong, Shenzhen, 2001 Longxiang Road, Longgang District, Shenzhen 518172, Guangdong, China}",
+             r"\corresp[*]{Correspondence: Ruixiang Mei, \url{ruixiangmei@link.cuhk.edu.cn}}",
              r"\abstract{Supplementary figures and source-table preview supporting the representation-diagnostic analyses.}",
              r"\keywords{supplementary data, metagenomics, representation diagnostics}",
              r"\begin{document}",

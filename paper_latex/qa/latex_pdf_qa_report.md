@@ -2,6 +2,13 @@
 
 Date: 2026-08-12
 
+## Current-status note (2026-08-14)
+
+This QA report records the current compiled LaTeX artifacts but retains historical release
+references for provenance. The canonical manuscript now uses the four-author metadata; the
+existing `v1.2.0` DOI remains an immutable historical single-author snapshot. A new release and
+version DOI are still pending and are tracked in the NARGAB submission checklist maintained alongside the manuscript.
+
 ## Build status
 
 - Main manuscript: 20 pages, compiled from `main.tex` with the OUP authoring template.
@@ -16,9 +23,9 @@ Date: 2026-08-12
 - CK4P-MSP is presented as a fixed, training-free and block-decomposable stability-readability trade-off, not as a universal minimum-drift representation or a production classifier.
 - PseKNC, PseEIIP, PCA/SVD, high-k compressed vectors, MinHash/Jaccard controls and full-position probes remain visible as boundaries rather than being hidden when they win a particular axis.
 - The main figures preserve the intended division of labor: K supports composition-linked retrieval, P mainly reduces global perturbation drift, and MSP improves grouped local-change readability.
-- The archived `v1.2.0` source contains the author metadata current at the time of release and no Huang Jianhua author entry. Final journal author metadata remains subject to a later, explicitly versioned update after the proposed student coauthors and their roles are confirmed.
+- The archived `v1.2.0` source contains the author metadata current at the time of that release and no Huang Jianhua author entry. The current canonical source contains the confirmed four-author metadata; the historical tag is not modified.
 - CK4P-MSP remains the sole main method. CK4P-MSP-PKM is consistently identified as a fixed-weight, 297-dimensional supplementary Pareto extension rather than a replacement or universally improved model.
-- Data and code statements point to GitHub Release `v1.2.0`, Zenodo version DOI `10.5281/zenodo.21882250` and the stable Zenodo concept DOI `10.5281/zenodo.21792340`.
+- Data and code statements currently retain the historical `v1.2.0`/concept DOI pointers pending the new four-author release; they must be backfilled once the new version DOI is minted.
 
 ## Visual QA
 

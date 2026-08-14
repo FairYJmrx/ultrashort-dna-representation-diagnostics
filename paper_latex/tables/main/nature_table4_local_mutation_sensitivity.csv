@@ -1,9 +1,8 @@
-﻿representation,noise L2,local L2,local - noise L2,sensitivity ratio,delta-readout macro-F1,features
-CK4,0.355,0.266,-0.089,0.750,0.891,136
-CK4+P,0.115,0.086,-0.029,0.752,0.900,147
-CK4P-MSP,0.110,0.083,-0.027,0.754,0.977,222
-CSP,0.116,0.109,-0.006,0.947,0.696,147
-one-hot,0.239,0.239,0.000,1.000,0.956,500
-P-channels,0.086,0.107,0.020,1.255,0.983,500
-one-hot+P,0.188,0.207,0.019,1.101,0.973,1000
-position k-mer P,0.167,0.185,0.017,1.125,0.972,1536
+representation,features,L2 drift,nearest-clean retrieval,grouped delta-readout macro-F1,observed audit role
+CK4,136,0.218,1.000,0.892,local composition and composition-linked retrieval
+P,11,0.025,0.295,0.639,global property stability without local-composition retrieval
+MSP,75,0.027,0.958,0.965,coarse positional property readout
+CK4+P,147,0.156,1.000,0.904,composition plus global property stability
+CK4+MSP,211,0.156,1.000,0.978,composition plus grouped local-change readout
+P+MSP,86,0.027,0.942,0.970,stable property-only summary with incomplete retrieval
+CK4P-MSP,222,0.129,1.000,0.979,balanced block-decomposable trade-off

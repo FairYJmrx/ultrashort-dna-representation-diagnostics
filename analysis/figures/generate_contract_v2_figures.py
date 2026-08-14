@@ -12,7 +12,10 @@ is ``figures/contract_v2`` in the release repository.
 from __future__ import annotations
 
 import argparse
+import os
 from pathlib import Path
+
+os.environ.setdefault("MPLBACKEND", "Agg")
 
 import matplotlib.pyplot as plt
 import numpy as np

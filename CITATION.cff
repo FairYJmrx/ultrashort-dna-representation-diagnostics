@@ -1,17 +1,23 @@
 cff-version: 1.2.0
 message: "If you use this repository, please cite the associated manuscript and this software release."
 title: "Short-read representation diagnostics"
-version: "1.2.0"
-date-released: "2026-08-11"
+version: "1.2.1"
+date-released: "2026-08-14"
 url: "https://github.com/FairYJmrx/ultrashort-dna-representation-diagnostics"
-identifiers:
-  - type: doi
-    value: "10.5281/zenodo.21882250"
 license: "MIT"
 authors:
   - family-names: "Mei"
     given-names: "Ruixiang"
     orcid: "https://orcid.org/0009-0003-2128-0726"
+  - family-names: "Chen"
+    given-names: "Zhi"
+    orcid: "https://orcid.org/0009-0001-0072-5576"
+  - family-names: "Cao"
+    given-names: "Rui"
+    orcid: "https://orcid.org/0009-0006-6182-1381"
+  - family-names: "Gong"
+    given-names: "Xunbing"
+    orcid: "https://orcid.org/0009-0009-6715-0656"
 preferred-citation:
   type: article
   title: "Layered representation diagnostics for short metagenomic reads"
@@ -19,5 +25,14 @@ preferred-citation:
     - family-names: "Mei"
       given-names: "Ruixiang"
       orcid: "https://orcid.org/0009-0003-2128-0726"
+    - family-names: "Chen"
+      given-names: "Zhi"
+      orcid: "https://orcid.org/0009-0001-0072-5576"
+    - family-names: "Cao"
+      given-names: "Rui"
+      orcid: "https://orcid.org/0009-0006-6182-1381"
+    - family-names: "Gong"
+      given-names: "Xunbing"
+      orcid: "https://orcid.org/0009-0009-6715-0656"
   year: 2026
   notes: "Manuscript in preparation for journal submission; final bibliographic metadata to be added after publication."
