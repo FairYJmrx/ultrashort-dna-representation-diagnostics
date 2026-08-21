@@ -141,6 +141,7 @@ where local perturbation variants share a source template.
 .\.venv\Scripts\python.exe experiments\main\run_local_mutation_sensitivity.py --output-dir results\stage3\contract_v2\local_mutation_sensitivity
 .\.venv\Scripts\python.exe experiments\audits\run_p_msp_contribution_audit.py --output-dir results\stage3\contract_v2\p_msp_contribution
 .\.venv\Scripts\python.exe experiments\audits\run_high_k_compressed_baselines.py --output-dir results\stage3\contract_v2\high_k_compressed_baselines
+.\.venv\Scripts\python.exe experiments\audits\run_grouped_readout_audit.py --output-dir results\stage3\contract_v2\grouped_readout_audit_full
 .\.venv\Scripts\python.exe experiments\audits\run_knn_mi_robustness_audit.py --output-dir results\stage3\contract_v2\knn_mi_robustness
 .\.venv\Scripts\python.exe experiments\audits\run_local_change_factorial_audit.py --output-dir results\stage3\contract_v2\local_change_factorial
 .\.venv\Scripts\python.exe experiments\audits\run_local_change_factorial_audit.py --output-dir results\stage3\contract_v2\local_change_p_attribution --lengths 69,100,150 --local-modes center,left,right,jittered --n-reads 250 --mutation-fraction 0.03 --cv-folds 5 --seed 20260728
@@ -185,6 +186,32 @@ that map. The current ART audit uses the public CK4P-MSP contract at
 controls; legacy feature labels must not be used to make claims about the public
 method. The runtime protocol is specified separately in
 `docs/unified_runtime_benchmark.md`.
+
+### E5: 35-species fixed-capacity probe
+
+The large CAMISIM-derived 35-species input is an external server-side input.
+The release repository keeps the reconstruction contract without vendoring the
+multi-gigabyte FASTQ or token cache. Record input hashes and the label map with:
+
+```powershell
+.\.venv\Scripts\python.exe data_pipeline\simulate\prepare_35_species_manifest.py --fastq <FASTQ> --labels <LABELS_NPY> --label-map <LABEL_MAP_JSON> --output-dir results\e5_35species\manifest
+.\.venv\Scripts\python.exe data_pipeline\preprocess\build_35_species_splits.py --labels <LABELS_NPY> --groups <SOURCE_GROUPS_NPY> --output results\e5_35species\splits.npz
+.\.venv\Scripts\python.exe experiments\main\run_e5_multispecies_probe.py --representation CK4 <CK4_NPY> --representation CK4P-MSP <CK4P_MSP_NPY> --labels <LABELS_NPY> --splits results\e5_35species\splits.npz --output-dir results\e5_35species\readout
+```
+
+Use `--assume-independent-reads` only when simulator documentation guarantees
+independent generated reads. The versioned E5 contract is recorded in
+`configs/e5_35species.yaml`; treat it and the generated manifest as the
+authoritative record of read length, class count, split policy and readout
+budget. E5 uses one fixed MLP readout across
+representations and is reported as a closed-set representation-accessibility
+probe, not as a production species classifier.
+
+`run_grouped_readout_audit.py` is a conservative source-template split check
+for the compact WGS readout helper. It does not overwrite historical compact
+baseline outputs. The current WGS panel contains one reference accession per
+species, so this remains a closed-set reference-panel probe rather than an
+unseen-genome generalization benchmark.
 CK4P-MSP contract.
 
 ### Data and simulation

@@ -1,0 +1,21 @@
+{
+  "input": "D:\\AI-NGS\\info\\release_code\\data\\real_slices\\close_relative_reads.csv",
+  "lengths": [
+    69,
+    75
+  ],
+  "conditions": [
+    "clean",
+    "N_3pct"
+  ],
+  "representations": [
+    "ck4",
+    "ck4p_msp"
+  ],
+  "max_clean_per_length": 100,
+  "max_per_class": 20,
+  "n_splits": 3,
+  "group_column": "clean_read_id",
+  "split": "StratifiedGroupKFold",
+  "elapsed_seconds": 6.5384156703948975
+}

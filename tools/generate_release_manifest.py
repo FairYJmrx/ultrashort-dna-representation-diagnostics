@@ -27,6 +27,7 @@ def main() -> None:
         "",
         "## Source-of-truth directories",
         "",
+        "- `configs/`: versioned experiment contracts and fixed parameter records.",
         "- `methods/`: canonical representation implementations.",
         "- `data_pipeline/`: download, preprocessing and simulation entrypoints.",
         "- `experiments/`: main experiments and bounded audits.",
