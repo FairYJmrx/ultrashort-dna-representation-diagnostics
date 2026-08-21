@@ -5,10 +5,10 @@ not a production taxonomic classifier and it is not a clinical validation.
 
 ## External large inputs
 
-The current server benchmark uses the `code-V4` branch and the CAMISIM-derived
-75-bp dataset. The large FASTQ and token caches stay outside Git and must be
-recreated or accessed from the approved server storage. The release repository
-stores only configuration, manifests, split rules and result summaries.
+The current E5 batch is rebuilt from the approved server workspace's
+per-species 75-bp FASTQ inputs. The large source and output FASTQ files stay
+outside Git. The release repository stores the deterministic builder,
+configuration, manifests, split rules and result summaries.
 
 Before a run, record:
 
@@ -18,7 +18,49 @@ Before a run, record:
 - read length and filtering command;
 - random seed and fixed readout architecture.
 
-## CAMISIM input preparation
+## Fresh balanced batch construction
+
+Create a manifest with exactly three tab-separated columns:
+
+```text
+label\tspecies\tfastq
+0\tSpecies_0\t/data/.../Species_0.fastq
+...
+34\tSpecies_34\t/data/.../Species_34.fastq
+```
+
+For the versioned 35-species panel, the manifest can be generated from the
+panel metadata and the server-side FASTQ root:
+
+```text
+python data_pipeline/simulate/prepare_per_species_fastq_manifest.py \
+  --panel-csv data/e5_35species/species_panel.csv \
+  --fastq-root /external/code-V4/data/NGS_75bp \
+  --output results/e5_35species/fastq_manifest.tsv
+```
+
+Then build a new row-aligned batch. The default allocation is at most 50,000
+reads per species and at most 1,500,000 reads in total; with 35 adequately
+sampled species this produces 42,857 reads per species and 1,499,995 reads.
+
+```text
+python data_pipeline/preprocess/build_balanced_35_species_fastq.py \
+  --manifest /external/path/35_species_fastq_manifest.tsv \
+  --output-fastq /external/path/e5_35species_75bp.fastq \
+  --output-labels results/e5_35species/labels.npy \
+  --output-metadata results/e5_35species/batch_metadata.json \
+  --max-per-species 50000 --total-cap 1500000 --seed 42 --read-length 75
+```
+
+The script counts and validates every source FASTQ, samples each species with
+a deterministic seed, writes the new FASTQ in label order and emits labels in
+the exact same row order. No read-level mapping file is used or needed for
+this per-species input contract.
+
+## Optional CAMISIM input preparation
+
+The earlier CAMISIM route remains available as a separate simulator-specific
+workflow, but it is not the current E5 data contract.
 
 The 35-species panel is prepared from the public reference metadata workbook;
 the release entrypoint writes `genome_to_id.tsv`, `metadata.tsv`, a sorted

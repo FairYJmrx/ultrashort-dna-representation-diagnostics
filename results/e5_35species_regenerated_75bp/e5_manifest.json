@@ -1,0 +1,120 @@
+{
+  "experiment": "E5_fixed_capacity_multiclass_probe",
+  "seed": 42,
+  "hidden_layer_sizes": [
+    128,
+    64
+  ],
+  "max_iter": 50,
+  "labels_path": "/data/RuixiangMEI/AI-NGS/mngs_project/e5_35species_builder/results/e5_35species_75bp_labels.npy",
+  "labels_sha256": "6be547f6df41ad877fee74d1270e19a2cf6c164fa0bd67eda8a91c8540ebfa6e",
+  "splits_path": "/data/RuixiangMEI/AI-NGS/mngs_project/e5_35species_builder/results/splits.npz",
+  "splits_sha256": "c54bd91db6a2b9545edd7630ad54a4a8ece21e7780836561d16178e70937bcef",
+  "results": [
+    {
+      "representation": "CK4",
+      "feature_path": "/data/RuixiangMEI/AI-NGS/mngs_project/e5_35species_builder/results/representations_core/CK4.npy",
+      "feature_sha256": "750b2465d49b8228116f13f6210b5df81d9731a25cd6856bdef004fac5241e7e",
+      "dimension": 136,
+      "metrics": {
+        "train": {
+          "n": 1049999,
+          "macro_f1": 0.29797280454960734,
+          "balanced_accuracy": 0.3057634378923742,
+          "macro_recall": 0.3057634378923742
+        },
+        "validation": {
+          "n": 225000,
+          "macro_f1": 0.28918978032461595,
+          "balanced_accuracy": 0.29729246426093897,
+          "macro_recall": 0.29729246426093897
+        },
+        "test": {
+          "n": 225001,
+          "macro_f1": 0.28851441187951254,
+          "balanced_accuracy": 0.29608874170194643,
+          "macro_recall": 0.29608874170194643
+        }
+      }
+    },
+    {
+      "representation": "CK4_P",
+      "feature_path": "/data/RuixiangMEI/AI-NGS/mngs_project/e5_35species_builder/results/representations_core/CK4_P.npy",
+      "feature_sha256": "f2fb221737daa0380eb66a3a1314f30e1e66fa4b6a5eca6e81d6d7bf45786007",
+      "dimension": 147,
+      "metrics": {
+        "train": {
+          "n": 1049999,
+          "macro_f1": 0.30515141603326823,
+          "balanced_accuracy": 0.30453856766654125,
+          "macro_recall": 0.30453856766654125
+        },
+        "validation": {
+          "n": 225000,
+          "macro_f1": 0.2977971041454594,
+          "balanced_accuracy": 0.2975065673904254,
+          "macro_recall": 0.2975065673904254
+        },
+        "test": {
+          "n": 225001,
+          "macro_f1": 0.2979448107005744,
+          "balanced_accuracy": 0.297582736688466,
+          "macro_recall": 0.297582736688466
+        }
+      }
+    },
+    {
+      "representation": "CK4_MSP",
+      "feature_path": "/data/RuixiangMEI/AI-NGS/mngs_project/e5_35species_builder/results/representations_core/CK4_MSP.npy",
+      "feature_sha256": "999b4d5a23d32d347d502d45900f2bbc5375dfbf0c2616dcfc6311d1792511b8",
+      "dimension": 211,
+      "metrics": {
+        "train": {
+          "n": 1049999,
+          "macro_f1": 0.2943700234890198,
+          "balanced_accuracy": 0.3006786510343995,
+          "macro_recall": 0.3006786510343995
+        },
+        "validation": {
+          "n": 225000,
+          "macro_f1": 0.2871512684554927,
+          "balanced_accuracy": 0.29382100793639965,
+          "macro_recall": 0.29382100793639965
+        },
+        "test": {
+          "n": 225001,
+          "macro_f1": 0.28767471539942074,
+          "balanced_accuracy": 0.29384475039007635,
+          "macro_recall": 0.29384475039007635
+        }
+      }
+    },
+    {
+      "representation": "CK4P-MSP",
+      "feature_path": "/data/RuixiangMEI/AI-NGS/mngs_project/e5_35species_builder/results/representations_core/CK4P_MSP.npy",
+      "feature_sha256": "4d14e77601b13fa8871f807b55b95d952d0dacf774c47b143c20a7058c83c0b1",
+      "dimension": 222,
+      "metrics": {
+        "train": {
+          "n": 1049999,
+          "macro_f1": 0.28542333766927047,
+          "balanced_accuracy": 0.29256142801585455,
+          "macro_recall": 0.29256142801585455
+        },
+        "validation": {
+          "n": 225000,
+          "macro_f1": 0.2796087060549777,
+          "balanced_accuracy": 0.2870788694291707,
+          "macro_recall": 0.2870788694291707
+        },
+        "test": {
+          "n": 225001,
+          "macro_f1": 0.2793035202136336,
+          "balanced_accuracy": 0.2862325177768346,
+          "macro_recall": 0.2862325177768346
+        }
+      }
+    }
+  ],
+  "scope": "closed-set representation accessibility; not production taxonomy classification"
+}

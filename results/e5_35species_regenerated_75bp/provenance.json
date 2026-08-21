@@ -1,0 +1,36 @@
+{
+  "experiment_id": "E5_fixed_capacity_multiclass_probe",
+  "dataset_id": "regenerated_35sp_75bp_balanced_batch",
+  "server_workspace": "/data/RuixiangMEI/AI-NGS/mngs_project/e5_35species_builder",
+  "source_fastq_root": "/data/RuixiangMEI/AI-NGS/code-V4/data/NGS_75bp",
+  "read_length_bp": 75,
+  "n_species": 35,
+  "n_reads": 1500000,
+  "per_species_counts": {
+    "first_five_panel_labels": 42858,
+    "remaining_panel_labels": 42857
+  },
+  "seed": 42,
+  "max_reads_per_species": 50000,
+  "total_read_cap": 1500000,
+  "selection_rule": "deterministic per-species sampling followed by concatenation in panel-label order",
+  "independence_scope": "source per-species FASTQ records; not an unseen-genome split",
+  "sha256": {
+    "fastq_gz": "372dab93a3aacff96278205f96801e63132a90da1ce534cc5b7ae86d7ffa321f",
+    "labels_npy": "6be547f6df41ad877fee74d1270e19a2cf6c164fa0bd67eda8a91c8540ebfa6e",
+    "metadata_json": "199f47d7acef0f8b70789c0d40aac9c95d5c324d1489d396d8d8e81d58e919e6",
+    "splits_npz": "c54bd91db6a2b9545edd7630ad54a4a8ece21e7780836561d16178e70937bcef",
+    "splits_json": "50c2c1ca3804d0e23dac29c275de5220ae58f1c2e72b8189b9e0230e9c68ab34"
+  },
+  "readout": {
+    "model": "sklearn.neural_network.MLPClassifier",
+    "hidden_layer_sizes": [128, 64],
+    "max_iter": 50,
+    "seed": 42,
+    "train_fraction": 0.70,
+    "validation_fraction": 0.15,
+    "test_fraction": 0.15
+  },
+  "interpretation": "closed-set representation accessibility probe; not production taxonomy classification",
+  "note": "Large FASTQ and representation matrices remain outside Git; this directory stores auditable result summaries and input hashes."
+}

@@ -9,6 +9,7 @@ and must therefore be used with the aligned label array.
 from __future__ import annotations
 
 import argparse
+import gzip
 import hashlib
 import json
 import sys
@@ -22,7 +23,12 @@ REPO_ROOT = Path(__file__).resolve().parents[2]
 if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
-from methods.ck4p_msp import CK4PMSPConfig, build_ck4_block, build_ck4p_msp_features
+from methods.ck4p_msp import (
+    CK4PMSPConfig,
+    build_block_combination,
+    build_ck4_block,
+    build_ck4p_msp_features,
+)
 from methods.stage2_features import build_feature_matrix
 
 
@@ -35,7 +41,8 @@ def sha256_file(path: Path, chunk_size: int = 1024 * 1024) -> str:
 
 
 def iter_fastq(path: Path) -> Iterator[str]:
-    with path.open("rt", encoding="ascii", errors="replace") as handle:
+    opener = gzip.open if path.suffix == ".gz" else open
+    with opener(path, "rt", encoding="ascii", errors="replace") as handle:
         while True:
             header = handle.readline()
             if not header:
@@ -63,6 +70,15 @@ def feature_batch(sequences: list[str], name: str, length: int) -> np.ndarray:
         return matrix
     if normalized == "ck4p_msp":
         return build_ck4p_msp_features(sequences, config=CK4PMSPConfig()).matrix
+    block_names = {
+        "ck4_p": "ck4_p",
+        "ck4_msp": "ck4_msp",
+        "p": "p",
+        "msp": "msp",
+    }
+    if normalized in block_names:
+        features = build_ck4p_msp_features(sequences, config=CK4PMSPConfig())
+        return build_block_combination(features, block_names[normalized])
     historical = {
         "pseknc": "pseknc_k3_l3",
         "pseeiip": "pseeiip",

@@ -189,20 +189,22 @@ method. The runtime protocol is specified separately in
 
 ### E5: 35-species fixed-capacity probe
 
-The large CAMISIM-derived 35-species input is an external server-side input.
-The release repository keeps the reconstruction contract without vendoring the
-multi-gigabyte FASTQ or token cache. Record input hashes and the label map with:
+The current E5 batch is built from the approved server workspace's per-species
+75-bp FASTQ files. The release repository keeps the deterministic reconstruction
+contract without vendoring the large FASTQ or feature matrices. Generate the
+source manifest and a new row-aligned batch with:
 
 ```powershell
-.\.venv\Scripts\python.exe data_pipeline\simulate\prepare_35_species_manifest.py --fastq <FASTQ> --labels <LABELS_NPY> --label-map <LABEL_MAP_JSON> --output-dir results\e5_35species\manifest
-  .\.venv\Scripts\python.exe data_pipeline\preprocess\build_35_species_splits.py --labels <LABELS_NPY> --groups <SOURCE_GROUPS_NPY> --output results\e5_35species\splits.npz
-  .\.venv\Scripts\python.exe experiments\main\run_e5_multispecies_probe.py --representation CK4 <CK4_NPY> --representation CK4P-MSP <CK4P_MSP_NPY> --labels <LABELS_NPY> --splits results\e5_35species\splits.npz --output-dir results\e5_35species\readout
+.\.venv\Scripts\python.exe data_pipeline\simulate\prepare_per_species_fastq_manifest.py --panel-csv data\e5_35species\species_panel.csv --fastq-root <CODE_V4_DATA_NGS_75BP> --output results\e5_35species_regenerated_75bp\fastq_manifest.tsv
+.\.venv\Scripts\python.exe data_pipeline\preprocess\build_balanced_35_species_fastq.py --manifest results\e5_35species_regenerated_75bp\fastq_manifest.tsv --output-fastq <E5_FASTQ_GZ> --output-labels results\e5_35species_regenerated_75bp\labels.npy --output-metadata results\e5_35species_regenerated_75bp\batch_metadata.json --max-per-species 50000 --total-cap 1500000 --seed 42 --read-length 75
+.\.venv\Scripts\python.exe data_pipeline\preprocess\build_35_species_splits.py --labels results\e5_35species_regenerated_75bp\labels.npy --output results\e5_35species_regenerated_75bp\splits.npz --assume-independent-reads
+.\.venv\Scripts\python.exe data_pipeline\preprocess\build_35_species_representations.py --fastq <E5_FASTQ_GZ> --labels results\e5_35species_regenerated_75bp\labels.npy --output-dir results\e5_35species_regenerated_75bp\representations --representation CK4 --representation CK4_P --representation CK4_MSP --representation CK4P-MSP --batch-size 8192 --read-length 75
+.\.venv\Scripts\python.exe experiments\main\run_e5_multispecies_probe.py --representation CK4 <CK4_NPY> --representation CK4_P <CK4_P_NPY> --representation CK4_MSP <CK4_MSP_NPY> --representation CK4P-MSP <CK4P_MSP_NPY> --labels results\e5_35species_regenerated_75bp\labels.npy --splits results\e5_35species_regenerated_75bp\splits.npz --output-dir results\e5_35species_regenerated_75bp\readout
 ```
 
-For the formal E5 run, first select the deterministic subset with a maximum
-of 50,000 reads per species and 1,500,000 reads overall. Reuse its row-index
-file and subset labels for every representation; do not mix the 13.3M-read
-FASTQ with a label or feature cache from another generation batch.
+The formal batch contains 1,500,000 reads across 35 species, with a maximum of
+50,000 reads per species. Reuse its labels and row order for every representation;
+do not mix the historical 13.3M-read FASTQ or its old mapping with this batch.
 
 Use `--assume-independent-reads` only when simulator documentation guarantees
 independent generated reads. The versioned E5 contract is recorded in
