@@ -3,7 +3,7 @@
 This manifest is generated from the release worktree by
 `python tools/generate_release_manifest.py`.
 
-Tracked release files: **728**
+Tracked release files: **729**
 
 ## Source-of-truth directories
 
@@ -101,6 +101,7 @@ and ART FASTQ/SAM intermediates are excluded.
 - `data_pipeline/preprocess/make_toy_reads.py`
 - `data_pipeline/preprocess/prepare_close_relative_genomes.py`
 - `data_pipeline/preprocess/prepare_stage3_cami_toy_low_subset.py`
+- `data_pipeline/preprocess/select_35_species_subset.py`
 - `data_pipeline/simulate/README_35_species.md`
 - `data_pipeline/simulate/__init__.py`
 - `data_pipeline/simulate/prepare_35_species_manifest.py`

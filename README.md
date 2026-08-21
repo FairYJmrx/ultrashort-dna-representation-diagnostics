@@ -195,9 +195,14 @@ multi-gigabyte FASTQ or token cache. Record input hashes and the label map with:
 
 ```powershell
 .\.venv\Scripts\python.exe data_pipeline\simulate\prepare_35_species_manifest.py --fastq <FASTQ> --labels <LABELS_NPY> --label-map <LABEL_MAP_JSON> --output-dir results\e5_35species\manifest
-.\.venv\Scripts\python.exe data_pipeline\preprocess\build_35_species_splits.py --labels <LABELS_NPY> --groups <SOURCE_GROUPS_NPY> --output results\e5_35species\splits.npz
-.\.venv\Scripts\python.exe experiments\main\run_e5_multispecies_probe.py --representation CK4 <CK4_NPY> --representation CK4P-MSP <CK4P_MSP_NPY> --labels <LABELS_NPY> --splits results\e5_35species\splits.npz --output-dir results\e5_35species\readout
+  .\.venv\Scripts\python.exe data_pipeline\preprocess\build_35_species_splits.py --labels <LABELS_NPY> --groups <SOURCE_GROUPS_NPY> --output results\e5_35species\splits.npz
+  .\.venv\Scripts\python.exe experiments\main\run_e5_multispecies_probe.py --representation CK4 <CK4_NPY> --representation CK4P-MSP <CK4P_MSP_NPY> --labels <LABELS_NPY> --splits results\e5_35species\splits.npz --output-dir results\e5_35species\readout
 ```
+
+For the formal E5 run, first select the deterministic subset with a maximum
+of 50,000 reads per species and 1,500,000 reads overall. Reuse its row-index
+file and subset labels for every representation; do not mix the 13.3M-read
+FASTQ with a label or feature cache from another generation batch.
 
 Use `--assume-independent-reads` only when simulator documentation guarantees
 independent generated reads. The versioned E5 contract is recorded in

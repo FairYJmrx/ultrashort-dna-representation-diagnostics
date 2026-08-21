@@ -77,13 +77,15 @@ python data_pipeline/preprocess/build_35_species_splits.py \
 ## Representation construction
 
 After the FASTQ/label row alignment has been recorded, build matrices directly
-from the FASTQ stream. The writer uses bounded batches and keeps the row order
-identical to the input FASTQ:
+from the FASTQ stream. The writer uses bounded batches. With a subset index
+file, it skips unselected source rows and writes matrices in the same order as
+the subset label array:
 
 ```text
 python data_pipeline/preprocess/build_35_species_representations.py \
   --fastq /external/path/R1_qc.fastq \
-  --labels /external/path/labels.npy \
+  --labels results/e5_35species/subset_labels.npy \
+  --row-indices results/e5_35species/subset_indices.npy \
   --output-dir results/e5_35species/representations \
   --representation CK4 --representation CK5 --representation CK7 \
   --representation CK4P-MSP --batch-size 4096 --read-length 75
@@ -121,6 +123,20 @@ python data_pipeline/preprocess/align_35_species_labels.py \
 The command fails if FASTQ and mapping order differ. Coordinate buckets are an
 audit aid derived from read headers, not simulator-native source groups; they
 must not be described as an unseen-genome split without further validation.
+
+## Fixed-size subset command
+
+After labels are aligned, select at most 50,000 reads per species and at most
+1,500,000 reads in total. The selected row indices are reused for every
+representation and every split:
+
+```text
+python data_pipeline/preprocess/select_35_species_subset.py \
+  --labels results/e5_35species/labels.npy \
+  --output-indices results/e5_35species/subset_indices.npy \
+  --output-metadata results/e5_35species/subset_metadata.json \
+  --max-per-species 50000 --total-cap 1500000 --seed 42
+```
 
 The 35-species FASTQ is a large external input and is not redistributed by the
 release repository. A run is reproducible when the same public simulator

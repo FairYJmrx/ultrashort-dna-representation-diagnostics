@@ -15,6 +15,8 @@ The 35-species workflow is split between
 `preprocess/build_35_species_splits.py` (group-aware split construction) and
 `preprocess/align_35_species_labels.py` (read-ID-checked FASTQ/mapping label
 alignment) and
+`preprocess/select_35_species_subset.py` (deterministic per-species and total
+read caps) and
 `preprocess/build_35_species_representations.py` (bounded-batch FASTQ to
 representation matrices) and
 the fixed-capacity readout in

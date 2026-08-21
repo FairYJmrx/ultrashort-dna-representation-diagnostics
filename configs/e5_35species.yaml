@@ -33,6 +33,13 @@ preprocessing:
   observed_input_cycles: 75
   observed_post_filter_mean_length_bp: 74
   observed_passed_reads: 13329387
+  subset:
+    max_reads_per_species: 50000
+    total_read_cap: 1500000
+    seed: 42
+    selection_script: data_pipeline/preprocess/select_35_species_subset.py
+    indices_file: results/e5_35species/subset_indices.npy
+    labels_file: results/e5_35species/subset_labels.npy
 
 external_inputs:
   fastq_role: quality-controlled single-end reads
@@ -80,6 +87,8 @@ scope:
 artifacts:
   manifest_dir: results/e5_35species/manifest
   split_file: results/e5_35species/splits.npz
+  subset_indices: results/e5_35species/subset_indices.npy
+  subset_labels: results/e5_35species/subset_labels.npy
   readout_dir: results/e5_35species/readout
   required_files:
     - e5_manifest.json

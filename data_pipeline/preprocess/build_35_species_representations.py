@@ -80,6 +80,7 @@ def main() -> None:
     parser.add_argument("--batch-size", type=int, default=4096)
     parser.add_argument("--read-length", type=int, default=75)
     parser.add_argument("--max-reads", type=int)
+    parser.add_argument("--row-indices", type=Path)
     args = parser.parse_args()
 
     if args.batch_size < 1:
@@ -90,7 +91,18 @@ def main() -> None:
     labels = np.asarray(np.load(args.labels, mmap_mode="r"))
     if labels.ndim != 1:
         raise ValueError(f"labels must be one-dimensional: {labels.shape}")
-    n_rows = int(labels.size if args.max_reads is None else min(labels.size, args.max_reads))
+    if args.row_indices is not None and args.max_reads is not None:
+        raise ValueError("--row-indices and --max-reads are mutually exclusive")
+    selected_indices = None
+    if args.row_indices is not None:
+        selected_indices = np.asarray(np.load(args.row_indices, mmap_mode="r"))
+        if selected_indices.ndim != 1 or selected_indices.size == 0:
+            raise ValueError("row indices must be a non-empty one-dimensional array")
+        if not np.array_equal(selected_indices, np.unique(selected_indices)):
+            raise ValueError("row indices must be sorted and unique")
+        if selected_indices[0] < 0 or selected_indices[-1] >= labels.size:
+            raise ValueError("row indices are outside the label array")
+    n_rows = int(labels.size if selected_indices is None and args.max_reads is None else selected_indices.size if selected_indices is not None else min(labels.size, args.max_reads))
     output_dir = args.output_dir.resolve()
     output_dir.mkdir(parents=True, exist_ok=True)
 
@@ -122,12 +134,19 @@ def main() -> None:
         seen = end
         batch = []
 
-    for sequence in iter_fastq(args.fastq):
+    next_selected = 0
+    for fastq_row, sequence in enumerate(iter_fastq(args.fastq)):
         if len(sequence) != args.read_length:
             raise ValueError(
-                f"read length mismatch at FASTQ row {seen + len(batch)}: "
+                f"read length mismatch at FASTQ row {fastq_row}: "
                 f"{len(sequence)} vs {args.read_length}"
             )
+        if selected_indices is not None:
+            if next_selected >= selected_indices.size:
+                break
+            if fastq_row != int(selected_indices[next_selected]):
+                continue
+            next_selected += 1
         if seen + len(batch) >= n_rows:
             if args.max_reads is None:
                 raise ValueError(
@@ -138,7 +157,7 @@ def main() -> None:
         if len(batch) >= args.batch_size:
             flush()
     flush()
-    if seen != n_rows:
+    if seen != n_rows or (selected_indices is not None and next_selected != selected_indices.size):
         raise ValueError(f"FASTQ rows ({seen}) do not match requested rows ({n_rows})")
     for matrix in matrices.values():
         matrix.flush()
@@ -150,6 +169,8 @@ def main() -> None:
         "read_length": args.read_length,
         "batch_size": args.batch_size,
         "max_reads": args.max_reads,
+        "row_indices": {"path": str(args.row_indices.resolve()), "sha256": sha256_file(args.row_indices)} if args.row_indices else None,
+        "source_rows": int(labels.size),
         "truncated": args.max_reads is not None and args.max_reads < labels.size,
         "representations": args.representation,
         "dimensions": dimensions,
