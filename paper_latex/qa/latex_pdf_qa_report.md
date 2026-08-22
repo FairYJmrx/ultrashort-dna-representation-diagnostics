@@ -6,8 +6,8 @@ Date: 2026-08-12
 
 This QA report records the current compiled LaTeX artifacts but retains historical release
 references for provenance. The canonical manuscript now uses the five-author metadata; the
-existing `v1.2.0` DOI remains an immutable historical single-author snapshot. A new release and
-version DOI are still pending and are tracked in the NARGAB submission checklist maintained alongside the manuscript.
+The five-author reproducibility snapshot is GitHub Release `v1.2.1` and Zenodo DOI
+`10.5281/zenodo.22055051`; the historical `v1.2.0` DOI remains immutable.
 
 ## Build status
 
@@ -25,7 +25,7 @@ version DOI are still pending and are tracked in the NARGAB submission checklist
 - The main figures preserve the intended division of labor: K supports composition-linked retrieval, P mainly reduces global perturbation drift, and MSP improves grouped local-change readability.
 - The archived `v1.2.0` source contains the author metadata current at the time of that release and no Huang Jianhua author entry. The current canonical source contains the confirmed five-author metadata; the historical tag is not modified.
 - CK4P-MSP remains the sole main method. CK4P-MSP-PKM is consistently identified as a fixed-weight, 297-dimensional supplementary Pareto extension rather than a replacement or universally improved model.
-- Data and code statements currently retain the historical `v1.2.0`/concept DOI pointers pending the new five-author release; they must be backfilled once the new version DOI is minted.
+- Data and code statements now point to the five-author `v1.2.1` release and version DOI `10.5281/zenodo.22055051`; the concept DOI remains as the version-history pointer.
 
 ## Visual QA
 
