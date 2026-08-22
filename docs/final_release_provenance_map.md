@@ -49,5 +49,6 @@ Detailed interpretation boundaries are maintained in
 - `python tools/generate_release_manifest.py`
 
 The release commit, GitHub Actions result, tag and Zenodo version DOI are
-recorded in the GitHub Release notes. Manuscript availability statements cite
-the stable Zenodo concept DOI `10.5281/zenodo.21792340`.
+recorded in the GitHub Release notes. The current immutable release is
+`v1.2.1` at Zenodo DOI `10.5281/zenodo.22055051`; the stable concept DOI is
+`10.5281/zenodo.21792340`.

@@ -2,16 +2,17 @@
 
 This document records the completed migration into an OUP/NAR-compatible LaTeX source package and defines the current build and PDF-audit workflow. It is not an instruction to regenerate the revised manuscript from historical Markdown.
 
-## Current status (2026-08-14)
+## Current status (2026-08-22)
 
 - The canonical source is the five-author Standard Paper in `paper_latex`.
 - Ruixiang Mei is first and corresponding author; the author order is Ruixiang Mei, Zhi Chen,
   Rui Cao, Xunbing Gong and Teng Qi. Huang Jianhua is not an author.
 - Scientific and figure/layout QA are complete for the current claim boundary. No MIXBend
   comparison, Transformer benchmark, Kraken integration or new clinical experiment is pending.
-- `v1.2.0` is an immutable historical single-author snapshot. The current five-author code
-  candidate is frozen at release-branch commit `48a46f9`; the GitHub tag/Release, version DOI
-  and final DOI-backfilled NAR submission package remain to be created.
+- `v1.2.0` is an immutable historical single-author snapshot. A five-author candidate NAR
+  submission package now exists at `submission_packages/nargab_standard_paper`.
+  The five-author reproducibility snapshot is GitHub Release `v1.2.1`, archived at Zenodo DOI
+  `10.5281/zenodo.22055051`.
 
 ## 1. Target and Submission Constraints
 
@@ -55,8 +56,8 @@ The split Markdown files in `paper/`, `final_manuscript.md` and older Word manus
 
 ### Citation source
 
-- Working bibliography: `paper_latex/references.bib`.
-- Reference audit: `the repository bibliography and release manifest`.
+- Working bibliography: `references/references.bib`.
+- Reference audit: `paper/reference_audit.md`.
 - Current audit status: 57 manuscript citation keys used, 0 missing keys; remaining warnings are the manual
   `Nair2006` metadata check and optional ISBN verification for the book citation.
 
@@ -93,19 +94,19 @@ Supplementary figures:
 
 Figure inventory:
 
-- `paper_latex and the release manifest`
-- Current DOCX convenience build: `the historical DOCX builder, which is excluded from this release`; DOCX is not the formal submission source.
+- `paper/figure_table_inventory.md`
+- Current DOCX convenience build: `scripts/build_paper_manuscript_docx.py`; DOCX is not the formal submission source.
 
 ### Table source
 
 Use CSV as the authoritative tabular source and convert to LaTeX tables.
 
-- Table 1: `paper_latex/tables/nature_table1_representation_families.csv`
-- Table 2: `paper_latex/tables/nature_table2_data_layers.csv`
-- Table 3: `paper_latex/tables/nature_table3_compact_main_method.csv`
-- Table 4: `paper_latex/tables/nature_table4_local_mutation_sensitivity.csv`
-- Table 5: `paper_latex/tables/nature_table5_boundary_summary.csv`
-- Supplementary Table S10 source data: `paper_latex/tables/supp_table_s10_cami2_marine_probe_source.csv`
+- Table 1: `paper/tables/nature_table1_representation_families.csv`
+- Table 2: `paper/tables/nature_table2_data_layers.csv`
+- Table 3: `paper/tables/nature_table3_compact_main_method.csv`
+- Table 4: `paper/tables/nature_table4_local_mutation_sensitivity.csv`
+- Table 5: `paper/tables/nature_table5_boundary_summary.csv`
+- Supplementary Table S10 source data: `paper/tables/supp_table_s10_cami2_marine_probe_source.csv`
 
 ## 4. Target LaTeX Project Layout
 
@@ -201,7 +202,7 @@ The supplementary file should:
 
 ### Step 1. Prepare assets
 
-- Copy `references.bib` from `paper_latex/references.bib`.
+- Copy `references.bib` from `references/references.bib`.
 - Copy main figure PDFs to `paper_latex/figures/main/`.
 - Copy supplementary figure PDFs to `paper_latex/figures/supplementary/`.
 - Copy CSV tables to `paper_latex/tables/main/` and `paper_latex/tables/supplementary/`.
@@ -329,7 +330,9 @@ The LaTeX migration is considered submission-ready only when:
 
 - [x] Final affiliation, funding, ethics wording and acknowledgements are settled in the canonical source;
   final portal rendering remains an upload-stage check.
-- [ ] Repository reviewer-access mechanism for the new five-author release is confirmed.
-- [ ] New version-specific public DOI is minted and backfilled.
+- [x] A candidate NAR Standard Paper package was built and independently compiled from its own
+  `source/` tree; the package contains provenance and SHA-256 manifests.
+- [x] Repository reviewer-access mechanism for the five-author release is confirmed through the public GitHub Release and Zenodo record.
+- [x] New version-specific public DOI is minted and backfilled.
 - [~] Final NAR/OUP reference style is verified locally; perform the portal/package check immediately before upload.
 - [x] The PDF generated from LaTeX matches the final approved scientific text.

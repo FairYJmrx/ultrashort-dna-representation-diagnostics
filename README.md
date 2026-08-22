@@ -14,8 +14,9 @@ The archived `v1.2.0` source and output snapshot is available at version DOI
 all archived versions under the stable concept DOI
 [10.5281/zenodo.21792340](https://doi.org/10.5281/zenodo.21792340).
 
-The current five-author release candidate is `v1.2.1`. Its version-specific DOI
-will be added after the corresponding GitHub Release is archived by Zenodo.
+The current five-author reproducibility release is `v1.2.1`, archived at version DOI
+[10.5281/zenodo.22055051](https://doi.org/10.5281/zenodo.22055051). The GitHub tag and
+Zenodo record identify the immutable code and manuscript provenance for this release.
 
 ## 1. Repository Map
 

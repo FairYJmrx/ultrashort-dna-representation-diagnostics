@@ -15,8 +15,8 @@ Release branch for the reproducible manuscript package:
 The versioned GitHub Release and Zenodo record are the reviewer-access route.
 The submission snapshot will be GitHub Release `v1.2.1` after the final tag is
 linked through the stable Zenodo concept DOI
-`https://doi.org/10.5281/zenodo.21792340`; the version DOI is recorded in the
-GitHub release notes after Zenodo completes ingestion.
+`https://doi.org/10.5281/zenodo.21792340`; the current version DOI is
+`https://doi.org/10.5281/zenodo.22055051`.
 
 ## Files intentionally excluded
 
