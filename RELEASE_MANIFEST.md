@@ -3,7 +3,7 @@
 This manifest is generated from the release worktree by
 `python tools/generate_release_manifest.py`.
 
-Tracked release files: **734**
+Tracked release files: **717**
 
 ## Source-of-truth directories
 
@@ -47,13 +47,9 @@ and ART FASTQ/SAM intermediates are excluded.
 - `analysis/tables/generate_fullmatrix_property_contribution_ci.py`
 - `analysis/tables/generate_stage3_bootstrap_ci.py`
 - `configs/ck4p_msp_pkm_supplementary.yaml`
-- `configs/e5_35species.yaml`
 - `configs/experiment_matrix.yaml`
 - `configs/release_defaults.yaml`
 - `data/README.md`
-- `data/e5_35species/README.md`
-- `data/e5_35species/label_map.json`
-- `data/e5_35species/species_panel.csv`
 - `data/external/mibbs_dorsal/Data/CRMs.fa`
 - `data/external/mibbs_dorsal/Data/CoreDorsalOrthologsites.fa`
 - `data/external/mibbs_dorsal/Data/CoreDorsalsites.fa`
@@ -88,25 +84,16 @@ and ART FASTQ/SAM intermediates are excluded.
 - `data/toy_reads/toy_reads.csv`
 - `data_pipeline/README.md`
 - `data_pipeline/download/__init__.py`
-- `data_pipeline/download/download_35_species_references.py`
 - `data_pipeline/download/download_stage3_cami_toy_low.py`
 - `data_pipeline/download/inspect_stage3_cami_remote_tar.py`
 - `data_pipeline/preprocess/__init__.py`
-- `data_pipeline/preprocess/align_35_species_labels.py`
-- `data_pipeline/preprocess/build_35_species_representations.py`
-- `data_pipeline/preprocess/build_35_species_splits.py`
-- `data_pipeline/preprocess/build_balanced_35_species_fastq.py`
 - `data_pipeline/preprocess/make_close_relative_reads.py`
 - `data_pipeline/preprocess/make_genome_slice_reads.py`
 - `data_pipeline/preprocess/make_hardened_reads.py`
 - `data_pipeline/preprocess/make_toy_reads.py`
 - `data_pipeline/preprocess/prepare_close_relative_genomes.py`
 - `data_pipeline/preprocess/prepare_stage3_cami_toy_low_subset.py`
-- `data_pipeline/preprocess/select_35_species_subset.py`
-- `data_pipeline/simulate/README_35_species.md`
 - `data_pipeline/simulate/__init__.py`
-- `data_pipeline/simulate/prepare_35_species_manifest.py`
-- `data_pipeline/simulate/prepare_camisim_35species_inputs.py`
 - `data_pipeline/simulate/prepare_per_species_fastq_manifest.py`
 - `data_pipeline/simulate/run_cami2_marine_lightweight_probe.py`
 - `data_pipeline/simulate/run_stage3_art_generate_and_evaluate.py`
@@ -153,7 +140,6 @@ and ART FASTQ/SAM intermediates are excluded.
 - `experiments/audits/run_unified_runtime_benchmark.py`
 - `experiments/main/__init__.py`
 - `experiments/main/run_attention_context_diagnostic.py`
-- `experiments/main/run_e5_multispecies_probe.py`
 - `experiments/main/run_local_mutation_sensitivity.py`
 - `experiments/main/run_position_property_controlled_tasks.py`
 - `experiments/main/run_spaced_pattern_sanity.py`
@@ -339,9 +325,6 @@ and ART FASTQ/SAM intermediates are excluded.
 - `results/decision_stage/e3_natural_local_factorial/natural_local_factorial_run.json`
 - `results/decision_stage/e3_natural_local_factorial/natural_local_factorial_summary.csv`
 - `results/decision_stage/e3_natural_local_factorial/natural_local_factorial_summary.md`
-- `results/e5_35species_regenerated_75bp/e5_manifest.json`
-- `results/e5_35species_regenerated_75bp/e5_metrics.csv`
-- `results/e5_35species_regenerated_75bp/provenance.json`
 - `results/stage2/arg_snp_boundary/arg_snp_boundary_run.json`
 - `results/stage2/arg_snp_boundary/arg_snp_boundary_summary.md`
 - `results/stage2/arg_snp_boundary/arg_snp_readout.csv`
