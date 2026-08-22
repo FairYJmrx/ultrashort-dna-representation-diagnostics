@@ -2,7 +2,7 @@ cff-version: 1.2.0
 message: "If you use this repository, please cite the associated manuscript and this software release."
 title: "Short-read representation diagnostics"
 version: "1.2.1"
-date-released: "2026-08-14"
+date-released: "2026-08-22"
 url: "https://github.com/FairYJmrx/ultrashort-dna-representation-diagnostics"
 license: "MIT"
 authors:
