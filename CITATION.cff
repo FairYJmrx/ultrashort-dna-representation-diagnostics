@@ -18,6 +18,10 @@ authors:
   - family-names: "Gong"
     given-names: "Xunbing"
     orcid: "https://orcid.org/0009-0009-6715-0656"
+  - family-names: "Qi"
+    given-names: "Teng"
+    email: "tengqi@link.cuhk.edu.cn"
+    orcid: "https://orcid.org/0009-0007-7648-4776"
 preferred-citation:
   type: article
   title: "Layered representation diagnostics for short metagenomic reads"
@@ -34,5 +38,9 @@ preferred-citation:
     - family-names: "Gong"
       given-names: "Xunbing"
       orcid: "https://orcid.org/0009-0009-6715-0656"
+    - family-names: "Qi"
+      given-names: "Teng"
+      email: "tengqi@link.cuhk.edu.cn"
+      orcid: "https://orcid.org/0009-0007-7648-4776"
   year: 2026
   notes: "Manuscript in preparation for journal submission; final bibliographic metadata to be added after publication."

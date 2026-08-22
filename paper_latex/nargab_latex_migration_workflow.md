@@ -4,12 +4,12 @@ This document records the completed migration into an OUP/NAR-compatible LaTeX s
 
 ## Current status (2026-08-14)
 
-- The canonical source is the four-author Standard Paper in `paper_latex`.
+- The canonical source is the five-author Standard Paper in `paper_latex`.
 - Ruixiang Mei is first and corresponding author; the author order is Ruixiang Mei, Zhi Chen,
-  Rui Cao and Xunbing Gong. Huang Jianhua is not an author.
+  Rui Cao, Xunbing Gong and Teng Qi. Huang Jianhua is not an author.
 - Scientific and figure/layout QA are complete for the current claim boundary. No MIXBend
   comparison, Transformer benchmark, Kraken integration or new clinical experiment is pending.
-- `v1.2.0` is an immutable historical single-author snapshot. The current four-author code
+- `v1.2.0` is an immutable historical single-author snapshot. The current five-author code
   candidate is frozen at release-branch commit `f602b51`; the GitHub tag/Release, version DOI
   and final DOI-backfilled NAR submission package remain to be created.
 
@@ -25,7 +25,7 @@ This document records the completed migration into an OUP/NAR-compatible LaTeX s
 
 Confirmed:
 
-- Current author order: Ruixiang Mei (first and corresponding), Zhi Chen, Rui Cao and Xunbing Gong.
+- Current author order: Ruixiang Mei (first and corresponding), Zhi Chen, Rui Cao, Xunbing Gong and Teng Qi.
 - ORCID: https://orcid.org/0009-0003-2128-0726.
 - Confirmed corresponding email: ruixiangmei@link.cuhk.edu.cn.
 - Confirmed institution: The Chinese University of Hong Kong, Shenzhen. The canonical source
@@ -301,7 +301,7 @@ Current OUP smoke-test render:
 - All abbreviations are expanded on first use: CK4P-MSP, MSP, CSP, MI, KSG, ART, CAMI, EIIP.
 - Author names, affiliations, corresponding-author email and ORCID are present.
 - Data Availability and Code Availability currently point to the historical repository/concept DOI; replace them with
-  the new immutable four-author release URL and version DOI after freeze.
+  the new immutable five-author release URL and version DOI after freeze.
 - Funding is no longer pending: the canonical manuscript states that no specific grant supported the work.
 - Conflict-of-interest statement is present.
 - Ethics/Data Governance boundary is present and does not imply use of patient reads.
@@ -329,7 +329,7 @@ The LaTeX migration is considered submission-ready only when:
 
 - [x] Final affiliation, funding, ethics wording and acknowledgements are settled in the canonical source;
   final portal rendering remains an upload-stage check.
-- [ ] Repository reviewer-access mechanism for the new four-author release is confirmed.
+- [ ] Repository reviewer-access mechanism for the new five-author release is confirmed.
 - [ ] New version-specific public DOI is minted and backfilled.
 - [~] Final NAR/OUP reference style is verified locally; perform the portal/package check immediately before upload.
 - [x] The PDF generated from LaTeX matches the final approved scientific text.
